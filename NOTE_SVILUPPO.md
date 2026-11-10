@@ -34,3 +34,5 @@
 (13) 10/11/2026 – Loghi senza cerchio dello sfondo come in Dreamers (badge contain, trasparenti; Houston, Wichita e Fallon con lo sfondo tolto). Nuovo logo Quebec Ducks (dato da Francesco, sfondo nero tolto). Campo: riquadro Salary cap (libero, occupato 26/27 e 27/28, tagli) al posto della Cassa di Dreamers; tocco = Contratti e scelte.
 
 (14) 10/11/2026 – Logo Cleveland Cadavers creato (scudo bordeaux e oro, teschio con pallone), loghi/cle.png.
+
+(15) 10/11/2026 – Campo: gli altri 9 titolari non più come maglie in griglia ma in lista come la Tribuna, con titolo «Titolari» (ruolo, squadra NBA, AVG della settimana, AVG medio).
