@@ -9,6 +9,8 @@ on:
     - cron: "43 10,16 * * *"
     # (91) chiusura della notte: alle 8:07 italiane (7:07 UTC in inverno) i dati ESPN della notte diventano quelli ufficiali dell app
     - cron: "7 7 * * *"
+    # (92) lunedì: formazioni della settimana salvate nell app ogni 15 minuti fino alla prima partita (6-23 UTC = 7-24 italiane)
+    - cron: "*/15 6-23 * * 1"
   workflow_dispatch:
 permissions:
   contents: write
