@@ -13,7 +13,12 @@ const ownOf=n=>OWN[nrm(n)]||null;
 const ROLE=r=>{const a=String(r||"").split(",");return a.some(x=>x==="C")&&!a.some(x=>/G/.test(x))?"Centro":a.some(x=>/G/.test(x))&&!a.some(x=>/F|C/.test(x))?"Guardia":a[0]&&/G/.test(a[0])?"Guardia":a[0]==="C"?"Centro":"Ala"};
 /* --- caricamento dell archivio 25/26 --- */
 let loading=false;
-const OLD=["2425","2526"];/* stagioni passate: un file per stagione (tools/storico.mjs) */
+/* (41) STAGIONI PASSATE SOLO PER I DUCKS: nella versione ufficiale si vede solo la stagione in corso; 24/25 e 25/26 si accendono
+   con il tasto dell area riservata Ducks (dax.js, localStorage e16_dax2 = "1") e valgono solo su quel telefono. */
+const DAXS=()=>{try{return localStorage.getItem("e16_dax2")==="1"}catch(_){return false}};
+const OLD0=["2425","2526"];let OLD=DAXS()?OLD0:[];/* stagioni passate: un file per stagione (tools/storico.mjs) */
+const SEAS=()=>DAXS()?SEASONS:SEASONS.slice(-1);
+window.e16DaxStats=on=>{try{localStorage.setItem("e16_dax2",on?"1":"0")}catch(_){}OLD=on?OLD0:[];ALL=null;BYP=null;if(!on){if(ST.a<SEASONS[2].a)ST.a=SEASONS[2].a;if(ST.psz&&ST.psz!=="2627")ST.psz="2627";save()}};
 function needOld(){if(window.STORICO&&OLD.every(k=>STORICO[k]))return true;if(!loading){loading=true;let n=0;for(const k of OLD){const s=document.createElement("script");s.src="storico-"+k+".js";s.onload=()=>{if(++n===OLD.length){ALL=null;render()}};document.head.appendChild(s)}}return false}
 /* --- tutte le partite (cache) --- */
 let ALL=null,BYP=null;
@@ -25,6 +30,7 @@ const gamesOf=n=>{all();return BYP[nrm(n)]||[]};
 /* --- stato delle pagine (si ricorda sul telefono) --- */
 const ST={a:SEASONS[SEASONS.length-1].a,b:today(),q:"",sort:"ff",box:0,sq:"QUE",pl:"",pa:"",pb:"",met:"f",per:"g",back:"stat"};
 try{Object.assign(ST,JSON.parse(localStorage.getItem("e16_stat")||"{}"))}catch(e){}
+if(!DAXS()){if(ST.a<SEASONS[2].a)ST.a=SEASONS[2].a;if(ST.psz&&ST.psz!=="2627")ST.psz="2627"}
 const save=()=>{try{localStorage.setItem("e16_stat",JSON.stringify(ST))}catch(e){}};
 const inP=x=>x.d>=ST.a&&x.d<=ST.b;
 const fmtD=d=>{const[y,m,g]=d.split("-");return g+"/"+m+"/"+y.slice(2)};
@@ -45,10 +51,10 @@ const gvC=v=>v>=50?"v":v>=35?"g":v>=20?"y":"r";/* colori come Dreamers: viola, v
 const evC=v=>v>=1.4?"g":v>=1?"y":"r";
 let PEROPEN=false;
 /* periodo: pulsante «Periodo» come Dreamers; toccandolo si aprono le date e le scorciatoie (stagioni e mesi) */
-function perBox(){const se=SEASONS.find(s=>ST.a>=s.a&&ST.a<=s.b)||SEASONS[SEASONS.length-1];
+function perBox(){const SE=SEAS(),se=SE.find(s=>ST.a>=s.a&&ST.a<=s.b)||SE[SE.length-1];
  const ms=[],end=se.b<today()?se.b:today();for(let d=new Date(se.a.slice(0,7)+"-01T12:00:00Z");d.toISOString().slice(0,7)<=end.slice(0,7);d.setUTCMonth(d.getUTCMonth()+1))ms.push(d.toISOString().slice(0,7));
  const mon=ST.a.slice(0,7)===ST.b.slice(0,7)?ST.a.slice(0,7):"";const t=today();
- const sz=SEASONS.map(s=>`<option value="${s.a}|${s.b<t?s.b:t}"${se.k===s.k&&!mon&&ST.a===s.a?" selected":""}>Stagione ${s.l}</option>`).join("")+`<option value="${SEASONS[1].a}|${t}"${ST.a===SEASONS[1].a&&ST.b>=t?" selected":""}>Ultimi 2 anni</option><option value="${SEASONS[0].a}|${t}"${ST.a===SEASONS[0].a&&ST.b>=t?" selected":""}>Tutto</option>`;
+ const sz=SE.map(s=>`<option value="${s.a}|${s.b<t?s.b:t}"${se.k===s.k&&!mon&&ST.a===s.a?" selected":""}>Stagione ${s.l}</option>`).join("")+(SE.length<2?"":`<option value="${SEASONS[1].a}|${t}"${ST.a===SEASONS[1].a&&ST.b>=t?" selected":""}>Ultimi 2 anni</option><option value="${SEASONS[0].a}|${t}"${ST.a===SEASONS[0].a&&ST.b>=t?" selected":""}>Tutto</option>`);
  return `<div class="fabar"><button class="perbtn" data-peropen="1"><span>Periodo</span><b>${SV.cal}${fmtD(ST.a)} → ${fmtD(ST.b)}</b></button><button class="fafil" data-peropen="1" aria-expanded="${PEROPEN}">${SV.fil}Date</button></div>
  ${PEROPEN?`<div class="fbxrow e16dt"><label>Dal <input type="date" data-sp="a" value="${ST.a}"></label><label>al <input type="date" data-sp="b" value="${ST.b}"></label></div>`:""}
  <div class="chips esqm"><label class="szchip" aria-pressed="${!mon}"><select data-szsel="1">${sz}</select></label>${ms.filter(m=>m+"-01"<=t).map(m=>{const[y,mm]=m.split("-");const last=new Date(Date.UTC(+y,+mm,0)).toISOString().slice(0,10);return`<button class="chip" data-pr="${m}-01|${last}" aria-pressed="${mon===m}">${["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"][+mm-1]}</button>`}).join("")}</div>`}
@@ -142,7 +148,7 @@ function vGraf(){/* (35) dal profilo: il tasto indietro torna al profilo */const
    ruolo · squadra NBA · numero, età con i mesi, infortunio dal Centro Medico; tasti «📈 Grafico» e «⚖ Confronta»;
    scelta della stagione; AVG medio ed efficienza (AVG al minuto) con le barre rispetto alla media della squadra;
    partite, minuti, proiezione 36', ultima partita, posizione in lega; partita per partita divisa per mese; pagella con le stelline. */
-const SZP=[["2627","Stagione 26/27"],["2526","Stagione 25/26"],["2425","Stagione 24/25"]];
+const SZP0=[["2627","Stagione 26/27"],["2526","Stagione 25/26"],["2425","Stagione 24/25"]];const SZPf=()=>DAXS()?SZP0:SZP0.slice(0,1);
 const effLv=v=>v==null?"na":evC(v);/* pallino efficienza: verde da 1,40 · giallo 1,00–1,40 · rosso sotto 1,00 (AVG al minuto) */
 const evB=v=>v==null?'<span class="ev na">—</span>':`<span class="ev ${effLv(v)}"><i></i>${f2(v)}</span>`;
 const pdkB=(v,txt)=>v==null||isNaN(v)?'<span class="dash">—</span>':`<span style="color:#fff!important;-webkit-text-fill-color:#fff!important" class="pdkx ${gvC(v)}">${txt??f1(v)}</span>`;
@@ -176,7 +182,7 @@ function pagellaHTML(n,A){const V=(typeof VAL!=="undefined"&&VAL.p&&VAL.p[n])||n
  <p class="pgnote">Più stelle = meglio (Infortuni: più stelle = più sano; «stima» = calcolata dalle partite saltate nelle ultime due stagioni). Spazio in squadra = posto nella gerarchia della sua squadra NBA (AVG e minuti). Valore e AVG pesato del Calcolatore scambi (aggiornati ogni domenica).</p></div>`}
 let SHR_PL=null;
 function vPl(){const ok=needOld();const n=ST.pl;const o=ownOf(n),t=o&&TM[o.t]?o.t:null,T=t?TM[t]:null;
- const sz=SZP.some(x=>x[0]===ST.psz)?ST.psz:"2627",GLall=gamesOf(n),GL=GLall.filter(x=>x.s===sz),A=aggG(GL),last=GLall.slice(-1)[0];
+ const SZP=SZPf(),sz=SZP.some(x=>x[0]===ST.psz)?ST.psz:"2627",GLall=gamesOf(n),GL=GLall.filter(x=>x.s===sz),A=aggG(GL),last=GLall.slice(-1)[0];
  const nba=last?last.t:"",num=window.e16Num?e16Num(n):"",ruolo=o?ROLE(o.ruolo):(last&&last.r[22]?({G:"Guardia",F:"Ala",C:"Centro"})[String(last.r[22])[0]]||"":"");
  const bg=T?TCOL[t]:"#334155";
  /* media efficienza della squadra del fanta nella stagione scelta */
@@ -200,7 +206,7 @@ function vPl(){const ok=needOld();const n=ST.pl;const o=ownOf(n),t=o&&TM[o.t]?o.
  </div>
  <button class="advbtn ggrbtn ggy" data-plgr="1">📈 Grafico</button>
  <button class="advbtn ggrbtn ggy" data-cmp="${e(n)}">⚖ Confronta con un altro giocatore</button>
- <div class="gszn"><label for="gseason">Stagione</label><select id="gseason" data-psz="1">${SZP.map(([k,l])=>`<option value="${k}"${k===sz?" selected":""}>${l}</option>`).join("")}</select></div>
+ <div class="gszn"><label for="gseason">Stagione</label><select id="gseason" data-psz="1">${SZPf().map(([k,l])=>`<option value="${k}"${k===sz?" selected":""}>${l}</option>`).join("")}</select></div>
  ${!A?`<p class="note">${sz!=="2627"?(ok?"Nessuna partita NBA in questa stagione: non era in NBA o non ha giocato.":"Carico le stagioni passate…"):"Nessuna partita giocata finora: i dati compariranno dopo la prima gara."}</p>`:`
  <div class="gbig g2"><div><b class="gpdk"><span style="color:#fff!important;-webkit-text-fill-color:#fff!important" class="pdkx big ${gvC(A.avg)}">${f2(A.avg)}</span></b><small>AVG medi a partita</small></div><div>${evB(A.eff)}<small>Efficienza media</small></div></div>
  <div class="gbars">
@@ -252,7 +258,7 @@ async function shHead(c,W,S,y0,hh){const T=S.t?TM[S.t]:null,bg=T?TCOL[S.t]:"#334
  c.font=SH_F(700,30,1);c.fillStyle="#fff";c.globalAlpha=.8;c.fillText(fit(c,T?T.nome.toUpperCase():"SVINCOLATO",tw-(eta!=null?190:0)),tx+(eta!=null?190:0),y0+222);c.globalAlpha=1}
 /* scheda giocatore 1080×1350: AVG ed efficienza medi, minuti, partite, ultima gara, proiezione 36', trend AVG partita per partita */
 async function shPlayer(){const S=SHR_PL;if(!S)return null;const H=1350,W=1080,{cv,c}=await shBase(H,W),a=S.a,GL=S.GL||[];
- c.font=SH_F(700,28,1);c.textAlign="right";c.fillStyle="rgba(255,240,220,.8)";c.fillText((SZP.find(x=>x[0]===S.sz)||["",""])[1].toUpperCase(),W-56,100);
+ c.font=SH_F(700,28,1);c.textAlign="right";c.fillStyle="rgba(255,240,220,.8)";c.fillText((SZP0.find(x=>x[0]===S.sz)||["",""])[1].toUpperCase(),W-56,100);
  const y0=170,hh=260;await shHead(c,W,S,y0,hh);
  if(!a){c.textAlign="center";c.font=SH_F(800,46,1);c.fillStyle="#fff";c.fillText("NESSUNA PARTITA NBA",W/2,y0+hh+190);c.fillText("IN QUESTA STAGIONE",W/2,y0+hh+250);shFoot(c,W,H,"Dati ESPN");return cv}
  const yb=y0+hh+28,bh=216,bw=(W-112-30)/2;
