@@ -127,3 +127,4 @@
 (61) Ducks: tolta la vecchia Casa viola col gessato nero; la Casa ora è la Viola lettere nere col gessato bianco.
 (62) Ducks: tolta anche la Rossa · stemma bianco.
 (63) Ducks: corretta la nera tolta (via la Nera violacea · rosso, rimessa la Nera · rosso fuori viola dentro).
+(64) Ducks: tolta la Viola · colletto tricolore.
