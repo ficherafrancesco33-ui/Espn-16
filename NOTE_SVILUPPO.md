@@ -139,3 +139,4 @@
 (74) Dynasty TV: toccando una nostra sfida si apre il box score in stile Dynasty TV di Dreamers (tabellone con loghi e punteggio, schede delle due squadre, Titolari / In attesa / Tribuna con AVG e statistiche della settimana); «Apri la sfida» porta al duello della Lega.
 (75) Honolulu: il nome è «Honolulu» + «Monk Seals» (spazio non divisibile in TEAMS.nome), quindi ovunque la squadra si chiama MONK SEALS e la città HONOLULU. Scritte a bordo campo più lunghe di 9 lettere si stringono per stare nel campo (prima HONOLULU MONK usciva).
 (76) Tasto indietro: cambiando sezione dal menu in alto (o dal sottomenu) la pila riparte da zero, quindi ‹ porta alla Home. Lega: il tasto ‹ non è più sovrapposto al titolo ESPN 16.
+(77) Tolto il tasto impostazioni in alto (per ora non serve).
