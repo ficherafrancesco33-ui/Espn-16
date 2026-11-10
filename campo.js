@@ -41,7 +41,7 @@ function jersey(t,num,nick,pl){if(window.E16KIT)return E16KIT.jersey(t,num,nick,
 /* campo: modello Dreamers con i colori della squadra */
 function court(t){if(t.id==="QUE")return CAMPO_ART["court"+(E16N?1:0)];const c=COL[t.id]||COL.FAL;const city=t.nome.split(" ").slice(0,-1).join(" ").toUpperCase(),nick=t.nome.split(" ").slice(-1)[0].toUpperCase();
  return CAMPO_ART.dol.replace(/#ae592c/g,c.w1).replace(/#e8763a/g,c.w2).replace('fill="#1c0f44"',`fill="${c.fr}"`).replace(/stroke="#0a205a"/g,`stroke="${c.fr}"`)
-  .replace(/>SALT LAKE</,">"+e(city)+"<").replace(/>DOLPHINS</,">"+e(nick)+"<").replace(/href="img\/80465239f661\.webp"/,`href="${t.logo}"`)}
+  .replace(/(<text[^>]*)>SALT LAKE</,(m,o)=>o+(city.length>9?' textLength="36" lengthAdjust="spacingAndGlyphs"':"")+">"+e(city)+"<").replace(/(<text[^>]*)>DOLPHINS</,(m,o)=>o+(nick.length>9?' textLength="36" lengthAdjust="spacingAndGlyphs"':"")+">"+e(nick)+"<")/* (75) scritte lunghe a bordo campo: si stringono per stare nello spazio (prima uscivano dal campo, es. HONOLULU MONK) */.replace(/href="img\/80465239f661\.webp"/,`href="${t.logo}"`)}
 const NUM={};try{for(const id in ESPN.box)for(const r of ESPN.box[id]){}}catch(_){}
 const SLOT5={C:[50,27.6],SF:[21,55.8],PF:[79,55.8],PG:[33,83.2],SG:[67,83.2]};
 const RL=r=>{const a=String(r||"").split(",");return a[0]==="C"?"C":/G/.test(a[0])?"G":"F"};
