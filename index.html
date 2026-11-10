@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#ea580c">
+<meta name="theme-color" content="#e7590c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>ESPN 16</title>
@@ -272,8 +272,24 @@ html.notte .e16 .gn b{color:#e9d5ff}
 
 ::view-transition-old(root),::view-transition-new(root){animation-duration:.25s}
 </style>
+<style>/* (31) strisce dei valori in Home, come Dreamers (902) */
+.tkbar{display:flex;align-items:stretch;margin:2px 16px 12px;border-radius:12px;overflow:hidden;background:#fff8ec;border:2px solid #d9560b;box-shadow:0 4px 12px rgba(90,40,5,.2);height:40px}
+.tklab{flex:none;display:grid;place-content:center;padding:0 10px;background:linear-gradient(180deg,#f2701a,#c2410c);color:#fff;font-family:var(--display);font-style:italic;font-weight:900;font-size:14px;letter-spacing:.06em;line-height:1;text-align:center}
+.tklab small{display:block;font-size:9px;font-style:normal;font-weight:700;opacity:.85;margin-top:2px;letter-spacing:.04em}
+.tkvw{flex:1;overflow:hidden;position:relative;-webkit-mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent)}
+.tktr{display:inline-flex;align-items:center;height:100%;white-space:nowrap;animation:tkmv 60s linear infinite}
+.tki{display:inline-flex;align-items:baseline;gap:5px;padding:0 14px;border-right:1px solid rgba(217,86,11,.25);font-size:14px;color:#7a3410}
+.tki b{font-weight:800}.tki em{font-style:normal;font-size:12px;opacity:.75}.tki i{font-style:normal;font-weight:900}
+@keyframes tkmv{to{transform:translateX(-50%)}}
+html.notte .tkbar{background:#1b1035;border-color:#8b5cf6}html.notte .tklab{background:linear-gradient(180deg,#8b5cf6,#5b21b6)}html.notte .tki{color:#fff;border-right-color:rgba(139,92,246,.3)}
+html body .tki.su i:not(#a):not(#b){color:#16a34a!important;-webkit-text-fill-color:#16a34a!important}html body .tki.giu i:not(#a):not(#b){color:#dc2626!important;-webkit-text-fill-color:#dc2626!important}html.notte body .tki.su i:not(#a):not(#b){color:#4ade80!important;-webkit-text-fill-color:#4ade80!important}html.notte body .tki.giu i:not(#a):not(#b){color:#f87171!important;-webkit-text-fill-color:#f87171!important}html body .tklab:not(#a),html body .tklab *:not(#a){color:#fff!important;-webkit-text-fill-color:#fff!important}html:not(.notte) body .tki b:not(#a),html:not(.notte) body .tki em:not(#a){color:#7a3410!important;-webkit-text-fill-color:#7a3410!important}html.notte body .tki b:not(#a),html.notte body .tki em:not(#a){color:#fff!important;-webkit-text-fill-color:#fff!important}</style>
+<style>/* (32) striscia sotto l orologio dell iPhone: stesso colore della testata (giorno arancio, notte viola), niente stacchi blu.
+   Safari colora la barra in alto prendendo il colore di un elemento fisso in cima: questo. */
+#sbar{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);z-index:1000;pointer-events:none;background-color:#e7590c}
+html.notte #sbar{background-color:#3e2577;background-image:linear-gradient(90deg,#502783,#3e2577 50%,#212569)}</style>
 </head>
 <body>
+<div id="sbar" aria-hidden="true"></div>
 <script>/* (6) tema come Dreamers: giorno = html.dlt-parquet, notte = html.notte + body.notte; variabili colore sull html come in Dreamers */
 function e16Tema(nt){const H=document.documentElement,B=document.body;
  const C="--duchrl:#7c3aed;--sepw:1px;--sepc:#0b0b12;--bxc:#e8631a;--bxbc:#e8631a;--bxg:#22a34a;--bxr:#e02424;--bxn:#ffffff;--sj:1;--sn:1;--st:1;--sp:1;--sov:-10;--hh:112px;";
@@ -282,7 +298,7 @@ function e16Tema(nt){const H=document.documentElement,B=document.body;
  /* (28) cambio giorno/notte fluido come Dreamers: i due fogli restano sempre scaricati e letti; si cambia solo media (con disabled Safari li ricaricava: lampo bianco e pagina senza stile) */
  const g=document.getElementById("skg"),n=document.getElementById("skn");if(g){g.disabled=false;g.media=nt?"not all":"all"}if(n){n.disabled=false;n.media=nt?"all":"not all"}
  const sw=document.getElementById("sw");if(sw){sw.classList.toggle("on",nt);sw.setAttribute("aria-checked",nt?"true":"false")}
- const tc=document.querySelector('meta[name="theme-color"]');if(tc)tc.content=nt?"#2a1065":"#e85a0c"}
+ const tc=document.querySelector('meta[name="theme-color"]');if(tc)tc.content=nt?"#3e2577":"#e7590c"}
 let E16N=false;try{E16N=localStorage.getItem("e16_notte")==="1"}catch(e){}
 e16Tema(E16N);</script>
 <header>
@@ -363,7 +379,9 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 const TABS=[["home","Home"],["lega","Lega"],["tv","Dynasty TV"],["stat","Statistiche"],["gest","Centro gestione"],["scambi","Scambi"]];
 /* (8) menu Centro gestione come Dreamers */
 const SUB=[["roster","Roster"],["inf","Centro Medico"],["reg","Regolamento"],["cap","Cap & Scelte"]];
-const SUB2=[["calc","Calcolatore trade"],["ia","IA trade"],["val","Valori giocatori"]];
+/* (31) menu Scambi come Dreamers: Storico trade, Calcolatore, Osservatorio, IA Trade (gusti dei GM), Comparatore, Pic-Trade, Allenamento IA Trade.
+   I valori giocatori restano nel Calcolatore (scheda «Valori lega»). Pagine nuove in SCAMBIV (storico.js, osserv.js, gusti.js, pictrade.js, allena.js). */
+const SUB2=[["storico","Storico trade"],["calc","Calcolatore trade"],["osserv","Osservatorio"],["gusti","IA Trade"],["comp","Comparatore"],["pictrade","Pic-Trade"],["allena","Allenamento IA Trade"]];
 let tmTab="rosa",cur="home",curTeam=null,lgTab="cls",night=null,stQ={per:"all",nba:"",sort:"ffa",min:0},hq="";
 try{const s=JSON.parse(localStorage.getItem("e16_st")||"{}");Object.assign(stQ,s)}catch(e){}
 function go(v){cur=v;curTeam=null;render();scrollTo(0,0)}
@@ -377,7 +395,7 @@ function render(){
  document.getElementById("foot").textContent=typeof ESPN!=="undefined"?"ULTIMO AGGIORNAMENTO ESPN: "+ESPN.upd:"";
  const m=document.getElementById("main");
  /* (6) le pagine proprie di ESPN 16 (squadra, lega, cap) stanno dentro .e16: le loro regole non toccano le classi Dreamers */
- m.innerHTML='<div class="view">'+(curTeam?'<div class="e16">'+vTeam(curTeam)+'</div>':window.STATV&&STATV[cur]?STATV[cur]():cur==="campo"&&window.vCampo?`<div class="chips">${TEAMS.map(x=>`<button class="chip" data-team="${x.id}" aria-pressed="${x.id===e16RT()}"><span class="badge logo lg-${x.id}"></span>${esc(x.nome.split(" ").slice(-1)[0])}</button>`).join("")}</div>`+vCampo(e16RT()):window.GESTV&&GESTV[cur]?GESTV[cur]():window.TRADEV&&TRADEV[cur]?TRADEV[cur]():cur==="tv"?vTv():cur==="cap"?'<div class="e16">'+vCapAll()+'</div>':vHome())+'</div>';
+ m.innerHTML='<div class="view">'+(curTeam?'<div class="e16">'+vTeam(curTeam)+'</div>':window.STATV&&STATV[cur]?STATV[cur]():cur==="campo"&&window.vCampo?`<div class="chips">${TEAMS.map(x=>`<button class="chip" data-team="${x.id}" aria-pressed="${x.id===e16RT()}"><span class="badge logo lg-${x.id}"></span>${esc(x.nome.split(" ").slice(-1)[0])}</button>`).join("")}</div>`+vCampo(e16RT()):window.GESTV&&GESTV[cur]?GESTV[cur]():window.SCAMBIV&&SCAMBIV[cur]?SCAMBIV[cur]():window.TRADEV&&TRADEV[cur]?TRADEV[cur]():cur==="tv"?vTv():cur==="cap"?'<div class="e16">'+vCapAll()+'</div>':vHome())+'</div>';
  if(cur==="tv"){const w=document.getElementById("tvweek"),b=w&&w.querySelector('[aria-pressed="true"]');if(b)w.scrollLeft=b.offsetLeft-w.clientWidth/2+b.clientWidth/2}
 }
 document.addEventListener("click",e=>{if(e.target.closest("#sw")){E16N=!E16N;try{localStorage.setItem("e16_notte",E16N?"1":"0")}catch(_){}/* (28) dissolvenza breve tra giorno e notte dove il telefono la supporta */const go=()=>{e16Tema(E16N);render()};if(document.startViewTransition&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.startViewTransition(go);else go();return}
@@ -550,9 +568,16 @@ render();
 <script src="tv.js"></script>
 <script src="gest.js"></script>
 <script src="trade.js"></script>
+<script src="gusti-data.js"></script>
+<script src="storico.js"></script>
+<script src="osserv.js"></script>
+<script src="gusti.js"></script>
+<script src="pictrade.js"></script>
+<script src="allena.js"></script>
 <script src="campo-assets.js"></script>
 <script src="campo.js"></script>
 <script src="livetick.js"></script>
+<script src="valbanner.js"></script>
 <script src="nav.js"></script>
 <script src="live.js"></script>
 <script src="parquet.js"></script>
