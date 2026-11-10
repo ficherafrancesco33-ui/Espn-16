@@ -130,3 +130,4 @@
 (64) Ducks: tolta la Viola · colletto tricolore.
 (65) Tasto maglia di nuovo come Dreamers (piccolo, blu notte; di giorno stile parquet), solo staccato di 12px dal bordo. Tolte immagini di prova finite per errore nel repository.
 (66) Tasto maglia a 14px dal bordo, allineato come su Dreamers.
+(68) Statistiche: le stagioni 24/25 e 25/26 sono pubbliche per tutti; tolta l area riservata Ducks (dax.js non più caricato). Grafico: se il periodo salvato aveva la fine prima dell inizio (restava vuoto) la fine torna a oggi.

@@ -15,7 +15,7 @@ const ROLE=r=>{const a=String(r||"").split(",");return a.some(x=>x==="C")&&!a.so
 let loading=false;
 /* (41) STAGIONI PASSATE SOLO PER I DUCKS: nella versione ufficiale si vede solo la stagione in corso; 24/25 e 25/26 si accendono
    con il tasto dell area riservata Ducks (dax.js, localStorage e16_dax2 = "1") e valgono solo su quel telefono. */
-const DAXS=()=>{try{return localStorage.getItem("e16_dax2")==="1"}catch(_){return false}};
+/* (68) stagioni 24/25 e 25/26 ora pubbliche per tutti (tolta l area riservata Ducks) */const DAXS=()=>true;
 const OLD0=["2425","2526"];let OLD=DAXS()?OLD0:[];/* stagioni passate: un file per stagione (tools/storico.mjs) */
 const SEAS=()=>DAXS()?SEASONS:SEASONS.slice(-1);
 window.e16DaxStats=on=>{try{localStorage.setItem("e16_dax2",on?"1":"0")}catch(_){}OLD=on?OLD0:[];ALL=null;BYP=null;if(!on){if(ST.a<SEASONS[2].a)ST.a=SEASONS[2].a;if(ST.psz&&ST.psz!=="2627")ST.psz="2627";save()}};
@@ -31,6 +31,7 @@ const gamesOf=n=>{all();return BYP[nrm(n)]||[]};
 const ST={a:SEASONS[SEASONS.length-1].a,b:today(),q:"",sort:"ff",box:0,sq:"QUE",pl:"",pa:"",pb:"",met:"f",per:"g",back:"stat"};
 try{Object.assign(ST,JSON.parse(localStorage.getItem("e16_stat")||"{}"))}catch(e){}
 if(!DAXS()){if(ST.a<SEASONS[2].a)ST.a=SEASONS[2].a;if(ST.psz&&ST.psz!=="2627")ST.psz="2627"}
+/* (68) periodo salvato rovesciato (fine prima dell inizio, es. 20/10/26 → 12/04/26): il grafico restava vuoto. Fine = oggi */if(!ST.b||ST.b<ST.a)ST.b=today();
 const save=()=>{try{localStorage.setItem("e16_stat",JSON.stringify(ST))}catch(e){}};
 const inP=x=>x.d>=ST.a&&x.d<=ST.b;
 const fmtD=d=>{const[y,m,g]=d.split("-");return g+"/"+m+"/"+y.slice(2)};
