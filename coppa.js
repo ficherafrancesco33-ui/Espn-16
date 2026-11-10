@@ -15,7 +15,7 @@ const COPPA=[
   ["CAN","ALA",651,1309.5],["WIC","CLE",1024.5,1407],["BOS","SRO",1420.5,755],["ALB","DET",1374,1631],
   ["LVA","QUE",1530,1107.5],["FAL","NYP",1064,1301],["HOU","CHA",1741.5,1323.5],["HON","NYS",1361,964]]},
  /* (81) quarti come da tabellone ufficiale (locandina, sorteggio degli admin). (82) semifinali e finale: sorteggio automatico a fine turno (fill) */
- {k:"qf",n:"Quarti di finale",w:4,m:[["ALA","CLE"],["BOS","DET"],["LVA","NYP"],["HOU","HON"]]},
+ {k:"qf",n:"Quarti di finale",w:4,m:[["BOS","ALA"],["LVA","CLE"],["HOU","HON"],["NYP","DET"]]/* (84) accoppiamenti veri del sorteggio dei quarti (Francesco 10/11): Boston–Alaska, Las Vegas–Cleveland, Houston–Honolulu, Pandas–Pythons */},
  {k:"sf",n:"Semifinali",w:6,m:[]},
  {k:"f",n:"Finale",w:8,m:[]}];
 window.COPPA=COPPA;
@@ -56,7 +56,7 @@ function bracket(alive){const qf=COPPA[1],sf=COPPA[2],fi=COPPA[3];
  <div class="mcb-g"><div class="mcb-c q l">${mt(qf,Q[0])}${mt(qf,Q[1])}</div><div class="mcb-c s l">${mt(sf,S[0])}</div>
  <div class="mcb-c f"><div class="mcb-tro">${window.mcgeeTrofeo?mcgeeTrofeo("bkt"):""}</div>${champ?`<div class="mcb-ch">${lg(champ)}<b>${e(nick(champ))}</b><small>Campione</small></div>`:""}${mt(fi,F,"fin")}</div>
  <div class="mcb-c s r">${mt(sf,S[1])}</div><div class="mcb-c q r">${mt(qf,Q[2])}${mt(qf,Q[3])}</div></div>
- <p class="mcb-n">${sf.draw?"Semifinali sorteggiate a fine quarti.":"Semifinali sorteggiate a fine quarti: per ora i lati sono quelli della locandina."}</p></div>`}
+ <p class="mcb-n">${sf.draw?"Semifinali sorteggiate a fine quarti.":"Semifinali sorteggiate a fine quarti."}</p></div>`}
 function vCoppa(){const n=wNow();try{fill()}catch(_){}
  const cur_=COPPA.find(r=>r.w>=n)||COPPA[COPPA.length-1];
  const alive=(()=>{let L=TEAMS.map(t=>t.id);for(const r of COPPA){if(stato(r)!=="fin")break;const W=winners(r);if(W.length)L=W}return L})();

@@ -146,3 +146,4 @@
 (81) Quarti dal tabellone ufficiale: Whales–Cadavers, TeaBags–Pythons, Aliens–Pandas, Lions–Monk Seals. Niente più sorteggi: semifinali e finale si riempiono da sole (vincente QF1–QF2, QF3–QF4, poi lato sinistro contro lato destro).
 (82) McGee Cup: dopo ogni turno nuovo sorteggio casuale di tutti gli accoppiamenti del turno dopo (fino alla finale), fatto in automatico quando finisce la settimana del turno; seme fisso (turno + qualificate) così il sorteggio è uguale su tutti i telefoni. Punteggi della coppa = formazione ESPN del lunedì (la stessa del campionato).
 (83) McGee Cup: tabellone a specchio stile playoff (quarti ai lati, semifinali, finale al centro con sopra il trofeo); vincente in oro, perdente spenta, «?» finché non è decisa; tocca una sfida per il tabellino. Classi .mcb* (non .bk, che è il tasto indietro di nav.js).
+(84) McGee Cup: quarti corretti con gli accoppiamenti veri (Boston–Alaska, Las Vegas–Cleveland, Houston–Honolulu, Pandas–Pythons).
