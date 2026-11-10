@@ -147,3 +147,4 @@
 (82) McGee Cup: dopo ogni turno nuovo sorteggio casuale di tutti gli accoppiamenti del turno dopo (fino alla finale), fatto in automatico quando finisce la settimana del turno; seme fisso (turno + qualificate) così il sorteggio è uguale su tutti i telefoni. Punteggi della coppa = formazione ESPN del lunedì (la stessa del campionato).
 (83) McGee Cup: tabellone a specchio stile playoff (quarti ai lati, semifinali, finale al centro con sopra il trofeo); vincente in oro, perdente spenta, «?» finché non è decisa; tocca una sfida per il tabellino. Classi .mcb* (non .bk, che è il tasto indietro di nav.js).
 (84) McGee Cup: quarti corretti con gli accoppiamenti veri (Boston–Alaska, Las Vegas–Cleveland, Houston–Honolulu, Pandas–Pythons).
+(85) Fallon Mavericks: nuovo logo ritagliato (loghi/fal.png, ?v=85 per aggiornare la cache).
