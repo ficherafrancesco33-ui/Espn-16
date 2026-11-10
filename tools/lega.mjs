@@ -19,7 +19,7 @@ if (existsSync(OUT)) { try { OLD = new Function(readFileSync(OUT, "utf8") + ";re
 /* squadre ESPN -> sigle dell app (dal nome) */
 const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const TEAMS = [...html.matchAll(/\{id:"([A-Z]{3})",nome:"([^"]+)"/g)].map(m => ({ id: m[1], nome: m[2] }));
-const nn = s => String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z ]/g, "").replace(/\s+/g, " ").trim();
+const nn = s => String(s).replace(/\\u00a0|\u00a0/g, " ").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z ]/g, "").replace(/\s+/g, " ").trim();
 const PRO = { 1: "ATL", 2: "BOS", 3: "NO", 4: "CHI", 5: "CLE", 6: "DAL", 7: "DEN", 8: "DET", 9: "GS", 10: "HOU", 11: "IND", 12: "LAC", 13: "LAL", 14: "MIA", 15: "MIL", 16: "MIN", 17: "BKN", 18: "NY", 19: "ORL", 20: "PHI", 21: "PHX", 22: "POR", 23: "SAC", 24: "SA", 25: "OKC", 26: "UTAH", 27: "WSH", 28: "TOR", 29: "MEM", 30: "CHA", 0: "FA" };
 const SLOT = { 0: "PG", 1: "SG", 2: "SF", 3: "PF", 4: "C", 5: "G", 6: "F", 7: "SG/SF", 8: "G/F", 9: "PF/C", 10: "F/C", 11: "UTIL", 12: "BE", 13: "IR" };
 const POS = { 1: "PG", 2: "SG", 3: "SF", 4: "PF", 5: "C" };

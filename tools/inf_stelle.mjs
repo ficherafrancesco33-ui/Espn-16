@@ -5,7 +5,7 @@
 //    −1 se ora è fuori per Achille/crociato o con rientro tra 60 giorni o più; rookie senza storia = 3 (neutro).
 import fs from "fs";
 const load=(f,k)=>{const c={window:{}};new Function("window",fs.readFileSync(f,"utf8")+`;window.__x=${k};`)(c.window);return c.window.__x};
-const nn=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/ş/g,"s").replace(/[.'’]/g,"").replace(/\s+(jr|sr|ii|iii|iv)$/,"").replace(/\s+/g," ").trim();
+const nn=s=>String(s).replace(/\\u00a0|\u00a0/g, " ").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/ş/g,"s").replace(/[.'’]/g,"").replace(/\s+(jr|sr|ii|iii|iv)$/,"").replace(/\s+/g," ").trim();
 const html=fs.readFileSync("index.html","utf8");
 const ROSE=new Function(html.match(/const ROSE=(\{[\s\S]*?\});/)[0].replace("const ROSE=","return ")+"")();
 const dre=fs.readFileSync(process.argv[2],"utf8"),DS=JSON.parse(dre.match(/const INF_STELLE=(\{[^}]*\})/)[1]),DN={};for(const k in DS)DN[nn(k)]=DS[k];

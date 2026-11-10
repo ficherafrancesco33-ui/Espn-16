@@ -27,7 +27,7 @@ for (const d of Object.keys(ESPN.days)) for (const id of ESPN.days[d]) for (cons
 const START = "2026-10-20", today = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
 const days = Math.max(0, (Date.parse(today) - Date.parse(START)) / 864e5), wk = Math.max(1, Math.ceil((days + 1) / 7));
 let NASC = {}; try { NASC = load("eta-data.js", "NASCITA") } catch (e) {}
-const nn = s => String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[.'’]/g, "").replace(/\s+(jr|sr|ii|iii|iv)$/, "").trim();
+const nn = s => String(s).replace(/\\u00a0|\u00a0/g, " ").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[.'’]/g, "").replace(/\s+(jr|sr|ii|iii|iv)$/, "").trim();
 const NN = {}; for (const k in NASC) NN[nn(k)] = NASC[k];
 const ageOf = n => { const b = NN[nn(n)]; if (!b) return null; const d = new Date(b + "T00:00:00Z"), f = new Date("2027-02-01T00:00:00Z"); let a = f.getUTCFullYear() - d.getUTCFullYear(); if (f.getUTCMonth() < d.getUTCMonth() || (f.getUTCMonth() === d.getUTCMonth() && f.getUTCDate() < d.getUTCDate())) a--; return a };
 /* formula della lega (G..J = AVG stagione 4°..1°, K..N = partite 4°..1°, N riportata su 82) */
