@@ -20,12 +20,14 @@ jobs:
           node-version: 20
       - name: Calcola i valori
         run: node tools/valori.mjs
+      - name: Stipendi di mercato (formula della lega)
+        run: node tools/stipendi.mjs || true
       - name: Salva
         run: |
           git config user.name "espn-bot"
           git config user.email "espn-bot@users.noreply.github.com"
-          if git diff --quiet -- valori-data.js; then echo "Nessuna novità"; exit 0; fi
-          git add valori-data.js
+          if git diff --quiet -- valori-data.js stipendi-data.js tools/stip-passate.json; then echo "Nessuna novità"; exit 0; fi
+          git add valori-data.js stipendi-data.js tools/stip-passate.json
           git commit -m "Valori giocatori aggiornati [automatico]"
           for i in 1 2 3; do git pull --rebase -X theirs origin main && git push origin HEAD:main && exit 0; sleep 5; done
           exit 1

@@ -30,6 +30,9 @@ const RL=r=>{const a=String(r||"").split(",");return a[0]==="C"?"Centro":/G/.tes
 let CT=null;function ct(){if(CT)return CT;CT={};if(typeof CAP==="undefined")return CT;
  for(const t in CAP)for(const p of CAP[t].pl||[]){const y=(p[1]||[]).filter(v=>v!=null);if(!y.length)continue;CT[nk(p[0])]={n:p[0],t,y,rk:!!p[2],tot:y.reduce((a,b)=>a+b,0)}}return CT}
 const contr=n=>ct()[nk(n)]||null;
+/* (48) stipendio di mercato con la formula della lega (stipendi-data.js, aggiornato ogni domenica) */
+let SN=null;const stipOf=n=>{if(typeof STIP==='undefined')return null;if(!SN){SN={};for(const k in STIP.p)SN[nk(k)]=STIP.p[k]}return SN[nk(n)]||null};window.e16Stip=n=>{const x=stipOf(n);return x?x[0]:null};
+const trend=x=>!x||x[6]==null||x[6]===x[0]?'':x[0]>x[6]?` <i class="stup">▲ ${f1(x[0]-x[6])}</i>`:` <i class="stdn">▼ ${f1(x[6]-x[0])}</i>`;
 let LI=null;const listino=n=>{if(typeof LISTINO==="undefined")return null;if(!LI){LI={};for(const k in LISTINO)LI[nk(k)]=[k,...LISTINO[k]]}return LI[nk(n)]||null};
 /* AVG di stagione per nome normalizzato (dai tabellini) */
 let PS=null,PSk=null;function st(n){const P=pstats();if(PS!==P){PS=P;PSk={};for(const k in P)PSk[nk(k)]=P[k]}const p=PSk[nk(n)];return p&&p.gp?{avg:p.ff/p.gp,gp:p.gp,min:p.min/p.gp}:null}
@@ -49,10 +52,10 @@ window.e16ContrBox=function(n){const c0=contr(n),c=c0&&own(n)?c0:null;/* (45) co
  if(c){const left=c.y.length,v=verd(n,c.y[0]);
   return `<div class="ctrbox"><div class="ctrh"><b>Contratto</b>${c.rk?`<span class="ctrrk">R · rookie</span>`:""}${pill(v)}</div>
   <div class="ctry">${YL.map((y,i)=>`<div class="cy${c.y[i]!=null?" on":""}${i===0?" now":""}"><small>${y}</small><b>${c.y[i]!=null?f1(c.y[i]):"–"}</b></div>`).join("")}</div>
-  <p class="ctrs">Totale <b>${f1(c.tot)} cr</b> · ${left===1?"<b>scade a fine stagione</b>":`${left} anni · fino al ${YF[left-1]}`}${TM[c.t]?` · ${e(TM[c.t].nome)}`:""}</p></div>`}
- const L=listino(n);if(!own(n)&&L){/* svincolato: non è in nessuna rosa né ha un contratto nel file della lega */const lib=capLib("QUE"),ok=L[1]<=lib;
-  return `<div class="ctrbox fa"><div class="ctrh"><b>Libero</b><span class="ctrrk">listino ${f1(L[1])} cr</span>${pill(verd(n,L[1]))}</div>
-  <p class="ctrs">${ok?`Entra nel cap dei Ducks: libero ${f1(lib)} → resterebbero <b>${f1(lib-L[1])} cr</b>.`:`Non entra nel cap dei Ducks: libero ${f1(lib)} cr, servono ${f1(L[1]-lib)} cr in più.`} Prezzo di listino = costo all anno per firmarlo (ipotesi; la durata dei nuovi contratti non è nota).</p></div>`}
+  ${(()=>{const SX=stipOf(n);return SX?`<p class="ctrs ctrmk">Valore di mercato oggi (formula della lega): <b>${f1(SX[0])} cr</b>${trend(SX)} · contratto ${f1(c.y[0])} cr ${SX[0]>c.y[0]+.05?"<b class=\"stup\">sotto mercato</b>":SX[0]<c.y[0]-.05?"<b class=\"stdn\">sopra mercato</b>":"in linea"}</p>`:""})()}<p class="ctrs">Totale <b>${f1(c.tot)} cr</b> · ${left===1?"<b>scade a fine stagione</b>":`${left} anni · fino al ${YF[left-1]}`}${TM[c.t]?` · ${e(TM[c.t].nome)}`:""}</p></div>`}
+ const SX=stipOf(n),L=listino(n),pr=SX?SX[0]:L?L[1]:null;if(!own(n)&&pr!=null){/* svincolato: prezzo = stipendio di mercato con la formula della lega (o il listino se manca) */const lib=capLib("QUE"),ok=pr<=lib;
+  return `<div class="ctrbox fa"><div class="ctrh"><b>Libero</b><span class="ctrrk">${SX?"stipendio":"listino"} ${f1(pr)} cr${trend(SX)}</span>${pill(verd(n,pr))}</div>
+  <p class="ctrs">${ok?`Entra nel cap dei Ducks: libero ${f1(lib)} → resterebbero <b>${f1(lib-pr)} cr</b>.`:`Non entra nel cap dei Ducks: libero ${f1(lib)} cr, servono ${f1(pr-lib)} cr in più.`} ${SX?"Stipendio di mercato calcolato con la formula della lega (AVG e partite delle ultime 4 stagioni, età, stella, crescita), aggiornato ogni domenica.":"Prezzo di listino (manca lo stipendio calcolato)."}</p></div>`}
  return ""};
 
 /* ---------- PAGINA SALARY CAP DELLA SQUADRA ---------- */
@@ -81,7 +84,7 @@ function capPage(id){const C=CAP[id];if(!C)return`<div class="note">Contratti no
    ${N>1?`<button data-csim="p" data-cn="${e(c.n)}" aria-pressed="${cut==="p"}"><b>Spalmato</b><small>${f1(cost+1)} cr in ${N} anni (${f1((cost+1)/N)}/anno) · libero ${f1(lib+(cut?0:c.y[0]-(cost+1)/N))}</small></button>`:""}</div>
    ${cut?`<button class="ccund" data-csim="x" data-cn="${e(c.n)}">Togli dalla simulazione</button>`:""}</div>`:""}</div>`};
  /* svincolati del listino che entrano nel cap libero (dopo i tagli simulati) */
- const fa=[];if(typeof LISTINO!=="undefined")for(const k in LISTINO){const pr=LISTINO[k][0];if(own(k)||contr(k)||pr>lib)continue;const s=st(k);if(!s)continue;fa.push({n:k,pr,s,t:LISTINO[k][3]})}
+ const fa=[];if(typeof STIP!=="undefined")for(const k in STIP.p){const pr=STIP.p[k][0];if(own(k)||pr>lib)continue;const s=st(k);if(!s)continue;const Li=listino(k);fa.push({n:k,pr,s,t:Li?Li[4]:""})}else if(typeof LISTINO!=="undefined")for(const k in LISTINO){const pr=LISTINO[k][0];if(own(k)||contr(k)||pr>lib)continue;const s=st(k);if(!s)continue;fa.push({n:k,pr,s,t:LISTINO[k][3]})}
  fa.sort((a,b)=>b.s.avg-a.s.avg);
  const exp=L.filter(c=>c.y.length===1),freed=exp.reduce((a,c)=>a+c.y[0],0);
  /* (44) regola della lega: almeno 3 under 25 per squadra (età di oggi) */
