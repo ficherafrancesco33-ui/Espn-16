@@ -7,8 +7,8 @@
 const e=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const f1=v=>(Math.round(v*10)/10).toLocaleString("it-IT",{minimumFractionDigits:1,maximumFractionDigits:1});
 /* colori inventati: maglia (bg), scritte (fg), bordi (trim), cornice del campo (fr), legno (w1 bordi, w2 centro) */
-const COL={DET:{bg:"#4c1d95",fg:"#facc15",trim:"#111111",fr:"#1e0b3d",w1:"#ae592c",w2:"#e8763a"},
- CLE:{bg:"#111827",fg:"#e5e7eb",trim:"#7c3aed",fr:"#0b0f19",w1:"#7c4a2d",w2:"#b9794a"},
+const COL={DET:{bg:"#1d3fa0",fg:"#ffffff",trim:"#dc2626",fr:"#0b1a45",w1:"#ae592c",w2:"#e8763a"},
+ CLE:{bg:"#111827",fg:"#e5e7eb",trim:"#9ca3af",fr:"#0b0f19",w1:"#7c4a2d",w2:"#b9794a"},
  BOS:{bg:"#166534",fg:"#ffffff",trim:"#ca8a04",fr:"#0b2e1a",w1:"#a3602f",w2:"#d9944f"},
  NYS:{bg:"#c2410c",fg:"#ffffff",trim:"#1e3a8a",fr:"#1e3a8a",w1:"#ae592c",w2:"#e8763a"},
  CHA:{bg:"#0f172a",fg:"#f59e0b",trim:"#f59e0b",fr:"#0b1222",w1:"#9c5a2c",w2:"#d48a48"},

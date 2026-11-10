@@ -24,9 +24,13 @@ function vLega(){
   if(M.length)body+=`<div class="drms">${M.map(([A,B])=>{const a=WS.S[A],b=WS.S[B],la=a>=b;const r=(id,v,l)=>`<div class="drr tint ${l?"slead":"strail"}" style="${tint(id)}"><span class="drlg" style="--tc:${TCOL[id]}"><span class="badge logo lg-${id}"></span></span><span class="drn"><b>${e(TM[id].nome)}</b><small>${WS.off?"punteggio ufficiale ESPN":WS.G[id]+" partite · migliori 14"}</small></span><em>${f1(v)}</em></div>`;
    return `<button class="drm" data-du="${A},${B}">${r(A,a,la)}${r(B,b,!la)}<span class="drst ${fin?"":"live"}">${fin?"Finale":"In corso"}</span></button>`}).join("")}</div>`;
   else body+=`<p class="note">Calendario delle sfide non ancora inserito: ecco il punteggio della settimana di ogni squadra (14 titolari, punteggio pieno).</p><div class="drcla">${TEAMS.slice().sort((a,b)=>WS.S[b.id]-WS.S[a.id]).map((t,k)=>`<div class="drcr tint ${k===0?"lead":""}" data-team="${t.id}" style="${tint(t.id)}"><span class="drpos">${k+1}</span><span class="drlg l" style="--tc:${TCOL[t.id]}"><span class="badge logo lg-${t.id}"></span></span><div class="drci"><b>${e(t.nome)}</b><small>${WS.G[t.id]} partite · migliori 14 · ${t.conf==="E"?"East":"West"}</small></div><div class="drcwl"><b class="avg">${f1(WS.S[t.id])}<small>AVG</small></b></div></div>`).join("")}</div>`}
- if(G.tab==="cal"){const last=Math.max(wNow+2,...Object.keys(MATCHUPS).map(Number));let h="";
-  for(let k=1;k<=last;k++){const[a,b]=weekRange(k),M=MATCHUPS[k]||[];h+=`<h4 class="drplh">Settimana ${k}<span>${dIt(a)} → ${dIt(b)}${k===wNow?" · in corso":k<wNow?" · finita":""}</span></h4>${M.length?`<div class="drms">${M.map(([A,B])=>`<button class="drm" data-lgw="${k}" data-lg2="turno"><div class="drr tint" style="${tint(A)}"><span class="drlg"><span class="badge logo lg-${A}"></span></span><span class="drn"><b>${e(TM[A].nome)}</b></span></div><div class="drr tint" style="${tint(B)}"><span class="drlg"><span class="badge logo lg-${B}"></span></span><span class="drn"><b>${e(TM[B].nome)}</b></span></div></button>`).join("")}</div>`:`<p class="note">Sfide da inserire.</p>`}`}
-  body=h}
+ if(G.tab==="cal"){/* (30) calendario nel formato Dreamers (drcals/drcal): una card per settimana, sfide casa–ospite con punteggio (vincente evidenziata), "vs" se da giocare; tocca → Settimana */
+  const last=Math.max(...Object.keys(MATCHUPS).map(Number));let h="";
+  const side=(id,cls,w)=>`<span class="${cls} tint${w?" w":""}" style="--tc:${TCOL[id]}">${cls==="a"?`<b>${e(TM[id].nome)}</b>`:""}<span class="drlg s" style="--tc:${TCOL[id]}"><span class="badge logo lg-${id}" role="img" aria-label="${e(nick(TM[id]))}"></span></span>${cls==="h"?`<b>${e(TM[id].nome)}</b>`:""}</span>`;
+  for(let k=1;k<=last;k++){const[a,b]=weekRange(k),M=MATCHUPS[k]||[],WS=k<=wNow?weekScores(k):null,fin=k<wNow;
+   h+=`<button class="drcal${k===wNow?" cur":""}" data-lgw="${k}" data-lg2="turno"><span class="drck"><b>${k}</b><small>${dIt(a).slice(0,5)}–${dIt(b).slice(0,5)}</small></span><span class="drcp">${M.map(([A,B])=>{const x=WS?WS.S[A]:null,y=WS?WS.S[B]:null;
+    return `<i class="drcm">${side(A,"h",fin&&x>y)}<em>${WS?`${f1(x)}–${f1(y)}`:"vs"}</em>${side(B,"a",fin&&y>x)}</i>`}).join("")}</span></button>`}
+  body=`<div class="drcals">${h}</div><p class="note">Squadra in casa a sinistra. Punteggio = somma dei migliori 14 (settimane 1-3 ufficiale ESPN); in grassetto chi ha vinto. Tocca una settimana per vedere le sfide.</p>`}
  if(G.tab==="cla"){const WS=weekScores(wNow);body=["E","W"].map(c=>{const L=standings(c);return `<h4 class="drplh drplsh">${c==="E"?"Eastern":"Western"} Conference<span></span></h4><div class="drcla">${L.map((t,k)=>`<div class="drcr tint ${k===0?"lead":""}" data-team="${t.id}" style="${tint(t.id)}"><span class="drpos">${k+1}</span><span class="drlg l" style="--tc:${TCOL[t.id]}"><span class="badge logo lg-${t.id}"></span></span><div class="drci"><b>${e(t.nome)}</b><small>${e(t.gm)}${k<4?" · zona titolo":" · 5ª–8ª"}</small></div><div class="drcwl"><b>${t.w}<small>V</small></b><b class="l">${t.l}<small>P</small></b><b class="avg">${f1(WS.S[t.id])}<small>SETT.</small></b></div></div>`).join("")}</div>`}).join("")+`<p class="note">V-P dalla lega ESPN. SETT. = punteggio della settimana in corso.</p>`}
  if(G.tab==="po"){/* (23) tabellone come ESPN: 10 squadre, 1ª-6ª saltano il primo turno */const S=seeds();
   const tm=(i,lab)=>{const t=S[i];return t?`<div class="bkt tint" style="--tc:${TCOL[t.id]}"><i>${i+1}</i><span class="bklg" style="--tc:${TCOL[t.id]}"><span class="badge logo lg-${t.id}"></span></span><b>${e(nick(t))}</b><em>${t.w}-${t.l}</em></div>`:`<div class="bkt"><b>${lab}</b></div>`};
@@ -92,18 +96,65 @@ function vRoster(){const t=TM[G.rt]||TEAMS[0],R0=ROSE[t.id]||[],P=pstats(),r=REC
  <p class="note">AVG = media della stagione in corso. Titolari: i 14 schierati su ESPN. Tribuna: 3 posti (under 25, oppure infortunati).</p>`}
 /* ---------- CENTRO MEDICO (infortuni ESPN, letti dal telefono) ---------- */
 let INJ=null,INJt=0;
-async function injLoad(){if(INJ&&Date.now()-INJt<10*60e3)return;try{const r=await fetch("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries?t="+Date.now(),{cache:"no-store"});if(!r.ok)return;const J=await r.json();const L=[];
- for(const tm of J.injuries||[])for(const x of tm.injuries||[]){const a=x.athlete||{};L.push({n:a.displayName||"",nba:(a.team&&a.team.abbreviation)||"",st:x.status||"",d:(x.shortComment||x.longComment||""),date:x.date||"",tipo:(x.details&&x.details.type)||"",rit:(x.details&&x.details.returnDate)||""})}
- INJ=L;INJt=Date.now();if(cur==="inf")render()}catch(_){/* se ESPN non risponde dal telefono si usano gli infortuni scaricati da GitHub (espn-data.js) */if(!INJ&&ESPN.inj){INJ=ESPN.inj.map(x=>({n:x[0],nba:x[1],st:x[2],d:x[3],tipo:x[4],rit:x[5]}));INJt=Date.now();if(cur==="inf")render()}}}
-function vInf(){injLoad();const all=(INJ||[]).map(x=>({...x,t:own(x.n)})).filter(x=>x.t);const cnt={};all.forEach(x=>cnt[x.t]=(cnt[x.t]||0)+1);
- const L=G.it?all.filter(x=>x.t===G.it):all;const out=L.filter(x=>/out/i.test(x.st)),dub=L.filter(x=>!/out/i.test(x.st));
- const row=x=>`<div class="irow ${/out/i.test(x.st)?"out":"q"}" data-pl="${e(x.n)}"><span class="wedge" style="--tc:${/out/i.test(x.st)?"#dc2626":"#f59e0b"}"><span class="badge logo lg-${x.t}"></span></span><div class="ib"><div class="it"><b>${e(x.n)}</b><span class="ipill ${/out/i.test(x.st)?"out":"q"}">${e(x.st)}</span></div><small>${e(nick(TM[x.t]))} · ${x.nba}${x.tipo?" · "+e(x.tipo):""}${x.rit?" · rientro "+e(new Date(x.rit).toLocaleDateString("it-IT",{day:"2-digit",month:"2-digit"})):""}</small><p>${e(x.d)}</p></div></div>`;
- return `<button class="gback" data-go="home">‹ Home</button><h2><span class="t"><span>Centro Medico</span></span><em>${INJ?"ESPN · agg. "+new Date(INJt).toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}):"carico…"}</em></h2>
- <div class="chips ichips">${TEAMS.map(x=>`<button class="chip ichip" data-it="${x.id}" aria-pressed="${G.it===x.id}"><span class="badge logo lg-${x.id}"></span>${e(nick(x))}${cnt[x.id]?`<b class="icnt">${cnt[x.id]}</b>`:""}</button>`).join("")}</div>
- ${G.it?"":`<div class="ipick">Tocca una squadra per vedere solo i suoi giocatori.</div>`}
- ${out.length?`<section class="igrp"><h4 class="ih out"><span>Out</span></h4><div class="tbl-wrap ilist">${out.map(row).join("")}</div></section>`:""}
- ${dub.length?`<section class="igrp"><h4 class="ih q"><span>In dubbio · giorno per giorno</span></h4><div class="tbl-wrap ilist">${dub.map(row).join("")}</div></section>`:""}
- ${INJ&&!L.length?`<p class="note">Nessun infortunato.</p>`:""}`}
+/* (30) CENTRO MEDICO come Dreamers: chip squadre, scegli una squadra → intestazione, conteggi per stato, gruppi
+   (Fuori / In dubbio / In forse / Probabile / Giorno per giorno) e per ogni giocatore il MANICHINO con la zona colpita (bodyMap di Dreamers).
+   Dati: infortuni ESPN live (se il telefono non li raggiunge, quelli scaricati da GitHub in espn-data.js). Descrizione tradotta in italiano. */
+const STATI={out:["Out","Fuori"],dubbio:["Doubtful","In dubbio"],quest:["Questionable","In forse"],prob:["Probable","Probabile"],dtd:["Day-to-day","Giorno per giorno"]};
+const stOf=s=>{s=String(s).toLowerCase();return/out|suspen/.test(s)?"out":/doubt/.test(s)?"dubbio":/question/.test(s)?"quest":/probab/.test(s)?"prob":"dtd"};
+/* parti del corpo ESPN → italiano (f = femminile, per l aggettivo destro/destra) */
+const PARTI={ankle:["Caviglia",1],knee:["Ginocchio"],hamstring:["Bicipite femorale"],calf:["Polpaccio"],foot:["Piede"],toe:["Dito del piede"],back:["Schiena",1],"lower back":["Zona lombare",1],hip:["Anca",1],groin:["Inguine"],
+ shoulder:["Spalla",1],wrist:["Polso"],hand:["Mano",1],finger:["Dito della mano"],thumb:["Pollice"],elbow:["Gomito"],achilles:["Tendine d'Achille"],concussion:["Commozione cerebrale",1],illness:["Malattia",1],rest:["Riposo"],
+ personal:["Motivi personali"],quadriceps:["Quadricipite"],quad:["Quadricipite"],thigh:["Coscia",1],shin:["Tibia",1],tibia:["Tibia",1],fibula:["Perone"],head:["Testa",1],neck:["Collo"],chest:["Petto"],ribs:["Costole",1],rib:["Costola",1],
+ abdomen:["Addome"],abdominal:["Addome"],oblique:["Obliquo"],face:["Viso"],nose:["Naso"],eye:["Occhio"],heel:["Tallone"],"plantar fascia":["Fascia plantare",1],"lower leg":["Gamba",1],leg:["Gamba",1],glute:["Gluteo"],
+ adductor:["Adduttore"],pelvis:["Bacino"],suspension:["Squalifica",1],"not injury related":["Non legato a infortunio"],undisclosed:["Non comunicato"],jaw:["Mascella",1],forearm:["Avambraccio"],arm:["Braccio"],
+ biceps:["Bicipite"],triceps:["Tricipite"],patella:["Rotula",1],sternum:["Sterno"],spine:["Colonna vertebrale",1],kidney:["Rene"],appendix:["Appendice",1],mouth:["Bocca",1],lisfranc:["Lisfranc"],"g league":["G League (assegnato)"]};
+const DETT={sprain:"distorsione",strain:"stiramento",soreness:"fastidio",contusion:"contusione",fracture:"frattura",tear:"lesione",tendinitis:"tendinite",tendinopathy:"tendinopatia",inflammation:"infiammazione",
+ surgery:"operazione",bruise:"contusione",spasms:"spasmi",tightness:"rigidità",dislocation:"lussazione",impingement:"conflitto",bursitis:"borsite",laceration:"lacerazione",hyperextension:"iperestensione",
+ "torn ligament":"lesione al legamento",rupture:"rottura",injury:"infortunio","general soreness":"indolenzimento",management:"gestione dei carichi",recovery:"recupero",effusion:"versamento"};
+function tipoIt(x){const k=String(x.tipo||"").toLowerCase(),P=PARTI[k],side=String(x.side||"").toLowerCase(),d=String(x.det||"").toLowerCase();
+ let t=P?P[0]:(x.tipo||"Infortunio");if(P&&/left|right/.test(side)&&!/malattia|riposo|motivi|squalifica|commozione|non /i.test(t))t+=" "+(side==="left"?(P[1]?"sinistra":"sinistro"):(P[1]?"destra":"destro"));
+ if(d)t+=" ("+(DETT[d]||d)+")";return t}
+/* manichino di Dreamers: evidenzia la zona del corpo letta dalla descrizione (destra = lato sinistro del disegno, vista frontale) */
+function bodyMap(tipo,stato){
+  const t=(tipo||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+  const Z=[["head",/\b(?:testa|commozione|concussion|naso|nasal|viso|occhi|mascell|faccia)/],["neck",/\b(?:collo|neck)/],["shoulder",/\b(?:spall|shoulder|rotator|cuffia|clavicol)/],
+   ["elbow",/\b(?:gomit|elbow)/],["wrist",/\b(?:polso|wrist)/],["hand",/\b(?:mano|dito della mano|finger|thumb|pollic|hand)/],["chest",/\b(?:petto|costol|rib|pettoral|chest|sterno)/],
+   ["abs",/\b(?:obliq|addom|abdom|core)/],["back",/\b(?:schiena|back|lomb|sciatic|spina|vertebr)/],["hip",/\b(?:anca|hip|bacino|ingui|groin|addutt|glute)/],
+   ["thigh",/\b(?:coscia|quadric|quad|hamstring|bicipite femorale|flessor|femor)/],["knee",/\b(?:ginocch|knee|menisc|rotul|patell|acl|crociat|mcl|lca)/],
+   ["shin",/\b(?:polpacc|calf|tibia|shin|perone|stinco|gamba)/],["ankle",/\b(?:caviglia|ankle|achill)/],["foot",/\b(?:piede|foot|tallon|heel|plantar|alluce|toe|lisfranc|metatars)/]];
+  const hit=Z.filter(([k,r])=>r.test(t)).map(z=>z[0]);
+  /* malattie che colpiscono tutto il corpo (influenza, virus, malattia): manichino interamente colorato */
+  const all=!hit.length&&/\b(?:malatti|illness|pots|influenz|flu\b|virus|virale|febbre|fever|malore|gastro|covid|sindrom|disidrat)/.test(t);
+  const R=/destr|right/.test(t),L=/sinistr|left/.test(t),sides=R&&!L?["R"]:L&&!R?["L"]:["R","L"];
+  const col={out:"#ef4444",dubbio:"#f97316",quest:"#f5b400",prob:"#84cc16",dtd:"#93a3c8",ok:"#22c55e"}[stato]||"#ef4444";
+  const X=(x,s)=>s==="R"?x:40-x;
+  const shp={head:s=>`<circle cx="20" cy="7" r="5"/>`,neck:s=>`<rect x="18" y="11.5" width="4" height="4"/>`,
+   shoulder:s=>`<circle cx="${X(11.5,s)}" cy="17.5" r="3"/>`,elbow:s=>`<circle cx="${X(9,s)}" cy="29" r="3"/>`,wrist:s=>`<circle cx="${X(9,s)}" cy="39.5" r="2.8"/>`,
+   hand:s=>`<circle cx="${X(9,s)}" cy="43" r="3"/>`,chest:s=>`<rect x="13.5" y="16" width="13" height="9" rx="2"/>`,abs:s=>`<rect x="${s==="R"?14:20}" y="25" width="6" height="10" rx="1.5"/>`,
+   back:s=>`<rect x="14.5" y="27" width="11" height="9" rx="2"/>`,hip:s=>`<rect x="${s==="R"?13.5:20}" y="35" width="6.5" height="6" rx="2"/>`,
+   thigh:s=>`<rect x="${X(13.5,s)-(s==="R"?0:5.5)}" y="42" width="5.5" height="14" rx="2.5"/>`,knee:s=>`<circle cx="${X(16.2,s)}" cy="58" r="3.4"/>`,
+   shin:s=>`<rect x="${X(14,s)-(s==="R"?0:4.5)}" y="60.5" width="4.5" height="11" rx="2"/>`,ankle:s=>`<circle cx="${X(16.2,s)}" cy="73" r="3.2"/>`,
+   foot:s=>`<ellipse cx="${X(15.6,s)}" cy="76.6" rx="3.8" ry="2.4"/>`};
+  const bodySide=s=>`<rect x="${s==="R"?7.3:29.3}" y="16" width="3.4" height="13" rx="1.7"/><rect x="${s==="R"?7.6:29.6}" y="29" width="2.8" height="11" rx="1.4"/><circle cx="${X(9,s)}" cy="43" r="2.1"/>
+   <rect x="${s==="R"?13.5:21}" y="41" width="5.5" height="17" rx="2.6"/><rect x="${s==="R"?14:21.5}" y="57" width="4.5" height="16" rx="2.2"/><ellipse cx="${X(15.6,s)}" cy="76.6" rx="3" ry="1.6"/>`;
+  const base=`<g fill="${all?col:"#55669a"}"${all?` style="filter:drop-shadow(0 0 2.5px ${col})"`:""}><circle cx="20" cy="7" r="4.6"/><rect x="18.2" y="11" width="3.6" height="4.5"/><path d="M11 16 Q20 13.5 29 16 L27.5 36 Q20 39 12.5 36 Z"/>${bodySide("R")}${bodySide("L")}</g>`;
+  const hl=hit.length?`<g fill="${col}" style="filter:drop-shadow(0 0 2.5px ${col})" stroke="#fff" stroke-width=".6">${hit.map(k=>["head","neck","chest","back"].includes(k)?shp[k]("R"):sides.map(sd=>shp[k](sd)).join("")).join("")}</g>`:"";
+  return `<svg class="bmap" viewBox="0 0 40 80" role="img" aria-label="${hit.length?"Zona: "+e(tipo):all?"Tutto il corpo: "+e(tipo):"Nessuna zona specifica"}">${base}${hl}</svg>`}
+const dd=s=>{if(!s)return"";const d=new Date(s);return isNaN(d)?"":d.toLocaleDateString("it-IT",{day:"2-digit",month:"2-digit",timeZone:"America/New_York"})};
+async function injLoad(){if(INJ&&Date.now()-INJt<10*60e3)return;try{const r=await fetch("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;const J=await r.json();const L=[];
+ for(const tm of J.injuries||[])for(const x of tm.injuries||[]){const a=x.athlete||{},D=x.details||{};L.push({n:a.displayName||"",nba:(a.team&&a.team.abbreviation)||"",st:x.status||"",d:(x.shortComment||x.longComment||""),date:x.date||"",tipo:D.type||"",rit:D.returnDate||"",side:D.side||"",det:D.detail||""})}
+ INJ=L;INJt=Date.now();if(cur==="inf")render()}catch(_){/* se ESPN non risponde dal telefono si usano gli infortuni scaricati da GitHub (espn-data.js) */if(!INJ&&ESPN.inj){INJ=ESPN.inj.map(x=>({n:x[0],nba:x[1],st:x[2],d:x[3],tipo:x[4],rit:x[5],side:x[6]||"",det:x[7]||"",date:x[8]||""}));INJt=Date.now();if(cur==="inf")render()}}}
+function vInf(){injLoad();const all=(INJ||[]).map(x=>({...x,t:own(x.n),k:stOf(x.st)})).filter(x=>x.t);const cnt={};all.forEach(x=>cnt[x.t]=(cnt[x.t]||0)+1);
+ const wedge=t=>`<span class="wedge" style="--tc:${TCOL[t]}"><span class="badge logo lg-${t}"></span></span>`;
+ const chips=`<div class="chips ichips">${TEAMS.map(x=>`<button class="chip ichip" data-it="${x.id}" aria-pressed="${G.it===x.id}"><span class="badge logo lg-${x.id}"></span>${e(nick(x))}${cnt[x.id]?`<b class="icnt">${cnt[x.id]}</b>`:""}</button>`).join("")}</div>`;
+ const head=`<button class="gback" data-go="home">‹ Home</button><h2><span class="t"><span>Centro Medico</span></span><em>${INJ?"Agg. "+new Date(INJt).toLocaleDateString("it-IT",{day:"2-digit",month:"2-digit",year:"numeric"})+" · "+new Date(INJt).toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}):"carico…"}</em></h2>`;
+ if(!G.it)return head+chips+`<div class="ipick">Scegli una squadra per vedere i suoi giocatori in infermeria.</div><p class="note">Fonte: ESPN – NBA Injuries (aggiornato in automatico).</p>`;
+ const t=TM[G.it],L=all.filter(x=>x.t===G.it),groups=Object.keys(STATI).map(k=>[k,L.filter(x=>x.k===k)]).filter(([k,l])=>l.length);
+ const row=x=>{const ti=tipoIt(x),rit=dd(x.rit);return `<div class="irow ${x.k}" data-pl="${e(x.n)}">${wedge(x.t)}<div class="ib"><div class="it"><b>${e(x.n)}</b><span class="ipill ${x.k}">${STATI[x.k][0]}</span></div><small>${e(nick(t))} · ${x.nba}</small><p>${e(ti)}${rit?` · <em>ESPN: rientro stimato ${rit}</em>`:""}</p><div class="isrc"><span>ESPN</span>${x.date?`<span>${dd(x.date)}</span>`:""}</div></div>${bodyMap(ti+" "+x.tipo+" "+(x.side||""),x.k)}</div>`};
+ return head+chips+`<div class="ihead" style="--tc:${TCOL[G.it]}"><span class="badge logo lg-${G.it}"></span><b>${e(t.nome)}</b></div>
+  <div class="isum">${Object.keys(STATI).map(k=>`<span class="ipill ${k}">${STATI[k][0]} <b>${L.filter(x=>x.k===k).length}</b></span>`).join("")}</div>
+  ${groups.length?groups.map(([k,l])=>`<section class="igrp"><h4 class="ih ${k}"><span>${STATI[k][1]}</span></h4><div class="tbl-wrap ilist">${l.map(row).join("")}</div></section>`).join(""):`<div class="iok">✓ Nessun giocatore segnalato: rosa al completo.</div>`}
+  <p class="note">Fonte: ESPN – NBA Injuries (aggiornato in automatico). Il manichino colora la zona dell infortunio (destra = lato sinistro del disegno, vista frontale); tutto colorato = malattia.</p>`}
 /* ---------- REGOLAMENTO ---------- */
 function vReg(){const art=(n,t,b)=>`<details class="rart"${n===1?" open":""}><summary><span class="rn">${String(n).padStart(2,"0")}</span><span class="rt">${t}<small>Articolo ${n}</small></span></summary><div class="rbody">${b}</div></details>`;
  return `<button class="gback" data-go="home">‹ Home</button><h2><span class="t"><span>Regolamento</span></span><em>FantaBasket USA due palle</em></h2>

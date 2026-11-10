@@ -327,7 +327,7 @@ function etaOf(n){const d=nascOf(n);if(!d)return null;const t=new Date(),b=new D
 const etaTxt=n=>{const a=etaOf(n);return a==null?"":a+" anni"};
 const u25=n=>{const a=etaOf(n);return a!=null&&a<25};
 /* (6) colore di ogni squadra (dal logo), usato come in Dreamers per grafici, intestazioni squadra e righe */
-const /* (29) sfondi loghi presi dai colori dei loghi nuovi, un po più chiari */TCOL={DET:"#2b4fa8",CLE:"#6d3fc0",BOS:"#b5531f",NYS:"#c2410c",QUE:"#6d28d9",CHA:"#b45309",NYP:"#2a62c4",CAN:"#0f766e",HOU:"#ea580c",LVA:"#3d4a6e",HON:"#2f6fa8",ALB:"#7f1d1d",ALA:"#1d4ed8",WIC:"#565e6e",FAL:"#1e3a8a",SRO:"#34507a"};
+const /* (29) sfondi loghi presi dai colori dei loghi nuovi, un po più chiari */TCOL={DET:"#2b4fa8",CLE:"#8a5a3c",BOS:"#b5531f",NYS:"#c2410c",QUE:"#6d28d9",CHA:"#b45309",NYP:"#2a62c4",CAN:"#0f766e",HOU:"#ea580c",LVA:"#3d4a6e",HON:"#2f6fa8",ALB:"#7f1d1d",ALA:"#1d4ed8",WIC:"#565e6e",FAL:"#1e3a8a",SRO:"#34507a"};
 /* vittorie/sconfitte dagli screenshot ESPN (finché la lega non è collegata). pf/pa = punti fatti/subiti, se noti */
 const REC={DET:{w:2,l:1,pf:0,pa:0},CLE:{w:2,l:1,pf:0,pa:0},BOS:{w:2,l:1,pf:0,pa:0},NYS:{w:1,l:2,pf:0,pa:0},QUE:{w:1,l:2,pf:0,pa:0},CHA:{w:0,l:3,pf:0,pa:0},NYP:{w:0,l:3,pf:0,pa:0},CAN:{w:0,l:3,pf:0,pa:0},HOU:{w:3,l:0,pf:0,pa:0},LVA:{w:3,l:0,pf:0,pa:0},HON:{w:3,l:0,pf:0,pa:0},ALB:{w:2,l:1,pf:0,pa:0},ALA:{w:2,l:1,pf:0,pa:0},WIC:{w:1,l:2,pf:0,pa:0},FAL:{w:1,l:2,pf:0,pa:0},SRO:{w:1,l:2,pf:0,pa:0}};
 /* ===== ROSE dagli screenshot ESPN. [nome completo come nei tabellini ESPN, squadra NBA, slot in formazione ESPN, ruoli ESPN]

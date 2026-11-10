@@ -88,7 +88,7 @@ for (const d of days) {
 }
 /* infortuni NBA (Centro Medico): [nome, squadra NBA, stato, commento, tipo, data rientro] */
 try { const J = await get("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries"); ESPN.inj = [];
-  for (const tm of J.injuries || []) for (const x of tm.injuries || []) { const a = x.athlete || {}; ESPN.inj.push([a.displayName || "", (a.team && a.team.abbreviation) || "", x.status || "", x.shortComment || x.longComment || "", (x.details && x.details.type) || "", (x.details && x.details.returnDate) || ""]) }
+  for (const tm of J.injuries || []) for (const x of tm.injuries || []) { const a = x.athlete || {}; ESPN.inj.push([a.displayName || "", (a.team && a.team.abbreviation) || "", x.status || "", x.shortComment || x.longComment || "", (x.details && x.details.type) || "", (x.details && x.details.returnDate) || "", (x.details && x.details.side) || "", (x.details && x.details.detail) || "", x.date || ""]) }
 } catch (e) { if (OLD.inj) ESPN.inj = OLD.inj }
 ESPN.upd = new Intl.DateTimeFormat("it-IT", { timeZone: "Europe/Rome", dateStyle: "short", timeStyle: "short" }).format(new Date());
 writeFileSync(OUT, "/* ESPN 16 – generato da tools/espn.mjs (GitHub), non modificare a mano */\nconst ESPN=" + JSON.stringify(ESPN) + ";\n");

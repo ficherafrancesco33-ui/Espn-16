@@ -2306,3 +2306,29 @@ html:not(.notte) body[data-ct="DOL"] .gd.gbar:not(#zz) i:not(.ok):not(.lv):not(.
 .badge.logo.lg-SRO,.faglb.logo.lg-SRO,.tvob.logo.lg-SRO{background-image:url("loghi/sro.png?v=29")!important;background-size:contain!important;background-repeat:no-repeat!important;background-position:center!important;border-radius:0!important;background-color:transparent!important}
 /* (27) tabellino Dynasty TV: AVG 50+ viola come Dreamers (regola mancante nell estrazione) */
 .tvbox td.pdkl.pv .pdkb { background: rgb(139, 92, 246); color: rgb(255, 255, 255); }
+
+/* (30) Centro Medico come Dreamers: regole estratte (manichino bmap, ihead, isum, pillole stato) */
+.isum { display: flex; flex-wrap: wrap; gap: 6px; margin: -2px 0px 16px; }
+.ipill b { font-size: 14px; }
+.ipill.out { background: var(--loss); }
+.ipill.dubbio { background: rgb(249, 115, 22); }
+.ipill.quest { background: var(--gold); color: rgb(10, 15, 31); }
+.ipill.prob { background: rgb(132, 204, 22); color: rgb(10, 31, 4); }
+.ipill.dtd { background: rgb(91, 107, 149); }
+.ih.out { border-color: var(--loss); }
+.ib p em { color: var(--gold); font-style: normal; }
+.ib p.inote { color: rgb(249, 115, 22); font-size: 12.5px; }
+.isrc { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+.isrc span { font-size: 10.5px; font-family: var(--display); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: rgb(207, 214, 234); background: rgba(255, 255, 255, 0.07); padding: 0px 6px; }
+.ihead { display: flex; align-items: center; gap: 10px; padding: 8px 12px; margin-bottom: 12px; background: linear-gradient(115deg,var(--tc),color-mix(in srgb,var(--tc) 50%,#000)); color: rgb(255, 255, 255); }
+.ihead .badge { width: 34px; height: 34px; }
+.ihead b { font-family: var(--display); font-style: italic; font-weight: 800; font-size: 18px; text-transform: uppercase; text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px; }
+.irow .bmap { flex: 0 0 auto; width: 42px; height: 84px; align-self: center; margin: 6px 10px 6px 0px; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="infortuni"] .view > .ihead > .lg-DUC { scale: 1 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="infortuni"] .view > .ihead > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="infortuni"] .view > .ihead > .lg-DUC { scale: 1.05 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+
+.ih.dubbio{border-color:#f97316}
+.ih.quest{border-color:var(--gold)}
+.ih.prob{border-color:#84cc16}
+.ih.dtd{border-color:#5b6b95}
