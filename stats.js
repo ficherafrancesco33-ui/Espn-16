@@ -330,7 +330,28 @@ function vComp(){const ok=needOld();const names=[...new Set(all().map(x=>x.n))].
 /* ===== collegamento con l app ===== */
 window.e16ResetStats=()=>{ALL=null;SPZ=null};
 (window.NAVX=window.NAVX||[]).push({k:"st",get:()=>({pl:ST.pl,back:ST.back,pa:ST.pa,pb:ST.pb,psz:ST.psz}),set:o=>Object.assign(ST,o)});
-window.STATV={stat:vHub,sgioc:vGioc,ssq:vSq,ssql:vSqList,gioc:vPl,grafico:vGraf,comp:vComp};
+/* ===== (44) FREE AGENT (Centro gestione › Free agent): i giocatori liberi della lega ESPN (LEGA.fa, i più posseduti nelle leghe ESPN)
+   con AVG, partite e minuti della stagione scelta, prezzo di listino (listino-data.js) e se entra nel cap libero dei Ducks.
+   Come il resto delle Statistiche: di base solo la stagione in corso; 24/25 e 25/26 solo con il tasto segreto Ducks (DAXS). */
+const FA={sz:"2627",sort:"avg",q:""};
+function vFa(){const ok=needOld(),dax=DAXS(),SZ=dax?[["2627","26/27"],["2526","25/26"],["2425","24/25"]]:[["2627","26/27"]];if(!SZ.some(x=>x[0]===FA.sz))FA.sz="2627";
+ const L0=(typeof LEGA!=="undefined"&&LEGA.fa)||[],LI={};try{for(const k in LISTINO)LI[nrm(k)]=LISTINO[k][0]}catch(_){}
+ const lib=(()=>{try{const C=CAP.QUE;return C.libero!=null?C.libero:CAP_TOT-(C.occ[0]||0)-(C.tagli||0)}catch(_){return null}})();
+ let L=L0.filter(x=>!ownOf(x[0])).map(x=>{const G=gamesOf(x[0]).filter(y=>y.s===FA.sz),gp=G.length,f=G.reduce((a,y)=>a+y.f,0),m=G.reduce((a,y)=>a+y.m,0);return{n:x[0],t:x[1],pos:x[2],own:x[3],inj:x[4],gp,avg:gp?f/gp:0,min:gp?m/gp:0,pr:LI[nrm(x[0])]}});
+ const q=nrm(FA.q);if(q)L=L.filter(x=>nrm(x.n).includes(q)||nrm(x.t)===q);
+ const K={avg:x=>x.avg,own:x=>x.own,pr:x=>x.pr==null?-1:x.pr}[FA.sort];L.sort((a,b)=>K(b)-K(a)||b.avg-a.avg);
+ const inj=v=>/OUT/i.test(v)?`<span class="fainj o">OUT</span>`:/DAY|QUESTION|DOUBT|GTD/i.test(v)?`<span class="fainj q">DTD</span>`:"";
+ const row=(x,i)=>`<tr class="farow" data-pl="${e(x.n)}"><td class="fark">${i+1}</td><td class="fanm"><b>${e(shortN(x.n).replace(". ","."))}</b>${inj(x.inj)}<small><img class="fanba" src="loghi/nba/${String(x.t).toLowerCase()}.svg" alt="">${x.t} · ${e(x.pos)} · ${String(x.own).replace(".",",")}% posseduto</small></td><td>${x.gp||"–"}</td><td>${x.gp?f1(x.min):"–"}</td><td class="fapdk">${x.gp?`<span class="pdkx ${gvC(x.avg)}">${f1(x.avg)}</span>`:"–"}</td><td class="fapr">${x.pr!=null?`${f1(x.pr)}<i class="${lib!=null&&x.pr<=lib?"ok":"no"}">${lib!=null&&x.pr<=lib?"✓":"✕"}</i>`:"–"}</td></tr>`;
+ return `<button class="gback" data-go="home">‹ Home</button><h2><span class="t"><span>Free agent</span></span><em>${L.length} liberi · ESPN ${typeof LEGA!=="undefined"?e(LEGA.upd):""}</em></h2>
+ <input id="faq" class="vtq" type="search" placeholder="🔍 Cerca un free agent o una squadra NBA" autocomplete="off" value="${e(FA.q)}">
+ <div class="chips esqm">${[["avg","AVG"],["own","% posseduto"],["pr","Prezzo"]].map(([k,l])=>`<button class="chip" data-fas="${k}" aria-pressed="${FA.sort===k}">${l}</button>`).join("")}${dax?`<label class="szchip" aria-pressed="true"><select data-fasz="1">${SZ.map(([k,l])=>`<option value="${k}"${k===FA.sz?" selected":""}>Stagione ${l}</option>`).join("")}</select></label>`:""}</div>
+ ${ok?"":`<p class="note">Carico le stagioni passate…</p>`}
+ <div class="tbl-wrap"><table class="fatbl e16fa"><thead><tr><th>#</th><th>Giocatore</th><th>PG</th><th>Min</th><th>AVG</th><th>Prezzo</th></tr></thead><tbody>${L.slice(0,200).map(row).join("")||`<tr><td colspan="6">Nessun free agent.</td></tr>`}</tbody></table></div>
+ <p class="note">Free agent della lega ESPN (aggiornati in automatico). AVG, partite e minuti della stagione ${SZ.find(x=>x[0]===FA.sz)[1]}. Prezzo = listino della lega (costo all anno per firmarlo); ✓ = entra nel cap libero dei Ducks (${lib!=null?f1(lib):"–"} cr). Tocca un nome per il profilo.</p>`}
+document.addEventListener("click",ev=>{const b=ev.target.closest("[data-fas]");if(!b||cur!=="fag")return;FA.sort=b.dataset.fas;render()});
+document.addEventListener("change",ev=>{if(ev.target.dataset&&ev.target.dataset.fasz&&cur==="fag"){FA.sz=ev.target.value;render()}});
+document.addEventListener("input",ev=>{if(ev.target.id!=="faq")return;FA.q=ev.target.value;const p=ev.target.selectionStart;render();const i=document.getElementById("faq");if(i){i.focus();try{i.setSelectionRange(p,p)}catch(_){}}});
+window.STATV={fag:vFa,stat:vHub,sgioc:vGioc,ssq:vSq,ssql:vSqList,gioc:vPl,grafico:vGraf,comp:vComp};
 document.addEventListener("click",ev=>{/* (35) profilo: «Condividi» apre il foglio di scelta, «📈 Grafico» apre la pagina del grafico */const sh=ev.target.closest("[data-plsh]");if(sh&&cur==="gioc"){ev.preventDefault();ev.stopPropagation();plShAsk();return}
  const gr=ev.target.closest("[data-plgr]");if(gr&&cur==="gioc"){ev.preventDefault();ev.stopPropagation();cur="grafico";PEROPEN=false;render();scrollTo(0,0);return}
  const c=ev.target.closest("[data-sv],[data-pr],[data-ss],[data-box],[data-sq],[data-pl],[data-per],[data-met],[data-cmp],[data-peropen],[data-snd],[data-avgr]");if(!c||!window.STATV[cur]&&!c.dataset.pl)return;

@@ -22,14 +22,16 @@ jobs:
           node-version: 20
       - name: Scarica i tabellini ESPN
         run: node tools/espn.mjs
+      - name: Lega ESPN (rose, formazioni del lunedì, punteggi, free agent, scambi)
+        run: node tools/lega.mjs || true
       - name: Date di nascita (età)
         run: node tools/eta.mjs || true
       - name: Salva se ci sono novità
         run: |
           git config user.name "espn-bot"
           git config user.email "espn-bot@users.noreply.github.com"
-          if git diff --quiet -- espn-data.js eta-data.js; then echo "Nessuna novità"; exit 0; fi
-          git add espn-data.js eta-data.js
+          if git diff --quiet -- espn-data.js eta-data.js lega-data.js; then echo "Nessuna novità"; exit 0; fi
+          git add espn-data.js eta-data.js lega-data.js
           git commit -m "Dati ESPN aggiornati [automatico]"
           for i in 1 2 3; do git pull --rebase -X theirs origin main && git push origin HEAD:main && exit 0; sleep 5; done
           exit 1
