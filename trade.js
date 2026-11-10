@@ -21,9 +21,57 @@ function strength(){const S={};let mx=0;for(const t of TEAMS){const v=(ROSE[t.id
  const ord=TEAMS.slice().sort((a,b)=>R[b.id]-R[a.id]);const rank={};ord.forEach((t,i)=>rank[t.id]=i+1);return{S,rank}}
 let STR=null;const str=()=>STR||(STR=strength());
 const PICKV=(r,slot)=>r===1?1500*Math.exp(-.11*(slot-1)):r===2?280*Math.exp(-.075*(slot-1)):60*Math.exp(-.06*(slot-1));
-function pickInfo(p){/* p = [anno, giro, squadra d origine, nota] */const R=str().rank[p[2]]||8.5,slot0=17-R,k=Math.min(.75,Math.max(0,(p[0]-2027)*.25)),slot=slot0*(1-k)+8.5*k;
- const v=PICKV(p[1],slot)*Math.pow(.92,Math.max(0,p[0]-2027));const s=Math.max(1,Math.min(16,Math.round(slot)));
- const q=slot<=4?"alta":slot<=10?"media":"bassa";return{slot:s,q,v:Math.round(v/5)*5}}
+/* (34) PROTEZIONI E SWAP DELLE SCELTE (regole NBA, dal file della lega):
+   - Protetta TOP N: se la scelta finisce tra le prime N resta alla squadra che l ha protetta; altrimenti passa a chi la detiene.
+     Protetta lottery = prime 6 (le 10 squadre ai playoff scelgono dopo). Per chi la riceve vale meno (può non arrivare).
+   - Swap «scambia migliori»: chi ha il diritto prende la scelta migliore (numero più basso) tra la sua e quella dell altra squadra;
+     «scambia peggiori»: l altra squadra sceglie per prima e a te resta la peggiore. A 3 squadre: la prima prende la migliore, poi la seconda…
+   Valore: si simula l ordine del Draft 4000 volte (ogni squadra intorno alla sua posizione prevista, più incerta negli anni lontani),
+   si applica la regola e si confronta con la stessa scelta senza regole: valore = valore normale × (media con regola / media senza).
+   PKRULE: chiave "squadra che la detiene|anno|giro|squadra d origine" → f(slots) = numero di scelta che arriva (null = non arriva) e testo. */
+const LOTT=6;
+const rk=(S,T,i)=>T.map(t=>S[t]).sort((a,b)=>a-b)[i];
+const PKRULE={
+ "CAN|2027|1|CAN":{f:S=>{const s=rk(S,["CAN","ALA","SRO"],0);return s<=LOTT?s:null},t:"Swap: prende la migliore tra Mayans, Whales e Pirates. Protetta lottery: resta ai Mayans solo se è tra le prime 6, altrimenti va ai Samb."},
+ "NYS|2027|1|CAN":{f:S=>{const s=rk(S,["CAN","ALA","SRO"],0);return s>LOTT?s:null},t:"È la scelta dei Mayans dopo lo swap con Whales (e Pirates): protetta lottery, arriva ai Samb solo se NON è tra le prime 6."},
+ "SRO|2027|1|SRO":{f:S=>rk(S,["CAN","ALA","SRO"],1),t:"Swap a 3: i Mayans prendono la migliore tra Mayans, Pirates e Whales; ai Pirates la seconda (migliore dei Whales, peggiore dei Mayans)."},
+ "ALA|2027|1|ALA":{f:S=>rk(S,["CAN","ALA","SRO"],2),t:"Swap a 3 con Mayans e Pirates: ai Whales resta la peggiore delle tre scelte."},
+ "LVA|2027|1|ALB":{f:S=>rk(S,["ALB","FAL"],0),t:"Swap: agli Aliens va la migliore tra la scelta dei Bluesky e quella dei Mavericks."},
+ "ALB|2027|1|ALB":{f:S=>rk(S,["ALB","FAL"],1),t:"Swap con i Mavericks: ai Bluesky resta la peggiore delle due (la migliore va agli Aliens)."},
+ "HOU|2027|1|HOU":{f:S=>rk(S,["HOU","CHA"],0),t:"Swap: gli Orange Lions prendono la migliore tra la loro scelta e quella dei Cougars."},
+ "CHA|2027|1|CHA":{f:S=>rk(S,["HOU","CHA"],1),t:"Swap con gli Orange Lions: ai Cougars resta la peggiore delle due."},
+ "CAN|2028|1|CAN":{f:S=>rk(S,["CAN","CHA"],0),t:"Swap: i Mayans prendono la migliore tra la loro scelta e quella dei Cougars."},
+ "CHA|2028|1|CHA":{f:S=>rk(S,["CAN","CHA"],1),t:"Swap con i Mayans: ai Cougars resta la peggiore delle due."},
+ "BOS|2028|1|CLE":{f:S=>S.CLE>3?S.CLE:null,t:"Protetta TOP 3: se la scelta dei Cadavers finisce tra le prime 3 resta ai Mayans, altrimenti arriva ai TeaBags."},
+ "CAN|2029|1|CAN":{f:S=>rk(S,["CAN","ALA","NYS"],0),t:"Swap a 3: i Mayans prendono la migliore tra la loro scelta, quella dei Whales e quella dei Samb."},
+ "ALA|2029|1|ALA":{f:S=>{const m=rk(S,["CAN","ALA","NYS"],0);return m===S.ALA?S.CAN:S.ALA},t:"Swap con i Mayans: se la scelta dei Whales è la migliore delle tre (Mayans, Whales, Samb), i Mayans la prendono e ai Whales va quella dei Mayans."},
+ "NYS|2029|1|NYS":{f:S=>{const m=rk(S,["CAN","ALA","NYS"],0);return m===S.NYS?S.CAN:S.NYS},t:"Swap con i Mayans: se la scelta dei Samb è la migliore delle tre (Mayans, Whales, Samb), i Mayans la prendono e ai Samb va quella dei Mayans."},
+ "ALB|2029|1|BOS":{f:S=>S.BOS>3?S.BOS:null,t:"Protetta TOP 3: se la scelta dei TeaBags finisce tra le prime 3 resta ai TeaBags, altrimenti arriva ai Bluesky."},
+ "BOS|2029|1|BOS":{f:S=>S.BOS<=3?S.BOS:null,t:"Riserva TOP 3: i TeaBags la tengono solo se finisce tra le prime 3, altrimenti va ai Bluesky."},
+ "CAN|2030|1|CAN":{f:S=>rk(S,["CAN","ALB","LVA"],0),t:"Swap a 3: i Mayans prendono la migliore tra Mayans, Bluesky e Aliens."},
+ "ALB|2030|1|ALB":{f:S=>rk(S,["CAN","ALB","LVA"],1),t:"Swap a 3: i Mayans prendono la migliore, i Bluesky la migliore tra le due che restano (meglio degli Aliens)."},
+ "LVA|2030|1|LVA":{f:S=>rk(S,["CAN","ALB","LVA"],2),t:"Swap a 3 con Mayans e Bluesky: agli Aliens resta la peggiore delle tre."},
+ "QUE|2030|1|ALA":{f:S=>rk(S,["ALA","CAN"],1),t:"Scelta dei Whales con swap messo dai Mayans: ai Ducks arriva la peggiore tra quella dei Whales e quella dei Mayans."},
+ "BOS|2030|1|BOS":{f:S=>rk(S,["BOS","HOU","CHA"],0),t:"Swap a 3: i TeaBags prendono la migliore tra TeaBags, Orange Lions e Cougars."},
+ "HOU|2030|1|HOU":{f:S=>rk(S,["BOS","HOU","CHA"],1),t:"Swap a 3: i TeaBags prendono la migliore, gli Orange Lions la migliore tra le due che restano (meglio dei Cougars)."},
+ "CHA|2030|1|CHA":{f:S=>rk(S,["BOS","HOU","CHA"],2),t:"Swap a 3 con Orange Lions e TeaBags: ai Cougars resta la peggiore delle tre."},
+ "CAN|2031|1|CAN":{f:S=>rk(S,["CAN","NYS"],0),t:"Swap: i Mayans prendono la migliore tra la loro scelta e quella dei Samb."},
+ "NYS|2031|1|NYS":{f:S=>rk(S,["CAN","NYS"],1),t:"Swap con i Mayans: ai Samb resta la peggiore delle due."}};
+/* ordine del Draft simulato (seme fisso: stessi numeri a ogni apertura) */
+let SIMC={},PKMEMO={};function simDraft(y){if(SIMC[y])return SIMC[y];let sd=1234567+y;const rnd=()=>{sd=(sd*16807)%2147483647;return sd/2147483647};
+ const gau=()=>{let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+ const k=Math.min(.75,Math.max(0,(y-2027)*.25)),sdv=2.2+1.8*Math.max(0,y-2027),E={};for(const t of TEAMS){const R=str().rank[t.id]||8.5;E[t.id]=(17-R)*(1-k)+8.5*k}
+ const L=[];for(let i=0;i<4000;i++){const sc=TEAMS.map(t=>[t.id,E[t.id]+gau()*sdv]).sort((a,b)=>a[1]-b[1]),S={};sc.forEach((x,j)=>S[x[0]]=j+1);L.push(S)}return SIMC[y]=L}
+const ruleOf=(h,p)=>PKRULE[h+"|"+p[0]+"|"+p[1]+"|"+p[2]];
+function pickInfo(p,holder){/* p = [anno, giro, squadra d origine, nota]; holder = squadra che la detiene (per protezioni e swap) */const R=str().rank[p[2]]||8.5,slot0=17-R,k=Math.min(.75,Math.max(0,(p[0]-2027)*.25)),slot=slot0*(1-k)+8.5*k;
+ let v=PICKV(p[1],slot)*Math.pow(.92,Math.max(0,p[0]-2027));let s=Math.max(1,Math.min(16,Math.round(slot)));let q=slot<=4?"alta":slot<=10?"media":"bassa";
+ if(holder===undefined)holder=(()=>{try{for(const t in CAP)if((CAP[t].pk||[]).includes(p))return t}catch(_){}return null})();
+ const ru=holder&&ruleOf(holder,p);let extra=null;
+ if(ru&&PKMEMO[holder+'|'+p.join('|')]){const m=PKMEMO[holder+'|'+p.join('|')];v*=m.r;s=m.s||s;q=m.q||q;extra=m.x}
+ else if(ru){const L=simDraft(p[0]);let a=0,b=0,n=0;const got=[];for(const S of L){b+=PICKV(p[1],S[p[2]]);const f=ru.f(S);if(f!=null){a+=PICKV(p[1],f);n++;got.push(f)}}
+  v*=b?a/b:1;got.sort((x,y)=>x-y);const med=got.length?got[Math.floor(got.length/2)]:null;if(med){s=med;q=med<=4?"alta":med<=10?"media":"bassa"}
+  extra={txt:ru.t,prob:Math.round(n/L.length*100)};PKMEMO[holder+'|'+p.join('|')]={r:b?a/b:1,s:med,q:med?q:null,x:extra}}
+ return{slot:s,q,v:Math.round(v/5)*5,rule:extra}}
 window.e16Pick=pickInfo;
 function teamValue(id){const pl=(ROSE[id]||[]).reduce((a,g)=>a+val(g[0]),0),pk=((CAP[id]||{}).pk||[]).reduce((a,p)=>a+pickInfo(p).v,0);return{pl,pk,tot:pl+pk}}
 window.e16TeamValue=teamValue;window.e16Val=val;window.e16Str=()=>str();
@@ -32,7 +80,7 @@ const T={a:"QUE",b:null,sa:[],sb:[],me:"QUE",tg:"",q:"",vt:""};
 try{Object.assign(T,JSON.parse(localStorage.getItem("e16_trade")||"{}"))}catch(_){}
 const save=()=>{try{localStorage.setItem("e16_trade",JSON.stringify(T))}catch(_){}};
 const assets=id=>[...(ROSE[id]||[]).map(g=>({k:"p|"+g[0],n:g[0],v:val(g[0]),s:sal(id,g[0]),sub:`${g[1]} · ${(vRow(g[0])||[])[2]?Math.floor(vRow(g[0])[2])+" anni":""}`})),
- ...((CAP[id]||{}).pk||[]).map((p,i)=>{const I=pickInfo(p),o=TM[p[2]];return{k:"k|"+i,n:`${p[1]}° giro ${p[0]}${p[2]!==id?" (da "+(o?nick(o):p[2])+")":""}`,v:I.v,s:0,pick:1,sub:`prev. scelta n° ${I.slot} · ${I.q}`}})];
+ ...((CAP[id]||{}).pk||[]).map((p,i)=>{const I=pickInfo(p),o=TM[p[2]];return{k:"k|"+i,n:`${p[1]}° giro ${p[0]}${p[2]!==id?" (da "+(o?nick(o):p[2])+")":""}`,v:I.v,s:0,pick:1,sub:`${I.rule?(/^Protett|^Riserva/.test(I.rule.txt)?'🛡 ':'⇄ ')+(I.rule.prob<100?'arriva al '+I.rule.prob+'% · ':''):''}prev. scelta n° ${I.slot} · ${I.q}`}})];
 const capAfter=(id,out,inn)=>{const C=CAP[id];const base=C?(C.occ[0]||0)+(C.tagli||0):0;return base-out.reduce((a,x)=>a+x.s,0)+inn.reduce((a,x)=>a+x.s,0)};
 const verdict=(va,vb)=>{const d=va-vb,m=Math.max(va,vb)||1,pc=Math.abs(d)/m*100;return pc<8?["Equo","g"]:pc<20?[d>0?"Leggero vantaggio a chi riceve il lato A":"Leggero vantaggio a chi riceve il lato B","y"]:[d>0?"Sbilanciato: il lato A vale molto di più":"Sbilanciato: il lato B vale molto di più","r"]};
 const chips=(sel,attr)=>`<div class="chips">${TEAMS.map(x=>`<button class="chip" ${attr}="${x.id}" aria-pressed="${sel===x.id}"><span class="badge logo lg-${x.id}"></span>${e(nick(x))}</button>`).join("")}</div>`;
