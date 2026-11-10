@@ -58,3 +58,5 @@
 (25) 10/11/2026 – Home notte: i loghi dei binari tornano senza sfondo colore squadra (sfondo del pannello come Dreamers); di giorno resta lo sfondo colore squadra.
 
 (26) 10/11/2026 – Sfide → duello stile Sleeper ovunque: Home (pagina Settimana sfide e banner) e Lega aprono il duello (data-du/data-duw, gestito in gest.js). Campo: tabellone come Dreamers (h2.lbmh) sopra il campo con loghi, punteggi migliori 14, partite giocate/totali (sotto senza IR); toccandolo si apre il duello, le frecce cambiano settimana (CW in campo.js).
+
+(27) 10/11/2026 – Dynasty TV tabellino: AVG 50+ viola (td.pdkl.pv), regola Dreamers mancante nelle skin estratte; aggiunta in fondo a skin-giorno.css e skin-notte.css (se si rigenerano le skin, rimetterla).
