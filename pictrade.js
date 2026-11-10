@@ -34,7 +34,10 @@ function taItems(s){const t=TA.t[s],L=[...TA.pl[s]];
 function taTrade(){const n=taNow();return{data:n.d.slice(8,10)+"/"+n.d.slice(5,7)+"/"+n.d.slice(0,4),ora:n.h,titolo:"Scambio",lati:[[TA.t[0],taItems(1)],[TA.t[1],taItems(0)]]}}
 function taErr(){const e=[];if(!TA.t[0]||!TA.t[1])e.push("Scegli le due squadre.");
  else{if(!TA.pl[0].length&&!TA.pl[1].length)e.push("Metti almeno un giocatore nello scambio.");
-  for(let s=0;s<2;s++)if(!taItems(s).length)e.push(`${nick(TA.t[s])} non cede niente.`)}
+  for(let s=0;s<2;s++)if(!taItems(s).length)e.push(`${nick(TA.t[s])} non cede niente.`);
+  /* (44) regola dei 3 under 25: nessuna delle due squadre può restare con meno di 3 under 25 */
+  if(window.e16U25Fail){const I=[...TA.pl[0].map(n=>({ty:"pl",n,from:TA.t[0],to:TA.t[1]})),...TA.pl[1].map(n=>({ty:"pl",n,from:TA.t[1],to:TA.t[0]}))];
+   for(let s=0;s<2;s++){const a=e16U25Fail(I,TA.t[s]);if(a!=null)e.push(`${nick(TA.t[s])} resterebbe con ${a} under 25: la regola ne chiede almeno 3.`)}}}
  return e}
 function taPrompt(){const T=taTrade();
  const link=location.origin+location.pathname+"?scambio="+encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify({t:TA.t,pl:TA.pl,pk:TA.pk,ex:TA.ex})))));

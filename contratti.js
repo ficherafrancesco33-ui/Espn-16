@@ -84,10 +84,13 @@ function capPage(id){const C=CAP[id];if(!C)return`<div class="note">Contratti no
  const fa=[];if(typeof LISTINO!=="undefined")for(const k in LISTINO){const pr=LISTINO[k][0];if(own(k)||contr(k)||pr>lib)continue;const s=st(k);if(!s)continue;fa.push({n:k,pr,s,t:LISTINO[k][3]})}
  fa.sort((a,b)=>b.s.avg-a.s.avg);
  const exp=L.filter(c=>c.y.length===1),freed=exp.reduce((a,c)=>a+c.y[0],0);
- return gauge+seas+
+ /* (44) regola della lega: almeno 3 under 25 per squadra (età di oggi) */
+ const nU=(ROSE[id]||[]).filter(g=>{const a=typeof etaOf==="function"?etaOf(g[0]):null;return a!=null&&a<25}).length;
+ const u25b=`<div class="e16u25 ${nU<3?"ko":"ok"}">Under 25: <b>${nU}</b> · minimo 3${nU<3?" · sotto il minimo!":""}</div>`;
+ return gauge+u25b+seas+
  `<div class="ccsec">Contratti <small>${L.length} · dal più pagato</small></div><div class="cclist">${L.map(card).join("")}</div>
  <div class="ccsec">Chi posso permettermi <small>svincolati con prezzo ≤ ${f1(lib)} cr</small></div>
- ${fa.length?`<div class="ccfa">${fa.slice(0,15).map(x=>{const v=verd(x.n,x.pr);return`<div class="ccfr" data-pl="${e(x.n)}"><div><b>${e(x.n)}</b><small>${e(x.t)} · ${x.s.gp} part.</small></div><span class="ccfv"><b>${f1(x.s.avg)}</b><small>AVG</small></span><span class="ccfv"><b>${f1(x.pr)}</b><small>cr</small></span>${v?`<span class="ctrv ${v.k} sm">${f2(v.r)}</span>`:""}</div>`}).join("")}</div>`:`<p class="note">Nessuno svincolato con prezzo di listino entro ${f1(lib)} cr.</p>`}
+ ${fa.length?`<div class="ccfa">${fa.slice(0,15).map(x=>{const v=verd(x.n,x.pr);return`<div class="ccfr" data-pl="${e(x.n)}"><div><b>${e(x.n)}</b><small>${e(x.t)} · ${x.s.gp} part.${(()=>{/* (44) età e under 25 */const a=typeof etaOf==="function"?etaOf(x.n):null;return a!=null?` · ${a} anni${a<25?` <i class="fau25">U25</i>`:""}`:""})()}</small></div><span class="ccfv"><b>${f1(x.s.avg)}</b><small>AVG</small></span><span class="ccfv"><b>${f1(x.pr)}</b><small>cr</small></span>${v?`<span class="ctrv ${v.k} sm">${f2(v.r)}</span>`:""}</div>`}).join("")}</div>`:`<p class="note">Nessuno svincolato con prezzo di listino entro ${f1(lib)} cr.</p>`}
  <div class="ccsec">Scadenze <small>fine stagione 26/27</small></div>
  ${exp.length?`<div class="ccexp">${exp.map(c=>`<span data-pl="${e(c.n)}">${e(c.n)} <b>${f1(c.y[0])}</b></span>`).join("")}</div><p class="note">Nel 27/28 si liberano <b>${f1(freed)} cr</b>: il cap libero passa a ${f1(CAP_TOT-(C.occ[1]||0))} cr (senza nuovi contratti).</p>`:`<p class="note">Nessun contratto in scadenza quest'anno.</p>`}
  <div class="note">Cifre in crediti dal file della lega. <span class="ctrrk">R</span> = contratto da rookie. AVG/cr = AVG medio di stagione per credito di stipendio: affare = tra il 25% migliore della lega, caro = tra il 25% peggiore. Taglio: 10% di quello che resta del contratto (minimo 1), +1 se spalmato sugli anni; è solo una simulazione. Listino: prezzo per firmare uno svincolato (all anno, ipotesi).</div>`}

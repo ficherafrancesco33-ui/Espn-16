@@ -50,7 +50,7 @@ for (const w of curW) { const done = score[w] && line[w]; if (done) continue;
   line[w] = L }
 /* free agent (i 400 più posseduti nelle leghe ESPN) */
 const F = await get("?view=kona_player_info", { players: { filterStatus: { value: ["FREEAGENT", "WAIVERS"] }, limit: 400, sortPercOwned: { sortPriority: 1, sortAsc: false } } });
-const fa = (F.players || []).map(x => { const p = x.player; return [p.fullName, PRO[p.proTeamId] || "FA", pos(p), Math.round(((p.ownership || {}).percentOwned || 0) * 10) / 10, p.injuryStatus || ""] });
+const fa = (F.players || []).map(x => { const p = x.player; return [p.fullName, PRO[p.proTeamId] || "FA", pos(p), Math.round(((p.ownership || {}).percentOwned || 0) * 10) / 10, p.injuryStatus || "", p.id] });
 /* movimenti: firme e tagli di free agent, scambi (giocatori arrivati con uno scambio e ancora in rosa, raggruppati per ora) */
 const ID = {}; for (const t of R.teams) for (const e of t.roster.entries) ID[e.playerId] = e.playerPoolEntry.player.fullName;
 for (const x of F.players || []) ID[x.player.id] = x.player.fullName;

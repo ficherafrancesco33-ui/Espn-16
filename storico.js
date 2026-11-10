@@ -27,7 +27,7 @@ function allTrades(){const L=TRADES.map(x=>({...x,ts:tsOf(x),auto:0}));
 window.e16Trades=allTrades;
 function vStorico(){const T=allTrades();
  const cell=x=>x&&TM[x[0]]?`<div class="tc">${wedge(x[0])}<div class="tct"><small>${e(nick(x[0]))} · riceve</small><div class="trc"><div>${x[1].map(n=>`<span${isPl(n)?"":` class="tcr2"`}>${e(isPl(n)?sur(n):n)}</span>`).join("")}</div></div></div></div>`:`<div class="tc"></div>`;
- const rows=T.map(x=>{const sides=x.lati.length>=2?x.lati:[...x.lati,null];return `<div class="tr3"><div class="tty3"><span>${e(x.titolo||"Scambio")}${x.data?" "+x.data.slice(0,5):""}${x.auto?" · ESPN":""}</span></div>${sides.map(cell).join("")}</div>`}).join("");
+ const rows=T.map(x=>{const sides=x.lati.length>=2?x.lati:[...x.lati,null];return `<div class="tr3"><div class="tty3"><span>${e(x.titolo||"Scambio")}${x.data?" "+x.data.slice(0,5):""}</span></div>${sides.map(cell).join("")}</div>`}).join("");
  const M=(typeof LEGA!=="undefined"&&LEGA.mov||[]).filter(m=>m.ty==="add"||m.ty==="drop");
  const mv=M.slice(0,120).map(m=>{const f=fromTs(m.d);return `<div class="e16mv" ${isPl(m.p)||m.ty==="drop"?`data-pl="${e(m.p)}"`:""}><span class="e16mvd">${f.data.slice(0,5)}</span>${m.t&&TM[m.t]?wedge(m.t):"<span></span>"}<span class="e16mvt ${m.ty}">${m.ty==="add"?"Firmato":"Tagliato"}</span><b>${e(m.p)}</b><small>${m.t?e(nick(m.t)):""}</small></div>`}).join("");
  return `<button class="gback" data-go="home">‹ Home</button><h2><span class="t"><span>Trade Alert</span></span><em>Operazioni chiuse</em></h2>`+

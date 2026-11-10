@@ -133,12 +133,19 @@ function capFail(items,t){const C=CAP[t];if(!C)return null;for(let i=0;i<5;i++){
 function capOK(items,t){const f=capFail(items,t);return f?f.v:true}
 window.e16CapFail=capFail;
 const capMsg=(items,t)=>{const f=capFail(items,t);return f?`sforerebbe il cap ${CYL[f.i]} (${f1(f.v)} su ${CAP_TOT})`:""};
+/* (44) REGOLA DEI 3 UNDER 25: dopo ogni scambio ogni squadra deve avere almeno 3 under 25 (età di oggi). Chi è già sotto non può scendere ancora.
+   u25Fail → numero di under 25 dopo lo scambio se la regola salta, altrimenti null. Vale per calcolatore, IA trade, gusti, allenamento, Pic-Trade (window.e16U25Fail). */
+const isU=n=>typeof u25==="function"&&u25(n);
+function u25Fail(items,t){const now=(ROSE[t]||[]).filter(g=>isU(g[0])).length,pl=items.filter(x=>x.ty==="pl");
+ const after=now-pl.filter(x=>x.from===t&&isU(x.n)).length+pl.filter(x=>x.to===t&&isU(x.n)).length;return after<3&&after<now?after:null}
+window.e16U25Fail=u25Fail;
+const u25Msg=(items,t)=>{const a=u25Fail(items,t);return a==null?"":`resterebbe con ${a} under 25 (minimo 3)`};
 /* interesse delle altre squadre (come «Interesse alto/medio/basso» di Dreamers): saldo di valore, età e ruoli */
 function intHTML(items,teams,me){return `<div class="iaint">${teams.filter(t=>t!==me).map(t=>{const B=bal(items,t),inn=items.filter(x=>x.to===t&&x.ty==="pl"),out=items.filter(x=>x.from===t&&x.ty==="pl");
   const ea=inn.length?inn.reduce((a,x)=>a+(ageOf(x.n)||27),0)/inn.length:null,eo=out.length?out.reduce((a,x)=>a+(ageOf(x.n)||27),0)/out.length:null;
   const S=str().rank[t],reb=S>8,lv=B.pc>=5?"alto":B.pc>=-5?"medio":"basso";const why=[`${B.pc>=0?"ci guadagna":"ci rimette"} circa il ${Math.abs(Math.round(B.pc))}% di valore`];
   if(ea!=null&&eo!=null)why.push(`età media: riceve ${f1(ea)} anni, cede ${f1(eo)}${reb&&ea<eo?" (squadra che ricostruisce: le piacciono i giovani)":!reb&&ea>eo?" (squadra forte: le servono giocatori pronti)":""}`);
-  why.push(`forza prevista ${S}ª su 16`);const cap=capOK(items,t);if(cap!==true)why.push(capMsg(items,t));
+  why.push(`forza prevista ${S}ª su 16`);const cap=capOK(items,t);if(cap!==true)why.push(capMsg(items,t));if(u25Fail(items,t)!=null)why.push(u25Msg(items,t));
   return `<div class="iaint1 ${cap!==true?"basso":lv}"><span><b>Interesse ${cap!==true?"basso":lv}</b></span><small>${e(nick(TM[t]))}: ${why.join(" · ")}</small></div>`}).join("")}</div>`}
 /* ---------- CALCOLATORE ---------- */
 const VT={tab:"calc",t:["QUE","HOU"],it:[],t3:["QUE","HOU","LVA","DET"]};
@@ -156,9 +163,10 @@ function resHTML(){const T2=tms(),I=VT.it.filter(x=>T2.includes(x.from)&&T2.incl
   <div class="vtver"><b>${lab}</b><span>${d<.10?"Differenza":"Ci guadagnano i "+e(nick(TM[fav]))+" del"} ${Math.round(d*100)}%</span></div>
   ${d>=.10?`<p class="vtsug">Per pareggiare: i <b>${e(nick(TM[fav]))}</b> dovrebbero aggiungere un giocatore o una scelta da circa <b>${fmt(vneed)}</b> di valore (o i ${e(nick(TM[give]))} togliere qualcosa).</p>`:""}
   ${caps.length?`<p class="vtsug">⚠️ ${caps.map(([t,v])=>`<b>${e(nick(TM[t]))}</b> ${capMsg(I,t)}`).join(" · ")}</p>`:""}
+  ${[a,b].some(t=>u25Fail(I,t)!=null)?`<p class="vtsug">⚠️ ${[a,b].filter(t=>u25Fail(I,t)!=null).map(t=>`<b>${e(nick(TM[t]))}</b> ${u25Msg(I,t)}`).join(" · ")} · scambio non valido</p>`:""}
   ${intHTML(I,[a,b],null)}</div>`}
  const B=T2.map(t=>bal(I,t)),mx=Math.max(...B.map(x=>Math.abs(x.pc)));const[lab,cls]=mx<10?["Trade equilibrata","ok"]:mx<30?["Qualcuno ci guadagna","mid"]:["Trade sbilanciata","bad"];
- return `<div class="vtres ${cls}"><div class="iacols${T2.length===3?3:2}">${T2.map((t,i)=>colHTML(t,I.filter(x=>x.to===t),B[i].pc)).join("")}</div><div class="vtver"><b>${lab}</b><span>saldo massimo ${Math.round(mx)}%</span></div>${intHTML(I,T2,null)}</div>`}
+ return `<div class="vtres ${cls}"><div class="iacols${T2.length===3?3:2}">${T2.map((t,i)=>colHTML(t,I.filter(x=>x.to===t),B[i].pc)).join("")}</div><div class="vtver"><b>${lab}</b><span>saldo massimo ${Math.round(mx)}%</span></div>${T2.some(t=>u25Fail(I,t)!=null)?`<p class="vtsug">⚠️ ${T2.filter(t=>u25Fail(I,t)!=null).map(t=>`<b>${e(nick(TM[t]))}</b> ${u25Msg(I,t)}`).join(" · ")} · scambio non valido</p>`:""}${T2.some(t=>capOK(I,t)!==true)?`<p class="vtsug">⚠️ ${T2.filter(t=>capOK(I,t)!==true).map(t=>`<b>${e(nick(TM[t]))}</b> ${capMsg(I,t)}`).join(" · ")}</p>`:""}${intHTML(I,T2,null)}</div>`}
 function cardHTML(k){const T2=tms(),t=T2[k],I=VT.it.filter(x=>x.from===t&&T2.includes(x.to)),sel=new Set(I.filter(x=>x.ty==="pl").map(x=>x.n));
  const ros=(ROSE[t]||[]).map(g=>({n:g[0],r:roleOf(g[0]),v:val(g[0])})).sort((a,b)=>(RO[a.r]-RO[b.r])||(b.v-a.v));
  const pks=((CAP[t]||{}).pk||[]);
@@ -189,7 +197,7 @@ function iaFind(){const me=IA.me,mode=IA.mode,[lo,hi]=LV[IA.lv]||LV.eq,out=[];
  let targets=[];
  if(mode==="pl"){const by={};IA.want.forEach(n=>{const t=ownerOf(n);if(t&&t!==me)(by[t]=by[t]||[]).push(n)});targets=Object.entries(by).map(([t,L])=>({t,get:L.map(n=>({ty:"pl",n,from:t}))}))}
  else{const roles=IA.any?["G","F","C"]:IA.needs.filter(Boolean);for(const x of TEAMS){if(x.id===me)continue;const L=(ROSE[x.id]||[]).filter(g=>roles.includes(roleOf(g[0]))&&val(g[0])>=200).map(g=>({ty:"pl",n:g[0],from:x.id}));for(const g of L.slice(0,40))targets.push({t:x.id,get:[g]})}}
- const ok=(I,teams)=>teams.every(t=>capOK(I,t)===true);
+ const ok=(I,teams)=>teams.every(t=>capOK(I,t)===true&&u25Fail(I,t)==null);/* (44) anche la regola dei 3 under 25 */
  for(const T0 of targets){const X=T0.t,get=T0.get.map(x=>({...x,to:me}));const gp=get.reduce((a,x)=>a+itPts(x),0);
   /* 2 squadre */
   for(const S of MS){const gv=S.reduce((a,x)=>a+itPts(x),0);const pcMe=(gp-gv)/Math.max(gp,gv)*100;if(pcMe<lo||pcMe>hi)continue;if((gp-gv)/Math.max(gp,gv)*-100<-35)continue;
@@ -219,7 +227,7 @@ function vIaNew(){const me=IA.me,H=`<button class="gback" data-go="calc">‹ Cal
   if(!IA.res){const S=str(),R=[];for(const x of TEAMS){if(x.id===me)continue;const reb=S.rank[x.id]>8,meReb=S.rank[me]>8;
     const theirs=(ROSE[x.id]||[]).map(g=>({ty:"pl",n:g[0],from:x.id,to:me})).filter(p=>val(p.n)>=300&&(reb?(ageOf(p.n)||27)>=27:(ageOf(p.n)||27)<=24)).sort((a,b)=>itPts(b)-itPts(a)).slice(0,6);
     const mine=[...(ROSE[me]||[]).map(g=>({ty:"pl",n:g[0],from:me,to:x.id})).filter(p=>!IA.keep.includes(p.n)&&(reb?(ageOf(p.n)||27)<=24:(ageOf(p.n)||27)>=26)),...((CAP[me]||{}).pk||[]).map((p,i)=>({ty:"pk",p,pi:i,from:me,to:x.id})).filter(()=>reb)].sort((a,b)=>itPts(b)-itPts(a)).slice(0,10);
-    let best=null;for(const a of theirs)for(let i=0;i<mine.length;i++)for(let j=i;j<mine.length;j++){const G=i===j?[mine[i]]:[mine[i],mine[j]],I=[a,...G];const pm=bal(I,me).pc;if(pm<-12||pm>15)continue;if(!(capOK(I,me)===true&&capOK(I,x.id)===true))continue;const sc=Math.abs(pm)+G.length*2;if(!best||sc<best.score)best={I,teams:[me,x.id],score:sc}}
+    let best=null;for(const a of theirs)for(let i=0;i<mine.length;i++)for(let j=i;j<mine.length;j++){const G=i===j?[mine[i]]:[mine[i],mine[j]],I=[a,...G];const pm=bal(I,me).pc;if(pm<-12||pm>15)continue;if(!(capOK(I,me)===true&&capOK(I,x.id)===true&&u25Fail(I,me)==null&&u25Fail(I,x.id)==null))continue;const sc=Math.abs(pm)+G.length*2;if(!best||sc<best.score)best={I,teams:[me,x.id],score:sc}}
     if(best)R.push(best)}R.sort((a,b)=>a.score-b.score);IA.res=R.slice(0,8)}
   body=`<div class="iabox">${teamSel}<h4>Intoccabili (facoltativo)</h4><p class="iasub">Tocca i giocatori che NON vuoi dare. Per ogni squadra l'IA guarda se ricostruisce (vuole giovani e scelte) o punta al titolo (vuole giocatori pronti) e ti propone lo scambio più gradito a tutte e due.</p><div class="iaros">${ros(me,"keep")}</div><div class="iabtn2"><button class="iago" data-ia="regusti">Ricalcola ›</button></div></div>${iaResHTML()}`;
   return H+modeBar+body}

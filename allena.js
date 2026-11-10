@@ -60,6 +60,8 @@ function atGen(){const me=AT_PR&&AT_PR.t;if(!me)return null;const pool=t=>(ROSE[
   const FOC=Math.random()<.7,KK=[1,1,2,2,3][Math.random()*5|0];
   for(let i=0;i<600;i++){const ot=atSample(others,1)[0];if(!mine.length)break;
     const g=atSample(mine,KK).map(atInfo);if(g.length<KK)break;const th=pool(ot),r=atSample(th,KK).map(atInfo);if(r.length<KK)continue;
+    /* (44) regola dei 3 under 25: non si propongono scambi che lascerebbero una delle due squadre sotto i 3 under 25 */
+    if(window.e16U25Fail){const I=[...g.map(x=>({ty:"pl",n:x.n,from:me,to:ot})),...r.map(x=>({ty:"pl",n:x.n,from:ot,to:me}))];if(e16U25Fail(I,me)!=null||e16U25Fail(I,ot)!=null)continue}
     const vt=Math.max(...g.concat(r).map(x=>x.v)),vg=atPk(g,vt),vr=atPk(r,vt),d=atDf(vg,vr),gi=gustoIdx(g,r);
     const sc=(Math.abs(gi-tg)/100)+(Math.abs(d)>.12?3:0)+Math.abs(d)*.5+(rec.has(g.map(x=>x.n).join()+"|"+r.map(x=>x.n).join())?5:0)+(FOC&&!g.concat(r).some(x=>x.f&&x.f.length)?.3:0);
     if(sc<bs){bs=sc;best={t:me,ot,give:g,get:r,d,g:gi,mid:null}}}

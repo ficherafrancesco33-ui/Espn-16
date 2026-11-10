@@ -116,7 +116,8 @@ function buildIO(D){const io={};D.T.forEach(t=>io[t]={give:[],get:[]});const mv=
 function evalDeal(D){const{io,mv}=buildIO(D);
   if(mv.length>Math.max(4,2*D.T.length+1))return null;/* scambi leggibili: al massimo 3 giocatori dati per squadra */
   for(const t of D.T){const x=io[t];if(!x.give.length||!x.get.length||x.give.length>3)return null;
-    /* salary cap: dopo lo scambio non si può sforare (chi è già sopra non può salire) */const b=capBase(t),a=b-x.give.reduce((s,n)=>s+sal(t,n),0)+x.get.reduce((s,n)=>s+sal(iaOwner(n),n),0);if(a>CAPT+1e-9&&a>b)return null}
+    /* salary cap: dopo lo scambio non si può sforare (chi è già sopra non può salire) */const b=capBase(t),a=b-x.give.reduce((s,n)=>s+sal(t,n),0)+x.get.reduce((s,n)=>s+sal(iaOwner(n),n),0);if(a>CAPT+1e-9&&a>b)return null;
+    /* (44) regola dei 3 under 25: nessuna squadra può scendere sotto i 3 under 25 */if(window.e16U25Fail&&e16U25Fail([...x.give.map(n=>({ty:"pl",n,from:t,to:""})),...x.get.map(n=>({ty:"pl",n,from:"",to:t}))],t)!=null)return null}
   if(new Set(mv.map(m=>m.n)).size!==mv.length)return null;
   if(GU.mode==="sell"){const A=myT();if(io[A]&&io[A].give.some(n=>!GU.sell.has(n)))return null}
   let P=1;const S={};for(const t of D.T){const r=gsc(t,io[t].give,io[t].get);if(r.d<-45)return null;

@@ -2578,3 +2578,39 @@ select.atnote { appearance: auto; }
 @keyframes hofp{0%,100%{opacity:.5}50%{opacity:1}}
 @keyframes hofb{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .colno{background:radial-gradient(120% 70% at 50% 20%,#2a1458,#05030b 80%)!important;z-index:9999}
+
+/* (44) Storico trade: righe degli scambi (classi tr3/tc/trc di Dreamers) */
+.trc{min-width:130px;max-width:210px}
+.trc small{display:block;color:var(--muted);font-family:var(--display);font-weight:700;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase}
+.trc span{font-family:var(--display);font-style:italic;font-weight:800;font-size:15px;text-transform:uppercase;line-height:1.2;color:#fff}
+.trc span:not(:last-child)::after{content:", ";color:var(--muted)}
+.trc span.tcr2{color:var(--gold)}
+.ttab{overflow:hidden}
+.tr3{display:grid;grid-template-columns:18px minmax(0,1fr) minmax(0,1fr) 34px;border-bottom:1px solid rgba(255,255,255,.06)}
+.tr3:nth-child(even){background:rgba(255,255,255,.025)}
+.tr3:last-child{border-bottom:0}
+.tty3{background:#091129;border-right:2px solid var(--red);display:grid;place-items:center}
+.tty3 span{writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--display);font-style:italic;font-weight:800;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.tc{display:flex;gap:8px;min-width:0;align-items:stretch}
+.tc+.tc{border-left:1px solid rgba(255,255,255,.06)}
+.tc .wedge{width:34px;height:auto;min-height:48px;padding:2px}
+.tc .wedge .logo{width:30px;height:30px}
+.tct{min-width:0;padding:6px 6px 7px 0;display:grid;align-content:center;gap:1px}
+.tct small{font-family:var(--display);font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.tct .trc{min-width:0;max-width:none}
+.tct .trc span{font-size:13.5px;line-height:1.15}
+.trc.tdir{display:flex;align-items:center;gap:6px}
+.tar{flex:none;display:grid;place-items:center;width:20px;height:16px}
+.tar svg{width:16px;height:12px}
+.tar.in{color:var(--win)}
+.tar.out{color:var(--loss)}
+.ttab .trc span{display:block;padding:3px 0}
+.ttab .trc .tstar{display:block;margin-top:3px;font-size:9.5px}
+.ttab .trc span::after{content:none!important}
+.ttab .trc span+span{border-top:1px solid rgba(255,255,255,.06)}
+html:not(.notte) .ttab{background:#fff6e4;border:1px solid rgba(217,86,11,.3);border-radius:14px}
+html:not(.notte) .tr3{border-bottom-color:rgba(217,86,11,.18)}html:not(.notte) .tr3:nth-child(even){background:rgba(217,86,11,.05)}
+html:not(.notte) .tty3{background:#d9560b;border-right-color:#7c2d12}html:not(.notte) .tty3 span{color:#fff}
+html:not(.notte) .trc span,html:not(.notte) .ttab .trc span{color:#7a3410}html:not(.notte) .tct small{color:#b8410a}
+html:not(.notte) .tc+.tc{border-left-color:rgba(217,86,11,.18)}html:not(.notte) .ttab .trc span+span{border-top-color:rgba(217,86,11,.15)}
+html.notte .ttab{background:rgba(20,12,48,.85);border:1px solid rgba(139,92,246,.35);border-radius:14px}
