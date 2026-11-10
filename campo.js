@@ -52,12 +52,12 @@ function card(t,g,P,W){const p=P[g[0]],avg=p?p.ff/p.gp:null,w=W[g[0]];
 window.e16Jersey=(t,n,nk)=>jersey(t,n,nk);window.e16Num=n=>numOf(n);
 let NUMS=null;function numOf(n){if(!NUMS){NUMS={};/* numero di maglia NBA: dalle rose ESPN non lo abbiamo; si usa un numero stabile dal nome */}
  if(NUMS[n]!=null)return NUMS[n];let h=0;for(const ch of n)h=(h*31+ch.charCodeAt(0))%97;return NUMS[n]=h%55}
-/* (26) TABELLONE sopra il campo, come Dreamers (h2.lbmh): sfida della settimana con loghi, punteggi (migliori 14) e partite giocate/totali.
+/* (26) TABELLONE sopra il campo, come Dreamers (h2.lbmh): sfida della settimana con loghi, punteggi (formazione ESPN) e partite giocate/totali.
    Toccandolo si apre il duello stile Sleeper della Lega; le frecce cambiano settimana (campo e tabellone). */
 let CW=null;
 function lbm(id,w,wCur){const m=(MATCHUPS[w]||[]).find(x=>x.includes(id));if(!m)return"";const o=m[0]===id?m[1]:m[0],WS=weekScores(w);
- /* sopra: partite giocate / totali dei migliori 14; sotto: senza gli infortunati (slot IR), come Dreamers */
- const gp=t=>{const T=wkTeam(t,w),L=T.L.slice(0,14),c=A=>A.reduce((s,x)=>s+x.G.filter(y=>!y.up).length,0)+"/"+A.reduce((s,x)=>s+x.G.length,0);return[c(L),c(L.filter(x=>x.g[2]!=="IR"))]};
+ /* (44) sopra: partite giocate / totali dei 14 titolari della formazione ESPN; sotto: senza gli infortunati (slot IR), come Dreamers */
+ const gp=t=>{const T=wkTeam(t,w),L=T.L.filter(x=>x.on),c=A=>A.reduce((s,x)=>s+x.G.filter(y=>!y.up).length,0)+"/"+A.reduce((s,x)=>s+x.G.length,0);return[c(L),c(L.filter(x=>x.g[2]!=="IR"))]};
  const[a1,a2]=gp(id),[b1,b2]=gp(o),sa=WS.S[id],sb=WS.S[o],live=w===wCur;
  const svgL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',svgR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
  const has=k=>(MATCHUPS[k]||[]).some(x=>x.includes(id));
@@ -84,7 +84,7 @@ window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P
  ${five.map(g=>{const[x,y]=SLOT5[g[2]];return `<button class="cpl dr" data-ist="${g[2]==="IR"?"out":"ok"}" data-pl="${e(g[0])}" style="left:${x}%;top:${y}%;--k:1">${card(t,g,P,W)}</button>`}).join("")}</div>
  <h2><span class="t"><span>Titolari</span></span><em>altri ${rest.length} · 100% AVG</em></h2>
  <div class="bench dptrib e16tit">${rest.map(g=>{const p=P[g[0]],v=p?p.ff/p.gp:null,w=W[g[0]];return `<button class="bpl" data-pl="${e(g[0])}">${jersey(id,numOf(g[0]),name)}<span class="bnm"><i class="rtr ${RL(g[3])}"></i>${e(g[0])}<small>${({G:"Guardia",F:"Ala",C:"Centro"})[RL(g[3])]} · ${g[1]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${w?` · sett. ${f1(w.f)} (${w.n}P)`:""}</small></span><span class="trlk"></span><span class="bev"><span class="cev ${v!=null?pcls(v):"wait"}">${v!=null?f1(v):"–"}</span></span></button>`}).join("")}</div>
- <h2><span class="t"><span>Tribuna</span></span><em>3 posti · under 25 o infortunati · non contano</em></h2>
+ <h2><span class="t"><span>Tribuna</span></span><em>panchina e IR della formazione ESPN · non contano</em></h2>
  <div class="bench dptrib">${trib.map(g=>{const p=P[g[0]],v=p?p.ff/p.gp:null;return `<button class="bpl" data-pl="${e(g[0])}">${jersey(id,numOf(g[0]),name)}<span class="bnm"><i class="rtr ${RL(g[3])}"></i>${e(g[0])}<small>${g[2]==="IR"?"Infortunato · ":""}${g[1]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${g[2]==="IR"?"":u25(g[0])?" · under 25 ✓":etaOf(g[0])!=null?" · ⚠️ non under 25":""}</small></span><span class="trlk"></span><span class="bev"><span class="cev ${v!=null?pcls(v):"wait"}">${v!=null?f1(v):"–"}</span></span></button>`}).join("")}</div>
  <p class="note">Sotto ogni maglia: AVG medio della stagione; barra = AVG fatti questa settimana e partite giocate. I numeri di maglia sono indicativi.</p></div>`};
 })();
