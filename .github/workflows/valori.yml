@@ -1,0 +1,31 @@
+# ESPN 16: valori dei giocatori (calcolatore trade, IA trade, valore squadre) ricalcolati ogni domenica alle 18 italiane.
+# Il cron è in ora UTC: 17:00 UTC = 18:00 italiane con l ora solare; con l ora legale diventa 19:00 (GitHub non conosce i fusi).
+name: valori-settimanali
+on:
+  schedule:
+    - cron: "0 17 * * 0"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: espn
+  cancel-in-progress: false
+jobs:
+  valori:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Calcola i valori
+        run: node tools/valori.mjs
+      - name: Salva
+        run: |
+          git config user.name "espn-bot"
+          git config user.email "espn-bot@users.noreply.github.com"
+          if git diff --quiet -- valori-data.js; then echo "Nessuna novità"; exit 0; fi
+          git add valori-data.js
+          git commit -m "Valori giocatori aggiornati [automatico]"
+          for i in 1 2 3; do git pull --rebase -X theirs origin main && git push origin HEAD:main && exit 0; sleep 5; done
+          exit 1

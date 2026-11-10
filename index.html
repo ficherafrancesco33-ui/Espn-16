@@ -189,6 +189,9 @@ html,body{margin:0}
 .grjs.e16js{display:grid;place-items:center}
 .grjs.e16js img{width:120px;height:120px;border-radius:50%;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45))}
 .snrow[data-pl],.farow,.plink{cursor:pointer}
+/* (9) scelte: previsione e valore */
+.e16 .pk small.pkpr{font-weight:700}.e16 .pk small.pkpr.qa{color:#16a34a}.e16 .pk small.pkpr.qm{color:#b45309}.e16 .pk small.pkpr.qb{color:#dc2626}
+.e16 .pkv{flex:none;text-align:right;font:800 italic 18px/1 'Barlow Condensed';color:var(--acc)}.e16 .pkv i{display:block;font:700 9px 'Barlow Condensed';font-style:normal;color:var(--mut);letter-spacing:.8px;text-transform:uppercase}
 /* (8) pagina Lega: logo sotto il tasto «Torna all app» */
 .drroom .drhd{padding-top:30px}
 /* (7) casella Home: scorrimento */
@@ -275,6 +278,7 @@ e16Tema(E16N);</script>
 <div class="foot" id="foot"></div>
 <script src="espn-data.js"></script>
 <script src="cap-data.js"></script>
+<script src="valori-data.js"></script>
 <script>
 /* ===== SQUADRE (da ESPN Fantasy, 10/11/2026). conf: E = East, W = West. Ordine = ordine della classifica ESPN.
    I nomi con "…" sono tagliati nello screenshot: da completare (o arriveranno dal collegamento alla lega ESPN). */
@@ -331,27 +335,28 @@ const f1=v=>(Math.round(v*10)/10).toLocaleString("it-IT",{minimumFractionDigits:
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 /* ===== NAVIGAZIONE ===== */
-const TABS=[["home","Home"],["lega","Lega"],["tv","Dynasty TV"],["stat","Statistiche"],["gest","Centro gestione"]];
+const TABS=[["home","Home"],["lega","Lega"],["tv","Dynasty TV"],["stat","Statistiche"],["gest","Centro gestione"],["scambi","Scambi"]];
 /* (8) menu Centro gestione come Dreamers */
 const SUB=[["roster","Roster"],["inf","Centro Medico"],["reg","Regolamento"],["cap","Cap & Scelte"]];
+const SUB2=[["calc","Calcolatore trade"],["ia","IA trade"],["val","Valori giocatori"]];
 let tmTab="rosa",cur="home",curTeam=null,lgTab="cls",night=null,stQ={per:"all",nba:"",sort:"ffa",min:0},hq="";
 try{const s=JSON.parse(localStorage.getItem("e16_st")||"{}");Object.assign(stQ,s)}catch(e){}
 function go(v){cur=v;curTeam=null;render();scrollTo(0,0)}
 function render(){
- document.getElementById("nav").innerHTML=TABS.map(([k,l])=>`<button role="tab" data-go="${k}" aria-selected="${cur===k&&!curTeam||k==="stat"&&!!(window.STATV&&STATV[cur])||k==="gest"&&(SUB.some(x=>x[0]===cur)||!!curTeam)?"true":"false"}"${k==="gest"?' data-menu="1" aria-haspopup="true"':""}><span>${l}${k==="gest"?'<i class="car">▾</i>':""}</span></button>`).join("");
- {const sn=document.getElementById("subnav");sn.innerHTML=SUB.map(([k,l])=>`<button data-go="${k}" aria-selected="${cur===k}"><span>${l}</span></button>`).join("");sn.hidden=true}
+ document.getElementById("nav").innerHTML=TABS.map(([k,l])=>`<button role="tab" data-go="${k}" aria-selected="${cur===k&&!curTeam||k==="stat"&&!!(window.STATV&&STATV[cur])||k==="gest"&&(SUB.some(x=>x[0]===cur)||!!curTeam)||k==="scambi"&&SUB2.some(x=>x[0]===cur)?"true":"false"}"${k==="gest"||k==="scambi"?` data-menu="${k}" aria-haspopup="true"`:""}><span>${l}${k==="gest"||k==="scambi"?'<i class="car">▾</i>':""}</span></button>`).join("");
+ {const sn=document.getElementById("subnav");sn.hidden=true}
  /* (6) come Dreamers: body[data-v] dice in che pagina siamo (alcuni stili Dreamers dipendono da questo) */
  document.body.dataset.v=curTeam?"squadra":({stat:"efficienza",sgioc:"fa",gioc:"grafico",comp:"compar",ssq:"effsquadra",lega:"dreamers",inf:"infortuni",reg:"regolamento"})[cur]||cur;
  e16Tema(E16N);
  document.getElementById("foot").textContent=typeof ESPN!=="undefined"?"ULTIMO AGGIORNAMENTO ESPN: "+ESPN.upd:"";
  const m=document.getElementById("main");
  /* (6) le pagine proprie di ESPN 16 (squadra, lega, cap) stanno dentro .e16: le loro regole non toccano le classi Dreamers */
- m.innerHTML='<div class="view">'+(curTeam?'<div class="e16">'+vTeam(curTeam)+'</div>':window.STATV&&STATV[cur]?STATV[cur]():window.GESTV&&GESTV[cur]?GESTV[cur]():cur==="tv"?vTv():cur==="cap"?'<div class="e16">'+vCapAll()+'</div>':vHome())+'</div>';
+ m.innerHTML='<div class="view">'+(curTeam?'<div class="e16">'+vTeam(curTeam)+'</div>':window.STATV&&STATV[cur]?STATV[cur]():window.GESTV&&GESTV[cur]?GESTV[cur]():window.TRADEV&&TRADEV[cur]?TRADEV[cur]():cur==="tv"?vTv():cur==="cap"?'<div class="e16">'+vCapAll()+'</div>':vHome())+'</div>';
  if(cur==="tv"){const w=document.getElementById("tvweek"),b=w&&w.querySelector('[aria-pressed="true"]');if(b)w.scrollLeft=b.offsetLeft-w.clientWidth/2+b.clientWidth/2}
 }
 document.addEventListener("click",e=>{if(e.target.closest("#sw")){E16N=!E16N;try{localStorage.setItem("e16_notte",E16N?"1":"0")}catch(_){}e16Tema(E16N);render();return}
  if(e.target.closest("#setbtn")){location.reload();return}
- const mn=e.target.closest("[data-menu]");if(mn){const sn=document.getElementById("subnav"),r=mn.getBoundingClientRect();sn.style.left=Math.max(8,Math.min(r.left,innerWidth-200))+"px";sn.style.top=(r.bottom+4)+"px";sn.style.minWidth="180px";sn.hidden=!sn.hidden;return}
+ const mn=e.target.closest("[data-menu]");if(mn){const sn=document.getElementById("subnav"),r=mn.getBoundingClientRect();const L=mn.dataset.menu==="scambi"?SUB2:SUB,open=!sn.hidden&&sn.dataset.m===mn.dataset.menu;sn.dataset.m=mn.dataset.menu;sn.innerHTML=L.map(([k,l])=>`<button data-go="${k}" aria-selected="${cur===k}"><span>${l}</span></button>`).join("");if(open){sn.hidden=true;return}sn.hidden=false;sn.style.left=Math.max(8,Math.min(r.left,innerWidth-200))+"px";sn.style.top=(r.bottom+4)+"px";sn.style.minWidth="180px";return}
  if(!e.target.closest("#subnav")){const sn=document.getElementById("subnav");if(sn&&!sn.hidden)sn.hidden=true}
  const g=e.target.closest("[data-go]");if(g){go(g.dataset.go);return}
  const t=e.target.closest("[data-team]");if(t){if(!t.dataset.tab){try{e16Roster(t.dataset.team)}catch(_){}curTeam=null;cur="roster";render();scrollTo(0,0);return}curTeam=t.dataset.team;tmTab=t.dataset.tab;render();scrollTo(0,0);return}
@@ -455,8 +460,8 @@ function pickHtml(id){const C=CAP[id];if(!C)return`<div class="note">Scelte non 
  const Y=[2027,2028,2029,2030,2031];
  return Y.map(y=>{const P=C.pk.filter(p=>p[0]===y);
   return `<div class="pky"><div class="pkyh">DRAFT ${y}<span>${P.length} scelt${P.length===1?"a":"e"}</span></div>${P.length?P.map(p=>{const o=TM[p[2]],own=p[2]===id;
-   return `<div class="pk"><span class="gr g${p[1]}">${p[1]}°<i>GIRO</i></span><img src="${o?o.logo:""}" alt=""><div><b>${own?"Propria":"Da "+esc(o?o.nome:p[2])}</b>${p[3]?`<small>${esc(p[3].toLowerCase().replace(/^./,c=>c.toUpperCase()))}</small>`:""}</div></div>`}).join(""):`<div class="note" style="padding:6px 2px">Nessuna scelta</div>`}</div>`}).join("")+
- `<div class="note">Dal file della lega. Le scelte cedute ad altre squadre non compaiono.</div>`}
+   return `<div class="pk"><span class="gr g${p[1]}">${p[1]}°<i>GIRO</i></span><img src="${o?o.logo:""}" alt=""><div style="flex:1"><b>${own?"Propria":"Da "+esc(o?o.nome:p[2])}</b>${(()=>{if(!window.e16Pick)return"";const I=e16Pick(p);return `<small class="pkpr q${I.q[0]}">Previsione: scelta n° ${I.slot} · ${I.q==="alta"?"scelta alta":I.q==="media"?"scelta di metà giro":"scelta bassa"}</small>`})()}${p[3]?`<small>${esc(p[3].toLowerCase().replace(/^./,c=>c.toUpperCase()))}</small>`:""}</div>${window.e16Pick?`<span class="pkv">${e16Pick(p).v.toLocaleString("it-IT")}<i>valore</i></span>`:""}</div>`}).join(""):`<div class="note" style="padding:6px 2px">Nessuna scelta</div>`}</div>`}).join("")+
+ `<div class="note">Dal file della lega. Le scelte cedute ad altre squadre non compaiono. Previsione: più la squadra d'origine è debole (valore dei suoi giocatori e record), più la scelta è alta; per gli anni lontani la previsione è più incerta e torna verso metà giro.</div>`}
 function vCapAll(){
  const row=t=>{const C=CAP[t.id]||{occ:[0],tagli:0,libero:0,pk:[]},lib=C.libero,n1=C.pk.filter(p=>p[1]===1).length,n=C.pk.length;
   return `<tr data-team="${t.id}" data-tab="cap"><td><div class="tm"><img src="${t.logo}" alt=""><span>${esc(t.nome)}<small>${esc(t.gm)}</small></span></div></td><td style="color:var(--win);font-weight:800">${c1(lib)}</td><td>${c1(C.occ[0])}</td><td>${c1(C.occ[1])}</td><td>${n1}<small style="color:var(--mut)"> / ${n}</small></td></tr>`};
@@ -485,6 +490,7 @@ render();
 <script src="stats.js"></script>
 <script src="tv.js"></script>
 <script src="gest.js"></script>
+<script src="trade.js"></script>
 <script src="live.js"></script>
 <script src="parquet.js"></script>
 <script>render();
