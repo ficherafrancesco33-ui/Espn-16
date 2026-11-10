@@ -48,3 +48,5 @@
 (20) 10/11/2026 – Campo: tolta la scritta della settimana sopra il campo; linea in alto del campo nel colore del bordo campo (Ducks: bianco di giorno, viola di notte; altre squadre: colore cornice COL.fr).
 
 (21) 10/11/2026 – livetick.js: banner stats live sopra il campo come Dreamers (1494-1497): durante le partite scorrono le righe dei giocatori della squadra in campo (AVG, PT, RIM, AST, STL, STOP, TOV); ogni stat nuova passa una volta da sola. Giorno bianco con scritta colore squadra, notte colore squadra; attaccato al bordo alto del campo; sparisce a partite finite.
+
+(22) 10/11/2026 – Calendario sfide settimane 1-16 (MATCHUPS, [casa, ospite]) dagli screenshot ESPN League Schedule, verificato incrociando tutte le squadre (NYP ricavato dagli avversari). SCORES = punteggi ufficiali ESPN settimane 1-3; dalla 4 punteggio calcolato live (somma AVG titolari).
