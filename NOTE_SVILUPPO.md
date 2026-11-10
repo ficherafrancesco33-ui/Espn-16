@@ -140,3 +140,7 @@
 (75) Honolulu: il nome è «Honolulu» + «Monk Seals» (spazio non divisibile in TEAMS.nome), quindi ovunque la squadra si chiama MONK SEALS e la città HONOLULU. Scritte a bordo campo più lunghe di 9 lettere si stringono per stare nel campo (prima HONOLULU MONK usciva).
 (76) Tasto indietro: cambiando sezione dal menu in alto (o dal sottomenu) la pila riparte da zero, quindi ‹ porta alla Home. Lega: il tasto ‹ non è più sovrapposto al titolo ESPN 16.
 (77) Tolto il tasto impostazioni in alto (per ora non serve).
+(78) Sala Draft: età al draft in evidenza con una pastiglia colorata (ageB in draft.js, stile (78) in index.html): verde fino a 19,5 anni, oro fino a 21, arancio/rosso oltre. Nelle schede della lista (prima del ruolo, tolta dal sottotitolo grigio), nel profilo (intestazione) e nel comparatore (riga Età al draft). Leggibile di giorno e di notte.
+(79) McGEE CUP: nuova scheda «Coppa» dopo Lega (coppa.js). Coppa a eliminazione: ottavi sett. 2 (punteggi ufficiali della locandina), quarti sett. 4, semifinali sett. 6, finale sett. 8; turni in corso con i punteggi ESPN della settimana. Tocca una sfida = tabellino in Dynasty TV. Logo dalla locandina (img/mcgee.png).
+(80) Trofeo JaVale McGee Cup disegnato in SVG (coppa-trofeo.js), sotto l intestazione della Coppa; a coppa finita mostra la vincitrice.
+(81) Quarti dal tabellone ufficiale: Whales–Cadavers, TeaBags–Pythons, Aliens–Pandas, Lions–Monk Seals. Niente più sorteggi: semifinali e finale si riempiono da sole (vincente QF1–QF2, QF3–QF4, poi lato sinistro contro lato destro).

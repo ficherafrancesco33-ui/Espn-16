@@ -14,6 +14,8 @@
 (function(){
 const e=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const f1=v=>(Math.round(v*10)/10).toLocaleString("it-IT",{minimumFractionDigits:1,maximumFractionDigits:1});
+/* (78) età al draft in evidenza: pastiglia colorata (fino a 19,5 verde, fino a 21 oro, oltre arancio/rosso) */
+const ageB=a=>a?`<b class="dsage ${a<=19.5?"g":a<=21?"y":"o"}" title="Età al draft">${f1(a)} anni</b>`:"";
 const nick=id=>TM[id]?TM[id].nome.split(" ").slice(-1)[0]:id;
 const LOTT_N=[161,161,161,143,120,103,85,66];
 const f2=v=>v.toLocaleString("it-IT",{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -76,7 +78,7 @@ const trS=v=>v==null?"":`<em class="dstr ${v>=0?"up":"dn"}">${v>=0?"▲ +":"▼ 
 function vRook(){let L=ROOK().slice();const q=String(D.q||"").toLowerCase();if(q)L=L.filter(x=>x.n.toLowerCase().includes(q)||x.sc.toLowerCase().includes(q));if(D.pos)L=L.filter(x=>x.pos.includes(D.pos));
  const K={rk:x=>-x.rk,avg:x=>x.avg??-99,a36:x=>x.a36??-99,eff:x=>x.eff??-99,age:x=>-x.age,min:x=>x.mp,wk:x=>x.wk??-99}[D.sort]||(x=>-x.rk),sg=D.dir==="a"?-1:1;L.sort((a,b)=>sg*(K(b)-K(a)));
  const head=[["rk","Big board"],["avg","AVG"],["wk","Trend"],["a36","AVG/36′"],["eff","Efficienza"],["min","Minuti"],["age","Età"]];
- const card=x=>`<div class="dsrk" data-drk="${e(x.slug)}" role="button" tabindex="0" aria-label="Profilo di ${e(x.n)}"><div class="dsrkh"><i class="dsrkn">${x.rk}</i><span class="dsini" style="--sc:${scCol(x.sc)}">${e(ini(x.n))}</span><span class="dsrki"><b>${e(x.n)}</b><small>${e(x.pos)} · ${e(x.sc)} · ${f1(x.age)} anni${x.h?" · "+e(x.h):""}</small></span><span class="dsrkv"><span class="pdkx ${pc(x.avg)}">${x.avg!=null?f1(x.avg):"–"}</span><small>AVG</small>${trB(x.wk)}</span></div>
+ const card=x=>`<div class="dsrk" data-drk="${e(x.slug)}" role="button" tabindex="0" aria-label="Profilo di ${e(x.n)}"><div class="dsrkh"><i class="dsrkn">${x.rk}</i><span class="dsini" style="--sc:${scCol(x.sc)}">${e(ini(x.n))}</span><span class="dsrki"><b>${e(x.n)}</b><small>${ageB(x.age)}${e(x.pos)} · ${e(x.sc)}${x.h?" · "+e(x.h):""}</small></span><span class="dsrkv"><span class="pdkx ${pc(x.avg)}">${x.avg!=null?f1(x.avg):"–"}</span><small>AVG</small>${trB(x.wk)}</span></div>
   <div class="dsrks"><span><b>${x.gp?f1(x.mp):"–"}</b><small>min</small></span><span><b>${x.eff!=null?f2(x.eff):"–"}</b><small>AVG/min</small></span><span><b>${x.a36!=null?f1(x.a36):"–"}</b><small>AVG/36′</small></span><span><b>${x.gp}</b><small>partite</small></span>${x.md?`<span><b>${x.md}</b><small>mock</small></span>`:""}</div>
   <div class="dstags">${tags(x).slice(0,3).map(t=>`<em>${t}</em>`).join("")}<i class="dsgo2">Profilo ›</i></div></div>`;
  return `<div class="dsbox"><h4 class="dsh">Rookie del Draft 2027 <small>primi ${ROOK().length} del big board · Tankathon ${typeof ROOKIE!=="undefined"?e(ROOKIE.upd):""}</small></h4>
@@ -117,7 +119,7 @@ function vPlR0(){const L=ROOK(),x=L.find(z=>z.slug===D.pl)||L[0];if(!x)return`<b
  return `<button class="gback" data-go="draft">‹ Sala Draft</button>
  <div class="ghead dsph" style="background:linear-gradient(115deg,${bg} 0%,color-mix(in srgb,${bg} 55%,#000) 100%);color:#ffffff;border-bottom:4px solid #0b0b0b">
   <div class="gjer"><span class="dsini xl">${e(ini(x.n))}</span></div>
-  <div class="gtit"><small>${e(x.sc)}${x.stag?" · "+e(x.stag):""}</small><h3>${e(x.n)}</h3><p>${[x.pos,x.yr,f1(x.age)+" anni al draft",x.h,x.w?x.w+" lb":""].filter(Boolean).map(e).join(" · ")}<span style="display:block">Big board n° ${x.rk}${x.md?" · mock "+e(x.md):""}</span></p></div>
+  <div class="gtit"><small>${e(x.sc)}${x.stag?" · "+e(x.stag):""}</small><h3>${e(x.n)}</h3><p>${ageB(x.age)}${[x.pos,x.yr,x.h,x.w?x.w+" lb":""].filter(Boolean).map(e).join(" · ")}<span style="display:block">Big board n° ${x.rk}${x.md?" · mock "+e(x.md):""}</span></p></div>
  </div>
  <button class="advbtn ggrbtn ggy" data-dcmp="${e(x.slug)}">⚖ Confronta con un altro rookie</button>
  ${!x.gp?`<p class="note">Nessuna partita giocata finora: i dati compariranno dopo la prima gara.</p>`:`
@@ -155,7 +157,7 @@ function vCmpR0(){const L=ROOK(),byRk=L.slice().sort((a,b)=>a.rk-b.rk),A=L.find(
   ${T("AVG",x=>x.avg)}${T("Trend 7 gg",x=>x.wk,null,1,v=>(v>=0?"+":"−")+f1(Math.abs(v)))}${T("Minuti",x=>x.gp?x.mp:null)}${T("AVG/min",x=>x.eff,null,1,f2)}${T("AVG/36′",x=>x.a36)}
   ${T("Punti",pS(14))}${T("Rimbalzi",pS(8))}${T("Assist",pS(9))}${T("Recuperi",pS(11))}${T("Stoppate",pS(10))}${T("Palle perse",pS(12),null,-1)}
   ${T("Dal campo",pc2(2,3),null,1,pcf)}${T("Da 3",pc2(4,5),null,1,pcf)}${T("Liberi",pc2(6,7),null,1,pcf)}${T("True shooting",x=>x.gp?tsP(x.s):null,null,1,pcf)}
-  ${T("Partite",x=>x.gp,null,0,v=>String(v))}${T("Età al draft",x=>x.age,null,-1)}<tr><td>${e(A.h||"–")}</td><th>Altezza</th><td>${e(B.h||"–")}</td></tr>${T("Big board",x=>x.rk,null,-1,v=>"n° "+v)}<tr><td>${e(A.pos)} · ${e(A.sc)}</td><th>Ruolo</th><td>${e(B.pos)} · ${e(B.sc)}</td></tr></tbody></table></div>
+  ${T("Partite",x=>x.gp,null,0,v=>String(v))}${T("Età al draft",x=>x.age,null,-1,ageB)}<tr><td>${e(A.h||"–")}</td><th>Altezza</th><td>${e(B.h||"–")}</td></tr>${T("Big board",x=>x.rk,null,-1,v=>"n° "+v)}<tr><td>${e(A.pos)} · ${e(A.sc)}</td><th>Ruolo</th><td>${e(B.pos)} · ${e(B.sc)}</td></tr></tbody></table></div>
   <p class="note">In verde il migliore dei due in ogni voce (per palle perse, età e posto nel big board vince il valore più basso). Con «Partite» le gare sono allineate per numero (1ª, 2ª…), con «Settimane» per data dello storico.</p>`}
  return `<div class="grroom dsgr" style="--tc:#1747c9;--tf:#ffffff"><button class="gback" data-go="draft">‹ Sala Draft</button><div class="grhd"><span class="grlg"></span><div><small>Confronto · due rookie sullo stesso grafico</small><b>Comparatore rookie</b></div></div>
  <div class="grctl">${sel("pa",D.pa,CA)}${sel("pb",D.pb,CB)}</div>${ctl()}${body}</div>`}
