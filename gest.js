@@ -158,13 +158,13 @@ function bodyMap(tipo,stato){
   const hl=hit.length?`<g fill="${col}" style="filter:drop-shadow(0 0 2.5px ${col})" stroke="#fff" stroke-width=".6">${hit.map(k=>["head","neck","chest","back"].includes(k)?shp[k]("R"):sides.map(sd=>shp[k](sd)).join("")).join("")}</g>`:"";
   return `<svg class="bmap" viewBox="0 0 40 80" role="img" aria-label="${hit.length?"Zona: "+e(tipo):all?"Tutto il corpo: "+e(tipo):"Nessuna zona specifica"}">${base}${hl}</svg>`}
 const dd=s=>{if(!s)return"";const d=new Date(s);return isNaN(d)?"":d.toLocaleDateString("it-IT",{day:"2-digit",month:"2-digit",timeZone:"America/New_York"})};
-/* (95) infortuni il più possibile live SOLO sul telefono: con l app aperta si rilegge ESPN ogni 2 minuti; nell app li salva GitHub con i dati ufficiali del mattino (espn-data.js, ESPN.inj), usati se ESPN non risponde */
-const injBase=()=>{const S=(typeof ESPN!=="undefined"&&ESPN.inj)||[];return S.map(x=>({n:x[0],nba:x[1],st:x[2],d:x[3],tipo:x[4],rit:x[5],side:x[6]||"",det:x[7]||"",date:x[8]||""}))};
+/* (96) infortuni il più possibile live: con l app aperta il telefono rilegge ESPN ogni 30 secondi; nell app li salva GitHub ogni 5 minuti (infortuni-data.js, INFLIVE; il minimo che GitHub permette), usati se ESPN non risponde, poi quelli di espn-data.js */
+const injBase=()=>{const S=(typeof INFLIVE!=="undefined"&&INFLIVE.l)||(typeof ESPN!=="undefined"&&ESPN.inj)||[];return S.map(x=>({n:x[0],nba:x[1],st:x[2],d:x[3],tipo:x[4],rit:x[5],side:x[6]||"",det:x[7]||"",date:x[8]||""}))};
 if(!INJ){try{INJ=injBase();INJt=0}catch(_){}}
-setInterval(()=>{if(!document.hidden)injLoad()},2*60e3);
-async function injLoad(){if(INJ&&INJt&&Date.now()-INJt<110e3)return;try{const r=await fetch("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;const J=await r.json();const L=[];
+setInterval(()=>{if(!document.hidden)injLoad()},30e3);
+async function injLoad(){if(INJ&&INJt&&Date.now()-INJt<25e3)return;try{const r=await fetch("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;const J=await r.json();const L=[];
  for(const tm of J.injuries||[])for(const x of tm.injuries||[]){const a=x.athlete||{},D=x.details||{};L.push({n:a.displayName||"",nba:(a.team&&a.team.abbreviation)||"",st:x.status||"",d:(x.shortComment||x.longComment||""),date:x.date||"",tipo:D.type||"",rit:D.returnDate||"",side:D.side||"",det:D.detail||""})}
- INJ=L;INJt=Date.now();if(cur==="inf")render()}catch(_){/* se ESPN non risponde dal telefono restano gli infortuni salvati nell app la mattina (espn-data.js) */if(!INJ||!INJ.length){INJ=injBase();if(cur==="inf")render()}}}
+ INJ=L;INJt=Date.now();if(cur==="inf")render()}catch(_){/* se ESPN non risponde dal telefono restano gli infortuni salvati nell app (infortuni-data.js, poi espn-data.js) */if(!INJ||!INJ.length){INJ=injBase();if(cur==="inf")render()}}}
 /* (35) per il profilo giocatore (stats.js): stato e descrizione in italiano dell infortunio, dagli stessi dati del Centro Medico */
 window.e16InjOf=n=>{try{injLoad()}catch(_){}const L=INJ&&INJ.length?INJ:injBase();
  const k=__ownKey(n),x=L.find(y=>__ownKey(y.n)===k);if(!x)return null;const st=stOf(x.st);return{k:st,lab:STATI[st][0],txt:tipoIt(x),rit:x.rit||""}};

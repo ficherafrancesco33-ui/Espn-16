@@ -87,7 +87,7 @@ for (const d of days) {
   ESPN.days[d] = ids;
 }
 /* infortuni NBA (Centro Medico): [nome, squadra NBA, stato, commento, tipo, data rientro] */
-/* (95) gli infortuni si salvano nell app solo con i dati ufficiali del mattino (7-9 italiane) o se mancano; il resto del giorno li legge il telefono ogni 2 minuti */
+/* (96) in espn-data.js gli infortuni si aggiornano la mattina (7-9 italiane): la lista sempre aggiornata è infortuni-data.js (GitHub ogni 5 minuti) */
 const oraIt = +new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Rome", hour: "2-digit", hour12: false }).format(new Date());
 if (OLD.inj && OLD.inj.length && !(oraIt >= 7 && oraIt < 9) && !process.env.INFORTUNI) ESPN.inj = OLD.inj; else
 try { const J = await get("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries"); ESPN.inj = [];
