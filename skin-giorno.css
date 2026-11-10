@@ -2689,3 +2689,69 @@ html.dlt-parquet:not(.notte) div.gszn:not(#dx) { color: rgb(255, 249, 247) !impo
 /* (35) correzioni a mano: la scelta della stagione e la pagella come in Dreamers (regole riprese dal sorgente: l estrazione perdeva le scorciatoie di background) */
 .gszn select{flex:1;max-width:260px;appearance:none;-webkit-appearance:none;background:linear-gradient(180deg,var(--panel2),var(--panel)) padding-box;color:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);font-family:var(--display);font-style:italic;font-weight:800;font-size:17px;letter-spacing:.06em;text-transform:uppercase;padding:8px 34px 8px 12px;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 12px) 55%;background-size:6px 6px,6px 6px;background-repeat:no-repeat}
 .pgbox{--muted:#94a3b8;background:#141c33!important;color:#e2e8f0}
+
+/* (39) Lega di giorno: stile Parquet della stanza Dreamers (in Dreamers si attiva a schermo intero, qui sempre di giorno) */
+.drroom[data-th="3"]{background:repeating-linear-gradient(90deg,#c88a4c 0 26px,#be8043 26px 52px)!important;border-color:#7c3a10;color:#2b1608;--dtx:#2b1608;--dmu:#7a5632;--dpn:rgba(255,246,228,.97);--dpc:#fff6e4;--dpb:rgba(124,58,16,.45);--dac:linear-gradient(180deg,#f2701a,#c2410c);--don:#fff;--drad:16px;--dsh:0 6px 14px rgba(70,30,0,.35);--dgd:#b45309}
+.drroom[data-th="3"]::before{background-image:linear-gradient(180deg,rgba(255,255,255,.18),transparent 30%,rgba(0,0,0,.2))!important;opacity:1!important;background-size:auto}
+.drroom[data-th="3"] .drlogo{background-image:linear-gradient(180deg,#fff6e4,#ffd9a0)!important;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 #6b3008)}
+.drroom[data-th="3"] .drhd small,.drroom[data-th="3"] .drci small,.drroom[data-th="3"] .drnav small,.drroom[data-th="3"] .drcwl small,.drroom[data-th="3"] .drcwl em,.drroom[data-th="3"] .drpos,.drroom[data-th="3"] .drcwl b.avg,.drroom[data-th="3"] .drcm em,.drroom[data-th="3"] .drplh span,.drroom[data-th="3"] .drn small,.drroom[data-th="3"] .drfm em,.drroom[data-th="3"] .note,.drroom[data-th="3"] .drst,.drroom[data-th="3"] .dtsec h4 small{color:#7a5632!important}
+.drroom[data-th="3"] .drci b,.drroom[data-th="3"] .drn b,.drroom[data-th="3"] .drcwl b,.drroom[data-th="3"] .drcm b,.drroom[data-th="3"] .drm,.drroom[data-th="3"] .drr em,.drroom[data-th="3"] .drtabs button,.drroom[data-th="3"] .drnav button,.drroom[data-th="3"] .drnav b,.drroom[data-th="3"] .drcm span.w b,.drroom[data-th="3"] .drplh,.drroom[data-th="3"] .drcal,.drroom[data-th="3"] .dtsec h4,.drroom[data-th="3"] .dtc b,.drroom[data-th="3"] .dthead h3,.drroom[data-th="3"] .dtl b,.drroom[data-th="3"] .dtwl,.drroom[data-th="3"] .dtp,.drroom[data-th="3"] .dun b,.drroom[data-th="3"] .dus,.drroom[data-th="3"] .duf,.drroom[data-th="3"] .dtcap b,.drroom[data-th="3"] .dtcap em,.drroom[data-th="3"] .dtleg{color:#2b1608!important}
+.drroom[data-th="3"] .drcwl b.l,.drroom[data-th="3"] .drcm b{opacity:.85}
+.drroom[data-th="3"] .drtabs button,.drroom[data-th="3"] .drnav button,.drroom[data-th="3"] .drrul{background:rgba(255,246,228,.97);border:1px solid rgba(124,58,16,.45);border-radius:16px;color:#2b1608;box-shadow:0 6px 14px rgba(70,30,0,.35)}
+.drroom[data-th="3"] .drtabs button[aria-pressed="true"],.drroom[data-th="3"] .drrul[aria-pressed="true"]{background:linear-gradient(180deg,#f2701a,#c2410c);color:#fff!important;border-color:#7c3a10}
+.drroom[data-th="3"] .drm,.drroom[data-th="3"] .drcr,.drroom[data-th="3"] .du,.drroom[data-th="3"] .dtsec,.drroom[data-th="3"] .dthead,.drroom[data-th="3"] .dtc,.drroom[data-th="3"] .drcal,.drroom[data-th="3"] .bkm,.drroom[data-th="3"] .drfr{background:rgba(255,246,228,.97)!important;border:1px solid rgba(124,58,16,.45)!important;border-radius:16px!important;box-shadow:0 6px 14px rgba(70,30,0,.35)}
+.drroom[data-th="3"] .drcr{background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 24%,#fff6e4),#fff6e4 65%)!important}
+.drroom[data-th="3"] .drcr.lead{border-color:#b45309!important}
+.drroom[data-th="3"] .drr{border-bottom-color:rgba(124,58,16,.45)}
+.drroom[data-th="3"] .dtc,.drroom[data-th="3"] .dthr,.drroom[data-th="3"] .dtcap{background:color-mix(in srgb,#2b1608 7%,transparent)!important;box-shadow:none}
+.drroom[data-th="3"] .dtrng select{background:#fff6e4;color:#2b1608;border-color:rgba(124,58,16,.45)}
+.drroom[data-th="3"] .dthead{background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 24%,#fff6e4),#fff6e4 70%)!important}
+.drroom[data-th="3"] .drlive{border-color:#b45309;color:#2b1608}
+.drroom[data-th="3"] .drst{background:#d9480f!important;color:#fff!important}
+.drroom[data-th="3"] .drr em,.drroom[data-th="3"] .drcwl b,.drroom[data-th="3"] .drlogo{text-shadow:none}
+.drroom[data-th="3"] .duhd{background:linear-gradient(90deg,color-mix(in srgb,var(--ca,#6d4bd8) 28%,#fff6e4),#fff6e4 50%,color-mix(in srgb,var(--cb,#2563eb) 28%,#fff6e4))!important;border:1px solid var(--dpb)!important;border-radius:var(--drad)!important;box-shadow:var(--dsh)}
+.drroom[data-th="3"] .dut b,.drroom[data-th="3"] .dunm,.drroom[data-th="3"] .dut b span{color:#2b1608!important}
+.drroom[data-th="3"] .dut small,.drroom[data-th="3"] .dupct,.drroom[data-th="3"] .dun small,.drroom[data-th="3"] .dus em,.drroom[data-th="3"] .duf,.drroom[data-th="3"] .dunb{color:#7a5632!important}
+.drroom[data-th="3"] .duvs{background:#d9480f;color:#fff}
+.drroom[data-th="3"] :is(b,em,strong,span,i,small,div){text-shadow:none!important}
+b,.drroom[data-th="3"] .drr.w em,.drroom[data-th="3"] .drms .drr.slead em,.drroom[data-th="3"] .drms .drr.sgold em{color:#c2410c!important;text-shadow:none!important}
+.drroom[data-th="3"] .dusec.cap{color:#b45309}
+.drroom[data-th="3"] .dusec.full{color:#15803d}
+.drroom[data-th="3"] .dusec.half{color:#be185d}
+.drroom[data-th="3"] .dusec.trib{color:#6b6258}
+.drroom[data-th="3"] .dusec.wait{color:#4338ca}
+.drroom[data-th="3"] .duw:not(.dug){background:rgba(0,0,0,.06)}
+.drroom[data-th="3"] .duw:not(.dug) i{color:#7a5632}
+.drroom[data-th="3"] .duw:not(.dug) b{color:#2b1608}
+.drroom[data-th="3"] .duw.duu{box-shadow:inset 0 0 0 1px rgba(0,0,0,.3)}
+.drroom[data-th="3"] .duw.duu.lv b{color:#be123c}
+.drroom[data-th="3"] .duw.dun0 b{color:#7a5632}
+.drroom[data-th="3"] .du-vuoto,.drroom[data-th="3"] .du-vuoto b{color:#7a5632!important}
+.drroom[data-th="3"] .duslot{background:rgba(0,0,0,.08);color:#2b1608}
+.drroom[data-th="3"] .dusec,.drroom[data-th="3"] .dusec.cap,.drroom[data-th="3"] .dusec.full,.drroom[data-th="3"] .dusec.half,.drroom[data-th="3"] .dusec.trib,.drroom[data-th="3"] .dusec.wait,.drroom[data-th="3"] .gback,.drroom[data-th="3"] .dutop .gback,.drroom[data-th="3"] .drhd small,.drroom[data-th="3"] .note{color:#2b1608!important}
+.drroom[data-th="3"] .shbtn,.drroom[data-th="3"] .shb,.drroom[data-th="3"] [data-share]{background:#fff6e4!important;color:#2b1608!important;border:1px solid #2b1608!important}
+.drroom[data-th="3"] .drms .drr.slead em,.drroom[data-th="3"] .drms .drr.sgold em,.drroom[data-th="3"] .drr.w em{color:#c2410c!important;text-shadow:0 0 10px rgba(242,112,26,.85),0 0 22px rgba(255,150,40,.6)!important}
+.drroom[data-th="3"] .drms .drr.slead em,.drroom[data-th="3"] .drms .drr.sgold em,.drroom[data-th="3"] .drr.w em{text-shadow:none!important}
+.drroom[data-th="3"] .z-campo{background:rgba(22,163,74,.14);border-color:rgba(21,128,61,.6)}
+.drroom[data-th="3"] .z-panch{background:rgba(219,39,119,.1);border-color:rgba(190,24,93,.5)}
+.drroom[data-th="3"] .z-trib{background:rgba(107,98,88,.12);border-color:rgba(107,98,88,.5)}
+.drroom[data-th="3"] .duzt span{box-shadow:0 3px 10px rgba(60,30,10,.35)}
+.drroom[data-th="3"] .badge,.drroom[data-th="3"] .logo,.drroom[data-th="3"] .drlg,.drroom[data-th="3"] .drlg .badge,.drroom[data-th="3"] .bklg,.drroom[data-th="3"] .bklg .badge,.drroom[data-th="3"] .dulg,.drroom[data-th="3"] .dulg *,.drroom[data-th="3"] .hlogo,.drroom[data-th="3"] .tvlw,.drroom[data-th="3"] .dtlg,.drroom[data-th="3"] .drlg *{filter:none!important;box-shadow:none!important;text-shadow:none!important}
+.drroom[data-th="3"] .bkt b,.drroom[data-th="3"] .bkt em{color:#2b1608!important}
+.drroom[data-th="3"] .bkt i{color:#7a5632}
+.drroom[data-th="3"] .bkt.l b,.drroom[data-th="3"] .bkt.l em{color:#9a8470!important}
+.drroom[data-th="3"] .bkt.w em{color:#c2410c!important}
+.drroom[data-th="3"] .bkm.tbd .bkt b{color:#7a5632!important}
+.drroom[data-th="3"] .gdtot small,.drroom[data-th="3"] .gdtot em,.drroom[data-th="3"] .gdinfo small{color:#7a5632!important}
+.drroom[data-th="3"] .gdtot b{color:#2b1608!important}
+.drroom[data-th="3"] .drsw{background:#fff!important;border:2px solid #d9560b!important;box-shadow:0 3px 10px rgba(120,60,10,.25)}
+.drroom[data-th="3"] .drsw button{background:#fff!important;color:#d9560b!important;text-shadow:none!important;box-shadow:none!important}
+.drroom[data-th="3"] .drsw button[aria-selected="true"]{background:linear-gradient(180deg,#f2701a,#c2410c)!important;color:#fff!important}
+.drroom[data-th="3"] .drtabs button{background:#fff!important;color:#d9560b!important;border:2px solid #d9560b!important;text-shadow:none!important}
+.drroom[data-th="3"] .drtabs button[aria-pressed="true"]{background:linear-gradient(180deg,#f2701a,#c2410c)!important;color:#fff!important;border-color:#c2410c!important}
+.drroom[data-th="3"] .drcr{border:2px solid rgba(217,86,11,.7)!important;box-shadow:0 3px 10px rgba(120,60,10,.25)}
+.drroom[data-th="3"] .drcr .drpos,.drroom[data-th="3"] .drcr .drpos *{color:#d9560b!important}
+.drroom[data-th="3"] .drcr small,.drroom[data-th="3"] .drcr .drn small,.drroom[data-th="3"] .drcr .drm small{color:#8a3a0c!important}
+.drroom[data-th="3"] .drlogo{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-stroke:0;text-shadow:0 3px 0 #b8470a,0 0 14px rgba(217,86,11,.6)!important;filter:none!important}
+.drroom[data-th="3"] .drexit{background:#fff!important;color:#d9560b!important;border:2px solid #d9560b!important;box-shadow:0 3px 10px rgba(120,60,10,.25)!important}
+html.dreamfs:has(.drroom[data-th="3"]),html.dreamfs:has(.drroom[data-th="3"]) body{background:repeating-linear-gradient(90deg,#c88a4c 0 26px,#be8043 26px 52px)!important;background-color:#c88a4c!important}
