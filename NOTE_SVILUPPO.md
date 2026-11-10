@@ -62,3 +62,5 @@
 (27) 10/11/2026 – Dynasty TV tabellino: AVG 50+ viola (td.pdkl.pv), regola Dreamers mancante nelle skin estratte; aggiunta in fondo a skin-giorno.css e skin-notte.css (se si rigenerano le skin, rimetterla).
 
 (28) 10/11/2026 – Cambio giorno/notte fluido: skin-giorno/notte sempre caricate, si cambia solo media (con disabled Safari le ricaricava: lampo bianco e lente gigante = pagina senza stile). Dissolvenza 0,25 s con View Transition dove supportata.
+
+(29) 10/11/2026 – Loghi nuovi già ritagliati dall utente per LVA (lvg), CLE, SRO, DET, HON, NYP, BOS, WIC: ritagliati al contenuto (puntini sparsi tolti), 320px, ?v=29 per non usare la copia vecchia. TCOL di queste squadre presi dai colori dei loghi e un po più chiari (LVA #3d4a6e, CLE #6d3fc0, SRO #34507a, DET #2b4fa8, HON #2f6fa8, NYP #2a62c4, BOS #b5531f, WIC #565e6e). Maglie: CLE bordo viola, WIC arancio.

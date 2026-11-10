@@ -302,22 +302,22 @@ e16Tema(E16N);</script>
 /* ===== SQUADRE (da ESPN Fantasy, 10/11/2026). conf: E = East, W = West. Ordine = ordine della classifica ESPN.
    I nomi con "…" sono tagliati nello screenshot: da completare (o arriveranno dal collegamento alla lega ESPN). */
 const TEAMS=[
- {id:"DET",nome:"Detroit Pythons",gm:"Domenico Borracci",conf:"E",logo:"loghi/det.png"},
- {id:"CLE",nome:"Cleveland Cadavers",gm:"Andrea Ce",conf:"E",logo:"loghi/cle.png"},
- {id:"BOS",nome:"Boston TeaBags",gm:"Giuseppe Formica",conf:"E",logo:"loghi/bos.png"},
+ {id:"DET",nome:"Detroit Pythons",gm:"Domenico Borracci",conf:"E",logo:"loghi/det.png?v=29"},
+ {id:"CLE",nome:"Cleveland Cadavers",gm:"Andrea Ce",conf:"E",logo:"loghi/cle.png?v=29"},
+ {id:"BOS",nome:"Boston TeaBags",gm:"Giuseppe Formica",conf:"E",logo:"loghi/bos.png?v=29"},
  {id:"NYS",nome:"NY samb",gm:"Michael Di Fazi",conf:"E",logo:"loghi/nys.png"},
  {id:"QUE",nome:"Quebec Ducks",gm:"HC. Ducks",conf:"E",logo:"loghi/que.png"},
  {id:"CHA",nome:"Charlotte Cougars",gm:"Andrea Indovino",conf:"E",logo:"loghi/cha.png"},
- {id:"NYP",nome:"New York pandas",gm:"M. MisterfBio",conf:"E",logo:"loghi/nyp.png"},
+ {id:"NYP",nome:"New York pandas",gm:"M. MisterfBio",conf:"E",logo:"loghi/nyp.png?v=29"},
  {id:"CAN",nome:"Cancùn Mayans",gm:"Fabio Umberto Montrucchio",conf:"E",logo:"loghi/can.png"},
  {id:"HOU",nome:"Houston Orange Lions",gm:"Marco Van den Berg",conf:"W",logo:"loghi/hou.png"},
- {id:"LVA",nome:"Las Vegas Aliens",gm:"Claudio Monga",conf:"W",logo:"loghi/lvg.png"},
- {id:"HON",nome:"Honolulu Monk Seals",gm:"Matteo Pagani",conf:"W",logo:"loghi/hon.png"},
+ {id:"LVA",nome:"Las Vegas Aliens",gm:"Claudio Monga",conf:"W",logo:"loghi/lvg.png?v=29"},
+ {id:"HON",nome:"Honolulu Monk Seals",gm:"Matteo Pagani",conf:"W",logo:"loghi/hon.png?v=29"},
  {id:"ALB",nome:"Albuquerque Bluesky",gm:"Tommaso Di Vincenzo",conf:"W",logo:"loghi/alb.png"},
  {id:"ALA",nome:"Alaska Whales",gm:"Andrea Panci",conf:"W",logo:"loghi/ala.png"},
- {id:"WIC",nome:"Wichita Aviators",gm:"Alfio Maccarrone",conf:"W",logo:"loghi/wic.png"},
+ {id:"WIC",nome:"Wichita Aviators",gm:"Alfio Maccarrone",conf:"W",logo:"loghi/wic.png?v=29"},
  {id:"FAL",nome:"Fallon Mavericks",gm:"Giorgio Durante",conf:"W",logo:"loghi/fal.png"},
- {id:"SRO",nome:"Santa Rosa Pirates",gm:"Mattia Zanni",conf:"W",logo:"loghi/sro.png"}
+ {id:"SRO",nome:"Santa Rosa Pirates",gm:"Mattia Zanni",conf:"W",logo:"loghi/sro.png?v=29"}
 ];
 const TM=Object.fromEntries(TEAMS.map(t=>[t.id,t]));
 /* (19) ETÀ PRECISE: dalla data di nascita (eta-data.js, rose ESPN). etaOf(nome) = anni compiuti oggi; etaTxt = "23 anni"; u25 = sotto i 25 (regola della tribuna) */
@@ -327,7 +327,7 @@ function etaOf(n){const d=nascOf(n);if(!d)return null;const t=new Date(),b=new D
 const etaTxt=n=>{const a=etaOf(n);return a==null?"":a+" anni"};
 const u25=n=>{const a=etaOf(n);return a!=null&&a<25};
 /* (6) colore di ogni squadra (dal logo), usato come in Dreamers per grafici, intestazioni squadra e righe */
-const TCOL={DET:"#4c1d95",CLE:"#1f2937",BOS:"#9a3412",NYS:"#c2410c",QUE:"#6d28d9",CHA:"#b45309",NYP:"#111827",CAN:"#0f766e",HOU:"#ea580c",LVA:"#1e3a8a",HON:"#0e7490",ALB:"#7f1d1d",ALA:"#1d4ed8",WIC:"#c2410c",FAL:"#1e3a8a",SRO:"#0f172a"};
+const /* (29) sfondi loghi presi dai colori dei loghi nuovi, un po più chiari */TCOL={DET:"#2b4fa8",CLE:"#6d3fc0",BOS:"#b5531f",NYS:"#c2410c",QUE:"#6d28d9",CHA:"#b45309",NYP:"#2a62c4",CAN:"#0f766e",HOU:"#ea580c",LVA:"#3d4a6e",HON:"#2f6fa8",ALB:"#7f1d1d",ALA:"#1d4ed8",WIC:"#565e6e",FAL:"#1e3a8a",SRO:"#34507a"};
 /* vittorie/sconfitte dagli screenshot ESPN (finché la lega non è collegata). pf/pa = punti fatti/subiti, se noti */
 const REC={DET:{w:2,l:1,pf:0,pa:0},CLE:{w:2,l:1,pf:0,pa:0},BOS:{w:2,l:1,pf:0,pa:0},NYS:{w:1,l:2,pf:0,pa:0},QUE:{w:1,l:2,pf:0,pa:0},CHA:{w:0,l:3,pf:0,pa:0},NYP:{w:0,l:3,pf:0,pa:0},CAN:{w:0,l:3,pf:0,pa:0},HOU:{w:3,l:0,pf:0,pa:0},LVA:{w:3,l:0,pf:0,pa:0},HON:{w:3,l:0,pf:0,pa:0},ALB:{w:2,l:1,pf:0,pa:0},ALA:{w:2,l:1,pf:0,pa:0},WIC:{w:1,l:2,pf:0,pa:0},FAL:{w:1,l:2,pf:0,pa:0},SRO:{w:1,l:2,pf:0,pa:0}};
 /* ===== ROSE dagli screenshot ESPN. [nome completo come nei tabellini ESPN, squadra NBA, slot in formazione ESPN, ruoli ESPN]
