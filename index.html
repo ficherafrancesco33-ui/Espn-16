@@ -375,6 +375,7 @@ e16Tema(E16N);</script>
 <script src="contratti.js"></script>
 <script src="eta-data.js"></script>
 <script src="valori-data.js"></script>
+<script src="lega-data.js"></script>
 <script>
 /* ===== SQUADRE (da ESPN Fantasy, 10/11/2026). conf: E = East, W = West. Ordine = ordine della classifica ESPN.
    I nomi con "…" sono tagliati nello screenshot: da completare (o arriveranno dal collegamento alla lega ESPN). */
@@ -482,12 +483,15 @@ const dIt=d=>{const[y,m,g]=d.split("-");return g+"/"+m};
 /* ===== HOME ===== */
 /* (6) HOME con la stessa struttura e gli stessi stili della Home Dreamers (hn6: binario loghi, scheda della notte, partite che scorrono).
    Qui i binari sono due: East a sinistra, West a destra. */
+/* (44) ROSE dalla lega ESPN (pubblica): tools/lega.mjs scrive LEGA.rose con le rose di oggi e lo slot in formazione (BE = panchina, IR = infortunati).
+   Se il file c è, sostituisce le rose scritte a mano (stesso formato [nome, squadra NBA, slot, ruoli]). */
+try{if(typeof LEGA!=="undefined"&&LEGA.rose)for(const t in LEGA.rose)if(ROSE[t]&&LEGA.rose[t].length)ROSE[t]=LEGA.rose[t]}catch(e){}
 const OWNH={};try{const nn=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[.'’]/g,"").replace(/\s+(jr|sr|ii|iii|iv)$/,"").trim();for(const t in ROSE)for(const g of ROSE[t])OWNH[nn(g[0])]=t;window.__ownKey=nn}catch(e){}
 const ownH=n=>OWNH[window.__ownKey?__ownKey(n):n]||"";
 const nbaLogo=a=>`loghi/nba/${String(a).toLowerCase()}.svg`;
 const pdkC=v=>v>=50?"v":v>=35?"g":v>=20?"y":"r";
 /* (7) SETTIMANE della lega (come ESPN Fantasy): la 1ª va da martedì 20/10 a domenica 25/10, poi da lunedì a domenica.
-   Punteggio di una squadra in una settimana = somma degli AVG dei 14 titolari (rosa attuale, slot diversi da BE e IR) in tutte le loro partite della settimana: punteggio pieno, nessun ruolo, nessun cap. */
+   Punteggio di una squadra in una settimana = somma degli AVG dei 14 titolari della formazione ESPN del lunedì (44) in tutte le loro partite della settimana: punteggio pieno, nessun ruolo, nessun cap. */
 const W1="2026-10-20",W2="2026-10-26";
 function weekOf(d){if(d<W2)return 1;return 2+Math.floor((Date.parse(d+"T12:00:00Z")-Date.parse(W2+"T12:00:00Z"))/(7*864e5))}
 function weekRange(w){if(w===1)return[W1,"2026-10-25"];const a=new Date(Date.parse(W2+"T12:00:00Z")+(w-2)*7*864e5),b=new Date(a.getTime()+6*864e5);return[a.toISOString().slice(0,10),b.toISOString().slice(0,10)]}
@@ -496,6 +500,8 @@ const nyToday=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York"})
 /* (22) calendario delle sfide dagli screenshot ESPN «League Schedule» (10/11/2026), settimane 1-16: [casa, ospite]. SCORES = punteggi ufficiali ESPN delle settimane finite. */
 const MATCHUPS={"1": [["QUE", "CAN"], ["FAL", "SRO"], ["CLE", "HOU"], ["LVA", "ALB"], ["HON", "NYP"], ["WIC", "NYS"], ["CHA", "BOS"], ["DET", "ALA"]], "2": [["ALA", "CAN"], ["SRO", "LVA"], ["CLE", "QUE"], ["HOU", "FAL"], ["NYS", "HON"], ["WIC", "BOS"], ["NYP", "ALB"], ["DET", "CHA"]], "3": [["CAN", "NYS"], ["QUE", "SRO"], ["CLE", "NYP"], ["LVA", "FAL"], ["HON", "CHA"], ["WIC", "DET"], ["ALA", "ALB"], ["BOS", "HOU"]], "4": [["WIC", "CAN"], ["SRO", "ALA"], ["CLE", "NYS"], ["LVA", "BOS"], ["QUE", "HOU"], ["FAL", "NYP"], ["DET", "HON"], ["CHA", "ALB"]], "5": [["NYP", "CAN"], ["HOU", "SRO"], ["LVA", "CLE"], ["ALB", "QUE"], ["BOS", "FAL"], ["HON", "ALA"], ["WIC", "CHA"], ["NYS", "DET"]], "6": [["CAN", "HOU"], ["CLE", "SRO"], ["HON", "LVA"], ["QUE", "DET"], ["FAL", "ALB"], ["WIC", "NYP"], ["CHA", "ALA"], ["NYS", "BOS"]], "7": [["CAN", "LVA"], ["BOS", "SRO"], ["CLE", "FAL"], ["HON", "QUE"], ["ALA", "WIC"], ["ALB", "HOU"], ["NYS", "CHA"], ["DET", "NYP"]], "8": [["DET", "CAN"], ["SRO", "NYS"], ["CHA", "CLE"], ["QUE", "LVA"], ["FAL", "ALA"], ["HON", "BOS"], ["WIC", "ALB"], ["HOU", "NYP"]], "9": [["CAN", "DET"], ["SRO", "NYS"], ["CLE", "CHA"], ["QUE", "LVA"], ["ALA", "FAL"], ["BOS", "HON"], ["ALB", "WIC"], ["NYP", "HOU"]], "10": [["HON", "CAN"], ["CHA", "SRO"], ["WIC", "CLE"], ["LVA", "NYP"], ["BOS", "QUE"], ["FAL", "NYS"], ["ALB", "DET"], ["HOU", "ALA"]], "11": [["CAN", "ALB"], ["SRO", "DET"], ["HON", "CLE"], ["NYS", "LVA"], ["ALA", "QUE"], ["WIC", "FAL"], ["CHA", "HOU"], ["NYP", "BOS"]], "12": [["FAL", "CAN"], ["ALB", "SRO"], ["BOS", "CLE"], ["LVA", "DET"], ["QUE", "WIC"], ["HOU", "HON"], ["CHA", "NYP"], ["NYS", "ALA"]], "13": [["CHA", "CAN"], ["SRO", "NYP"], ["CLE", "ALA"], ["HOU", "LVA"], ["QUE", "FAL"], ["WIC", "HON"], ["ALB", "NYS"], ["DET", "BOS"]], "14": [["BOS", "CAN"], ["SRO", "WIC"], ["DET", "CLE"], ["ALA", "LVA"], ["QUE", "NYP"], ["FAL", "CHA"], ["HON", "ALB"], ["HOU", "NYS"]], "15": [["CAN", "SRO"], ["CLE", "ALB"], ["WIC", "LVA"], ["CHA", "QUE"], ["HON", "FAL"], ["DET", "HOU"], ["NYP", "NYS"], ["ALA", "BOS"]], "16": [["CAN", "CLE"], ["HON", "SRO"], ["LVA", "CHA"], ["NYS", "QUE"], ["FAL", "DET"], ["HOU", "WIC"], ["ALB", "BOS"], ["ALA", "NYP"]]};
 const SCORES={"1": {"CAN": 671, "SRO": 725, "CLE": 1171.5, "LVA": 1357.5, "QUE": 894, "FAL": 902.5, "HON": 1312, "WIC": 1076.5, "ALB": 1120, "CHA": 1110.5, "DET": 1097, "NYS": 1019.5, "ALA": 1190.5, "BOS": 1309.5, "HOU": 1278.5, "NYP": 1187}, "2": {"CAN": 653.5, "SRO": 747, "CLE": 1407, "LVA": 1526, "QUE": 1107.5, "FAL": 1064, "HON": 1364, "WIC": 1022, "ALB": 1376, "CHA": 1323.5, "DET": 1631, "NYS": 965, "ALA": 1309.5, "BOS": 1421.5, "HOU": 1741.5, "NYP": 1301}, "3": {"CAN": 605.5, "SRO": 1048, "CLE": 1722, "LVA": 1491.5, "QUE": 746.5, "FAL": 1100, "HON": 1679.5, "WIC": 1346.5, "ALB": 1362, "CHA": 1606.5, "DET": 1604, "NYS": 1301, "ALA": 1358, "BOS": 1361, "HOU": 1660, "NYP": 1392}};
+/* (44) calendario e punteggi ufficiali dalla lega ESPN: LEGA.match (tutte le settimane) e LEGA.score (settimane finite, punteggio ufficiale ESPN con le formazioni dei GM) */
+try{if(typeof LEGA!=="undefined"){if(LEGA.match)for(const w in LEGA.match)if(LEGA.match[w].length)MATCHUPS[w]=LEGA.match[w];if(LEGA.score)for(const w in LEGA.score)SCORES[w]={...(SCORES[w]||{}),...LEGA.score[w]}}}catch(e){}
 /* (23) record, punti fatti e subiti dai punteggi ufficiali (SCORES) delle settimane finite */
 for(const id in REC){REC[id].w=0;REC[id].l=0;REC[id].pf=0;REC[id].pa=0}
 for(const w in SCORES)for(const[A,B]of(MATCHUPS[w]||[])){const a=SCORES[w][A],b=SCORES[w][B];if(a==null||b==null)continue;for(const[t,x,y]of[[A,a,b],[B,b,a]]){const r=REC[t]||(REC[t]={w:0,l:0,pf:0,pa:0});r.pf+=x;r.pa+=y;if(x>y)r.w++;else if(x<y)r.l++}}
@@ -505,10 +511,15 @@ for(const w in SCORES)for(const[A,B]of(MATCHUPS[w]||[])){const a=SCORES[w][A],b=
 function seeds(){const by=(a,b)=>(b.w-a.w)||(a.l-b.l)||(b.pf-a.pf);const all=TEAMS.map(t=>({...t,...(REC[t.id]||{w:0,l:0,pf:0,pa:0})}));
  const top=["E","W"].map(c=>all.filter(t=>t.conf===c).sort(by)[0]).sort(by);const rest=all.filter(t=>!top.includes(t)).sort(by);return[...top,...rest]}
 /* (24) PARTITE DELLA SETTIMANA (regola ESPN 16): ogni giocatore porta la SOMMA dell AVG di tutte le sue partite della settimana;
-   la formazione è automatica: contano i migliori 14 dei 17 (nessuna panchina a metà, nessun capitano, nessun cap).
+   (44) FORMAZIONE ESPN: contano i 14 titolari messi dal GM il lunedì su ESPN (LEGA.line[settimana][squadra], bloccata fino al lunedì dopo);
+   panchina e IR non contano. Se la formazione di una settimana non c è ancora, si usano i migliori 14 dei 17 (come prima).
    wkTeam(t,w) → elenco dei 17 ordinati per punteggio della settimana, con le caselle partita (giocata / NG / da giocare) e la proiezione. */
 const WKD=["DO","LU","MA","ME","GI","VE","SA"];
-function wkTeam(t,w){const[a,b]=weekRange(w),P=pstats(),R0=ROSE[t]||[],own={};R0.forEach(g=>own[__ownKey(g[0])]=g);
+const lineOf=(t,w)=>{try{const L=LEGA.line[w][t];return L&&L.length?L:null}catch(e){return null}};
+function wkTeam(t,w){const[a,b]=weekRange(w),P=pstats(),LN=lineOf(t,w),R0=(ROSE[t]||[]).slice(),own={};
+ /* chi era titolare nella formazione del lunedì ma oggi non è più in rosa (ceduto/tagliato) entra lo stesso, con la sua squadra NBA dai tabellini */
+ if(LN){const have=new Set(R0.map(g=>__ownKey(g[0])));for(const n of LN)if(!have.has(__ownKey(n)))R0.push([n,"","ESPN",""])}
+ R0.forEach(g=>own[__ownKey(g[0])]=g);
  const L={};R0.forEach(g=>L[g[0]]={g,tot:0,n:0,G:[],rem:0,team:g[1]});
  const days=Object.keys(ESPN.days).filter(d=>d>=a&&d<=b).sort();
  /* 1) partite giocate (tabellini) */
@@ -519,9 +530,13 @@ function wkTeam(t,w){const[a,b]=weekRange(w),P=pstats(),R0=ROSE[t]||[],own={};R0
   for(const d of days)for(const id of ESPN.days[d]){const gm=ESPN.games[id];if(!gm||seen.has(id)||(gm[0]!==x.team&&gm[1]!==x.team))continue;const opp=(gm[0]===x.team?"@":"")+(gm[0]===x.team?gm[1]:gm[0]);
    if(ESPN.box[id]&&gm[4]!=="S")x.G.push({d,id,f:null,opp,ng:gm[4]==="F",lv:gm[4]==="L"});else{x.G.push({d,id,f:null,opp,up:1});x.rem++}}
   x.G.sort((p,q)=>p.d<q.d?-1:p.d>q.d?1:0);const p=P[k];x.avg=p?p.ff/p.gp:0;x.proj=x.tot+x.avg*x.rem}
- const out=Object.values(L).sort((p,q)=>q.tot-p.tot||q.proj-p.proj);out.forEach((x,i)=>x.on=i<14);
- const S=out.slice(0,14).reduce((s,x)=>s+x.tot,0),PR=out.map(x=>x.proj).sort((p,q)=>q-p).slice(0,14).reduce((s,v)=>s+v,0);
- return{L:out,S,PR,G:out.slice(0,14).reduce((s,x)=>s+x.n,0),rem:out.reduce((s,x)=>s+x.rem,0)}}
+ const all=Object.values(L).sort((p,q)=>q.tot-p.tot||q.proj-p.proj);
+ /* formazione migliore possibile della settimana (i 14 con più punti) per «lasciati in panchina» */
+ const BEST=all.slice(0,14).reduce((s,x)=>s+x.tot,0);
+ let out;if(LN){const ST=new Set(LN.map(__ownKey));all.forEach(x=>x.on=ST.has(__ownKey(x.g[0])));out=[...all.filter(x=>x.on),...all.filter(x=>!x.on&&x.g[2]!=="ESPN")]}
+ else{out=all.filter(x=>x.g[2]!=="ESPN");out.forEach((x,i)=>x.on=i<14)}
+ const ON=out.filter(x=>x.on),S=ON.reduce((s,x)=>s+x.tot,0),PR=ON.reduce((s,x)=>s+x.proj,0);
+ return{L:out,S,PR,nOn:ON.length,G:ON.reduce((s,x)=>s+x.n,0),rem:ON.reduce((s,x)=>s+x.rem,0),best:BEST,espn:!!LN}}
 let WK=null;function weekScores(w){if(SCORES[w]){const G={};TEAMS.forEach(t=>G[t.id]=0);return{S:{...SCORES[w]},G,off:1}}const S={},G={};TEAMS.forEach(t=>{const T=wkTeam(t.id,w);S[t.id]=T.S;G[t.id]=T.G});return{S,G}}
 let HSL=null,HWK=null;/* casella della Home: pagina scelta e settimana */
 try{HSL=+localStorage.getItem("e16_hsl")||0}catch(e){}
