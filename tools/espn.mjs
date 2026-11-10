@@ -30,14 +30,16 @@ if (existsSync(OUT)) { try { OLD = new Function(readFileSync(OUT, "utf8") + ";re
 /* oggi a New York */
 const nyToday = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
 const days = [];
+/* anche i prossimi 7 giorni (solo calendario, per la Dynasty TV) */
+const lastDay = (() => { const x = new Date(nyToday + "T12:00:00Z"); x.setUTCDate(x.getUTCDate() + 7); return x.toISOString().slice(0, 10) })();
 for (let d = new Date(START + "T12:00:00Z"); ; d.setUTCDate(d.getUTCDate() + 1)) {
-  const s = d.toISOString().slice(0, 10); if (s > nyToday) break; days.push(s);
+  const s = d.toISOString().slice(0, 10); if (s > lastDay) break; days.push(s);
 }
 
 const n = v => { const x = +v; return Number.isFinite(x) ? x : 0 };
 const mm = s => { const [a, b] = String(s || "").split("-"); return [n(a), n(b)] };
 
-/* riga del tabellino: [nome, squadra NBA, titolare 1/0, minuti, PTS, FGM, FGA, 3PM, 3PA, FTM, FTA, OREB, DREB, AST, STL, BLK, TO, PF, TF, FF, idESPN] */
+/* riga del tabellino: [nome, squadra NBA, titolare 1/0, minuti, PTS, FGM, FGA, 3PM, 3PA, FTM, FTA, OREB, DREB, AST, STL, BLK, TO, PF, TF, FF, idESPN, +/-, ruolo NBA, minuti mm:ss] */
 function boxOf(sum) {
   const out = [], idx = {};
   for (const t of (sum.boxscore && sum.boxscore.players) || []) {
@@ -47,7 +49,7 @@ function boxOf(sum) {
       const st = a.stats || []; if (!st.length || a.didNotPlay) continue;
       const g = x => st[k(x)];
       const [fgm, fga] = mm(g("FG")), [tpm, tpa] = mm(g("3PT")), [ftm, fta] = mm(g("FT"));
-      const row = [a.athlete.displayName, ab, a.starter ? 1 : 0, n(g("MIN")), n(g("PTS")), fgm, fga, tpm, tpa, ftm, fta, n(g("OREB")), n(g("DREB")), n(g("AST")), n(g("STL")), n(g("BLK")), n(g("TO")), n(g("PF")), 0, 0, a.athlete.id];
+      const row = [a.athlete.displayName, ab, a.starter ? 1 : 0, n(g("MIN")), n(g("PTS")), fgm, fga, tpm, tpa, ftm, fta, n(g("OREB")), n(g("DREB")), n(g("AST")), n(g("STL")), n(g("BLK")), n(g("TO")), n(g("PF")), 0, 0, a.athlete.id, n(String(g("+/-")||"0").replace("+","")), (a.athlete.position && a.athlete.position.abbreviation) || ""];
       idx[a.athlete.id] = row; out.push(row);
     }
   }
@@ -67,7 +69,7 @@ function boxOf(sum) {
   return out;
 }
 
-const ESPN = { upd: "", days: {}, box: {}, games: {} };
+const ESPN = { upd: "", days: {}, box: {}, games: {}, teams: OLD.teams || {} };   // teams: sigla -> [nome breve, colore, record V-P]
 for (const d of days) {
   const old = OLD.days[d];
   const closed = old && old.length && old.every(id => OLD.games[id] && OLD.games[id][5] === "F" && OLD.box[id]);
@@ -76,6 +78,7 @@ for (const d of days) {
   for (const e of sb.events || []) {
     const c = e.competitions[0], h = c.competitors.find(x => x.homeAway === "home"), a = c.competitors.find(x => x.homeAway === "away");
     const stt = e.status.type, st = stt.completed ? "F" : stt.state === "in" ? "L" : "S";
+    for (const x of [a, h]) ESPN.teams[x.team.abbreviation] = [x.team.shortDisplayName || x.team.name, "#" + (x.team.color || "333333"), ((x.records || []).find(r => r.type === "total") || {}).summary || (ESPN.teams[x.team.abbreviation] || [])[2] || ""];
     /* partita: [ospite, casa, punti ospite, punti casa, stato F/L/S, ora d'inizio ISO, periodo/orologio] */
     ESPN.games[e.id] = [a.team.abbreviation, h.team.abbreviation, n(a.score), n(h.score), st, e.date, st === "L" ? stt.shortDetail : ""];
     ids.push(e.id);

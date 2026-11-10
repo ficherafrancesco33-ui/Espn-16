@@ -189,13 +189,15 @@ html,body{margin:0}
 .grjs.e16js{display:grid;place-items:center}
 .grjs.e16js img{width:120px;height:120px;border-radius:50%;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45))}
 .snrow[data-pl],.farow,.plink{cursor:pointer}
+/* (7) casella Home: scorrimento */
+.hmtrk.anim{transition:transform .34s cubic-bezier(.22,.8,.3,1)}
+.hmcl[data-team],.hmtm[data-team]{cursor:pointer}
 /* (6) Home: due binari di loghi */.hn6.hn6two{grid-template-columns:52px minmax(0,1fr) 52px!important}
 .hn6.hn6two>.hmqrow{grid-column:1/-1!important;grid-row:1!important}
 .hn6.hn6two>.hmrail{grid-row:2!important;grid-column:1!important}
 .hn6.hn6two>.hmrail.hmrailw{grid-column:3!important}
 .hn6.hn6two>.hmmain{grid-row:2!important;grid-column:2!important;min-width:0}
 .hmp.lvx{cursor:pointer}
-.hmscroll{max-height:none!important}
 /* salary cap e scelte */.e16 .capbox{margin:0 12px 10px;padding:12px;border-radius:14px;background:var(--c3);border:2px solid var(--line)}
 .e16 .capn{display:grid;grid-template-columns:repeat(4,1fr);text-align:center}
 .e16 .capn b{display:block;font:800 italic 26px/1 'Barlow Condensed'}
@@ -326,7 +328,7 @@ const f1=v=>(Math.round(v*10)/10).toLocaleString("it-IT",{minimumFractionDigits:
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 /* ===== NAVIGAZIONE ===== */
-const TABS=[["home","Home"],["lega","Lega"],["cap","Cap & Scelte"],["stat","Statistiche"]];
+const TABS=[["home","Home"],["lega","Lega"],["tv","Dynasty TV"],["stat","Statistiche"],["cap","Cap & Scelte"]];
 let tmTab="rosa",cur="home",curTeam=null,lgTab="cls",night=null,stQ={per:"all",nba:"",sort:"ffa",min:0},hq="";
 try{const s=JSON.parse(localStorage.getItem("e16_st")||"{}");Object.assign(stQ,s)}catch(e){}
 function go(v){cur=v;curTeam=null;render();scrollTo(0,0)}
@@ -338,7 +340,8 @@ function render(){
  document.getElementById("foot").textContent=typeof ESPN!=="undefined"?"ULTIMO AGGIORNAMENTO ESPN: "+ESPN.upd:"";
  const m=document.getElementById("main");
  /* (6) le pagine proprie di ESPN 16 (squadra, lega, cap) stanno dentro .e16: le loro regole non toccano le classi Dreamers */
- m.innerHTML='<div class="view">'+(curTeam?'<div class="e16">'+vTeam(curTeam)+'</div>':window.STATV&&STATV[cur]?STATV[cur]():cur==="cap"?'<div class="e16">'+vCapAll()+'</div>':cur==="lega"?'<div class="e16">'+vLega()+'</div>':vHome())+'</div>';
+ m.innerHTML='<div class="view">'+(curTeam?'<div class="e16">'+vTeam(curTeam)+'</div>':window.STATV&&STATV[cur]?STATV[cur]():cur==="tv"?vTv():cur==="cap"?'<div class="e16">'+vCapAll()+'</div>':cur==="lega"?'<div class="e16">'+vLega()+'</div>':vHome())+'</div>';
+ if(cur==="tv"){const w=document.getElementById("tvweek"),b=w&&w.querySelector('[aria-pressed="true"]');if(b)w.scrollLeft=b.offsetLeft-w.clientWidth/2+b.clientWidth/2}
 }
 document.addEventListener("click",e=>{if(e.target.closest("#sw")){E16N=!E16N;try{localStorage.setItem("e16_notte",E16N?"1":"0")}catch(_){}e16Tema(E16N);render();return}
  if(e.target.closest("#setbtn")){location.reload();return}
@@ -365,6 +368,19 @@ const OWNH={};try{const nn=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").
 const ownH=n=>OWNH[window.__ownKey?__ownKey(n):n]||"";
 const nbaLogo=a=>`https://a.espncdn.com/i/teamlogos/nba/500/${String(a).toLowerCase()}.png`;
 const pdkC=v=>v>=50?"v":v>=35?"g":v>=20?"y":"r";
+/* (7) SETTIMANE della lega (come ESPN Fantasy): la 1ª va da martedì 20/10 a domenica 25/10, poi da lunedì a domenica.
+   Punteggio di una squadra in una settimana = somma degli AVG dei 14 titolari (rosa attuale, slot diversi da BE e IR) in tutte le loro partite della settimana: punteggio pieno, nessun ruolo, nessun cap. */
+const W1="2026-10-20",W2="2026-10-26";
+function weekOf(d){if(d<W2)return 1;return 2+Math.floor((Date.parse(d+"T12:00:00Z")-Date.parse(W2+"T12:00:00Z"))/(7*864e5))}
+function weekRange(w){if(w===1)return[W1,"2026-10-25"];const a=new Date(Date.parse(W2+"T12:00:00Z")+(w-2)*7*864e5),b=new Date(a.getTime()+6*864e5);return[a.toISOString().slice(0,10),b.toISOString().slice(0,10)]}
+const nyToday=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York"}).format(new Date());
+/* MATCHUPS: calendario delle sfide della lega, settimana -> [[squadra, squadra], ...]. Da inserire (screenshot ESPN «Schedule»). Finché è vuoto la Home mostra il punteggio della settimana di ogni squadra. */
+const MATCHUPS={};
+let WK=null;function weekScores(w){const[a,b]=weekRange(w);const S={},G={};TEAMS.forEach(t=>{S[t.id]=0;G[t.id]=0});
+ const tit={};for(const t in ROSE)for(const g of ROSE[t])if(g[2]!=="BE"&&g[2]!=="IR")tit[window.__ownKey?__ownKey(g[0]):g[0]]=t;
+ for(const d of Object.keys(ESPN.days)){if(d<a||d>b)continue;for(const x of rowsOf(d)){const t=tit[window.__ownKey?__ownKey(x.r[0]):x.r[0]];if(t){S[t]+=x.f;G[t]++}}}return{S,G}}
+let HSL=null,HWK=null;/* casella della Home: pagina scelta e settimana */
+try{HSL=+localStorage.getItem("e16_hsl")||0}catch(e){}
 function vHome(){
  const N=nights(),d=night&&N.includes(night)?night:N[N.length-1];const i=N.indexOf(d);
  const rail=c=>`<div class="hmrail${c==="W"?" hmrailw":""}">${TEAMS.filter(t=>t.conf===c).map(t=>`<button class="hrl" data-team="${t.id}" title="${esc(t.nome)}"><span class="badge logo lg-${t.id}"></span></button>`).join("")}</div>`;
@@ -374,21 +390,36 @@ function vHome(){
  const box=x=>{const r=x.r,miss=-((r[6]-r[5])+(r[10]-r[9])),rb=r[11]+r[12];
   return `<div class="bxs">${ch(r[4],"PT",r[4]>=30?"gb gv":r[4]>=20?"gv":"")}${ch(rb,"RB",rb>=10?"gb gv":"")}${ch(r[13],"AS",r[13]>=10?"gb gv":r[13]>=6?"gv":"")}${ch(r[14],"ST",r[14]>=2?"gv":"")}${ch(r[15],"BL",r[15]>=2?"gv":"")}${ch(r[7],"3P",r[7]>=3?"gv":"")}${ch(r[16],"TO",r[16]>=3?"gr2":"gv")}${ch(miss,"TIRI SBAGL.",miss<=-12?"gr2":"gv")}${r[18]||r[19]?ch((r[18]?r[18]+"T":"")+(r[19]?" "+r[19]+"F":""),"TEC/FLA","gr2"):""}</div>`};
  const mn=m=>`<span class="mnb${m>=30?" mg":m<=25?" mr":""}">${m} min</span>`;
- const list=rows.slice(0,q?60:50).map(x=>{const o=ownH(x.r[0]);return `<div class="hmp lvx" data-pl="${esc(x.r[0])}"><div class="lvh"><i class="hmo">${o?`<span class="badge logo lg-${o}"></span>`:`<img src="${nbaLogo(x.r[1])}" alt="" style="width:100%;height:100%;object-fit:contain">`}</i><span class="plk">${esc(x.r[0])}</span><span style="color:#fff!important;-webkit-text-fill-color:#fff!important" class="pdkx ${pdkC(x.f)}">${f1(x.f)}</span></div><small class="lvs">vs ${x.opp} · ${x.g[4]==="L"?"LIVE":"Finale"} · ${mn(x.r[3])}</small>${box(x)}</div>`}).join("")||`<div class="hmp"><small class="lvs">${q?"Nessun giocatore":"Nessuna partita"}</small></div>`;
- /* partite NBA della notte che scorrono in alto */
- const G=(d?(ESPN.days[d]||[]):[]).map(id=>ESPN.games[id]).filter(Boolean);
- const gm=g=>`<div class="hmg"><div class="hmr"><span class="tvlw hml ok"><em>${g[0]}</em><img src="${nbaLogo(g[0])}" alt=""></span><span>${g[4]==="S"?"":g[2]}</span></div><div class="hmr"><span class="tvlw hml ok"><em>${g[1]}</em><img src="${nbaLogo(g[1])}" alt=""></span><span>${g[4]==="S"?"":g[3]}</span></div><small>${g[4]==="F"?"FINALE":g[4]==="L"?"LIVE":"—"}</small></div>`;
- const mq=G.length?`<div class="hmqrow"><div class="hmq"><div class="hmqt" style="animation-duration:${Math.max(20,G.length*5)}s">${G.map(gm).join("")}${G.map(gm).join("")}</div></div></div>`:"";
- return `<div class="hbar"><label class="hsrch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><input id="hq" type="search" placeholder="Cerca giocatore" value="${esc(hq)}" autocomplete="off" aria-label="Cerca giocatore"></label></div>
- <div class="hn6 hn6two">${mq}${rail("E")}<div class="hmmain" id="hmmain"><div class="hmcard m all"><div class="hmslot"><div class="hmnn4">
-  <div class="hmh hmnv"><button type="button" class="hmar" ${i>0?`data-night="${N[i-1]}"`:"disabled"}>‹</button><span class="hmnt"><b>NOTTE DEL ${d?dIt(d):"—"}</b></span><button type="button" class="hmar" ${i>=0&&i<N.length-1?`data-night="${N[i+1]}"`:"disabled"}>›</button></div>
-  <div class="hmh"><span><button type="button" class="hso">TUTTE LE SQUADRE</button></span><span><button type="button" class="hso on">${rows.length} GIOCATORI</button></span></div>
-  <div class="hmscroll">${list}</div></div></div></div></div>${rail("W")}</div>`;
+ const live=rows.some(x=>x.g[4]==="L");
+ const list=rows.slice(0,q?60:50).map(x=>{const o=ownH(x.r[0]);return `<div class="hmp lvx" data-pl="${esc(x.r[0])}"><div class="lvh"><i class="hmo">${o?`<span class="badge logo lg-${o}"></span>`:`<img src="${nbaLogo(x.r[1])}" alt="" style="width:100%;height:100%;object-fit:contain">`}</i><span class="plk">${esc(x.r[0])}</span><span style="color:#fff!important;-webkit-text-fill-color:#fff!important" class="pdkx ${pdkC(x.f)}">${f1(x.f)}</span></div><small class="lvs">vs ${x.opp} · ${x.g[4]==="L"?`<span class="hmlv">LIVE</span> ${esc(x.g[6]||"")}`:"Finale"} · ${mn(x.r[3])}</small>${box(x)}</div>`}).join("")||`<div class="hmp"><small class="lvs">${q?"Nessun giocatore":"Nessuna partita"}</small></div>`;
+ /* settimana: quella in corso (o la scelta con le frecce) */
+ const wNow=weekOf(nyToday()<W1?W1:nyToday()),w=HWK&&HWK<=wNow?HWK:wNow,WS=weekScores(w),[wa,wb]=weekRange(w);
+ const cls=c=>{const L=standings(c);return `<div class="hmslot"><div class="hmh"><span>${c==="E"?"EAST":"WEST"} · CLASSIFICA</span><span>V · P · SETT.</span></div><div class="hmscroll">${L.map((t,k)=>`<div class="hmp hmcl${k<4?"":" hmcl2"}" data-team="${t.id}"><span class="hmps">${k+1}</span><i class="hmrl"><span class="badge logo lg-${t.id}"></span></i><span class="hmn">${esc(t.nome.split(" ").slice(-1)[0])}<small>${esc(t.gm)}</small></span><span class="hmwl"><b>${t.w}</b><b class="l">${t.l}</b><b class="a">${f1(WS.S[t.id])}</b></span></div>`).join("")}</div><div class="hmgrip"><i></i></div></div>`};
+ const M=MATCHUPS[w]||[];
+ const wkHead=`<div class="hmh hmnv"><button type="button" class="hmar" ${w>1?`data-hwk="${w-1}"`:"disabled"}>‹</button><span class="hmnt"><b>SETTIMANA ${w}</b><small>${dIt(wa)} → ${dIt(wb)}${w===wNow&&live?" · LIVE":""}</small></span><button type="button" class="hmar" ${w<wNow?`data-hwk="${w+1}"`:"disabled"}>›</button></div>`;
+ const sfide=`<div class="hmslot">${wkHead}<div class="hmscroll">${M.length?M.map(([A,B])=>{const a=WS.S[A],b=WS.S[B],fin=w<wNow;return `<div class="hmp hmrs"><span class="hmtm" data-team="${A}"><i class="hmrl"><span class="badge logo lg-${A}"></span></i><small>${esc(TM[A].nome.split(" ").slice(-1)[0])}</small></span><span class="hmsc"><small class="hmsd">scarto ${f1(Math.abs(a-b))}</small><b class="${a>=b?"w":"l"}">${f1(a)}</b><em>–</em><b class="${b>a?"w":"l"}">${f1(b)}</b><small class="hmact">${fin?"FINALE":w===wNow&&live?`<span class="hmlv">LIVE</span>`:"IN CORSO"}</small></span><span class="hmtm" data-team="${B}"><i class="hmrl"><span class="badge logo lg-${B}"></span></i><small>${esc(TM[B].nome.split(" ").slice(-1)[0])}</small></span></div>`}).join(""):
+  TEAMS.slice().sort((a,b)=>WS.S[b.id]-WS.S[a.id]).map((t,k)=>`<div class="hmp hmcl" data-team="${t.id}"><span class="hmps">${k+1}</span><i class="hmrl"><span class="badge logo lg-${t.id}"></span></i><span class="hmn">${esc(t.nome.split(" ").slice(-1)[0])}<small>${WS.G[t.id]} partite dei titolari</small></span><span class="hmwl"><b class="a">${f1(WS.S[t.id])}</b></span></div>`).join("")}</div>${M.length?"":`<p class="hmvu">Calendario delle sfide non ancora inserito: qui il punteggio della settimana di ogni squadra (14 titolari, punteggio pieno).</p>`}<div class="hmgrip"><i></i></div></div>`;
+ const notte=`<div class="hmslot"><div class="hmnn4"><div class="hmh hmnv"><button type="button" class="hmar" ${i>0?`data-night="${N[i-1]}"`:"disabled"}>‹</button><span class="hmnt"><b>NOTTE DEL ${d?dIt(d):"—"}</b>${live?`<small><span class="hmlv">LIVE</span></small>`:""}</span><button type="button" class="hmar" ${i>=0&&i<N.length-1?`data-night="${N[i+1]}"`:"disabled"}>›</button></div>
+  <div class="hmh"><span><button type="button" class="hso">TUTTE LE SQUADRE</button></span><span><button type="button" class="hso on">${rows.length} GIOCATORI</button></span></div><div class="hmscroll">${list}</div></div><div class="hmgrip"><i></i></div></div>`;
+ const PG=[notte,sfide,cls("E"),cls("W")];const k=((HSL%PG.length)+PG.length)%PG.length;
+ /* banner che scorre: partite NBA della notte e nostre sfide della settimana */
+ const nd=(()=>{const t=nyToday();return (ESPN.days[t]||[]).length?t:d})();const G=(nd?(ESPN.days[nd]||[]):[]).map(id=>ESPN.games[id]).filter(Boolean);
+ const gm=g=>`<div class="hmg"><div class="hmr"><span class="tvlw hml ok"><em>${g[0]}</em><img src="${nbaLogo(g[0])}" alt=""></span><span>${g[4]==="S"?"":g[2]}</span></div><div class="hmr"><span class="tvlw hml ok"><em>${g[1]}</em><img src="${nbaLogo(g[1])}" alt=""></span><span>${g[4]==="S"?"":g[3]}</span></div><small>${g[4]==="F"?"FINALE":g[4]==="L"?`<span class="hmlv">LIVE</span>`:new Date(g[5]).toLocaleTimeString("it-IT",{timeZone:"Europe/Rome",hour:"2-digit",minute:"2-digit"})}</small></div>`;
+ const WSn=weekScores(wNow);const mg=([A,B])=>`<div class="hmg hmgd" data-team="${A}"><div class="hmr"><i class="hmdl"><span class="badge logo lg-${A}"></span></i><span>${f1(WSn.S[A])}</span></div><div class="hmr"><i class="hmdl"><span class="badge logo lg-${B}"></span></i><span>${f1(WSn.S[B])}</span></div><small>SETT. ${wNow}</small></div>`;
+ const items=[...(MATCHUPS[wNow]||[]).map(mg),...G.map(gm)];
+ const mq=items.length?`<div class="hmqrow"><div class="hmq"><div class="hmqt" style="animation-duration:${Math.max(20,items.length*5)}s">${items.join("")}${items.join("")}</div></div></div>`:"";
+ return `<div class="hbar"><label class="hsrch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><input id="hq" type="search" placeholder="Cerca giocatore" value="${esc(hq)}" autocomplete="off" aria-label="Cerca giocatore"></label><button class="tvgo" data-go="tv" aria-label="Apri Dynasty TV"><i class="tvdot"${live?"":' style="display:none"'}></i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 3l4 3 4-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+ <div class="hn6 hn6two">${mq}${rail("E")}<div class="hmmain" id="hmmain"><div class="hmcard m all hmmulti"><div class="hmcar"><div class="hmtrk" id="hmtrk" style="transform:translateX(${-k*100}%)">${PG.join("")}</div></div><div class="hmdots one"><button type="button" class="hmarr hmone" data-hdir="-1">‹</button><button type="button" class="hmarr hmone" data-hdir="1">›</button></div></div></div>${rail("W")}</div>`;
 }
+/* frecce e trascinamento della casella (come Dreamers) */
+function hslGo(dir){HSL=(HSL||0)+dir;try{localStorage.setItem("e16_hsl",String(((HSL%4)+4)%4))}catch(e){}const t=document.getElementById("hmtrk");if(!t){render();return}const k=((HSL%4)+4)%4;t.classList.add("anim");t.style.transform=`translateX(${-k*100}%)`;setTimeout(()=>{t.classList.remove("anim")},360)}
+document.addEventListener("click",e=>{const a=e.target.closest("[data-hdir]");if(a){hslGo(+a.dataset.hdir);return}const w=e.target.closest("[data-hwk]");if(w){HWK=+w.dataset.hwk;render()}},true);
+{let sx=null,sy=null;document.addEventListener("touchstart",e=>{const c=e.target.closest(".hmcar");if(!c){sx=null;return}sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+ document.addEventListener("touchend",e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)hslGo(dx<0?1:-1)},{passive:true})}
 
 /* ===== SCHEDA SQUADRA ===== */
 /* media AVG di stagione e ultima partita di ogni giocatore (dai tabellini ESPN) */
-let PST=null;function pstats(){if(PST)return PST;PST={};for(const d of nights())for(const x of rowsOf(d)){const p=PST[x.r[0]]||(PST[x.r[0]]={gp:0,ff:0,min:0,last:null});p.gp++;p.ff+=x.f;p.min+=x.r[3];p.last={d,f:x.f,opp:x.opp}}return PST}
+let PST=null;window.e16Reset=()=>{PST=null;try{window.e16ResetStats&&e16ResetStats()}catch(e){}};function pstats(){if(PST)return PST;PST={};for(const d of nights())for(const x of rowsOf(d)){const p=PST[x.r[0]]||(PST[x.r[0]]={gp:0,ff:0,min:0,last:null});p.gp++;p.ff+=x.f;p.min+=x.r[3];p.last={d,f:x.f,opp:x.opp}}return PST}
 function vTeam(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P=pstats(),r=REC[id];
  const row=g=>{const p=P[g[0]];return`<tr data-pl="${esc(g[0])}" style="cursor:pointer"><td><div class="e16pl"><span style="display:inline-block;min-width:34px;font:800 11px 'Barlow Condensed';color:var(--mut)">${g[2]}</span>${esc(g[0])}<small>${g[1]} · ${g[3]}</small></div></td><td class="f">${p?f1(p.ff/p.gp):"–"}</td><td>${p?p.gp:0}</td><td>${p?f1(p.min/p.gp):"–"}</td><td>${p&&p.last?f1(p.last.f)+" <small style='color:var(--mut)'>"+dIt(p.last.d)+"</small>":"–"}</td></tr>`};
  const tit=R0.filter(g=>g[2]!=="BE"&&g[2]!=="IR"),be=R0.filter(g=>g[2]==="BE"||g[2]==="IR");
@@ -444,6 +475,8 @@ function vLega(){
 render();
 </script>
 <script src="stats.js"></script>
+<script src="tv.js"></script>
+<script src="live.js"></script>
 <script src="parquet.js"></script>
 <script>render();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
