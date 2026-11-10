@@ -124,7 +124,7 @@ function vPl(){const ok=needOld();const n=ST.pl;const G=gamesOf(n).filter(inP);c
  const gr=groups(G);const P=gr.map(g=>val(g.L,ST.met));const tr=trend(P);const av=m=>G.length?val(G,m):0;
  const names=[...new Set(all().map(x=>x.n))].sort();
  return `<div class="grroom" style="--tc:${t?TCOL[t.id]:"#1747c9"};--tf:#ffffff"><button class="grback" data-sv="${ST.back||"sgioc"}">‹ Indietro</button>
- <div class="grhd"><span class="grlg">${t?`<span class="badge logo lg-${t.id}"></span>`:""}</span><div><small>${t?e(t.nome)+" · ":""}${last?last.t:""} · grafici</small><b>${e(n)}</b></div></div>
+ <div class="grhd"><span class="grlg">${t?`<span class="badge logo lg-${t.id}"></span>`:""}</span><div><small>${t?e(t.nome)+" · ":""}${last?last.t:""}${etaOf(n)!=null?" · "+etaTxt(n)+" (nato il "+nascOf(n).split("-").reverse().join("/")+")":""}</small><b>${e(n)}</b></div></div>
  <div class="grtop"><div class="grctl"><label class="grsel"><span>Giocatore</span><select data-psel="pl">${names.map(x=>`<option${x===n?" selected":""}>${e(x)}</option>`).join("")}</select></label> <button class="perbtn" data-peropen="1"><span>Periodo</span><b>${SV.cal}${fmtD(ST.a)} → ${fmtD(ST.b)}</b></button></div><div class="grjs e16js">${t?`<img src="${t.logo}" alt="">`:""}</div></div>
  ${PEROPEN?perBox():""}
  <div class="pergr"><span>Media per</span><div>${[["s","Stagioni"],["m","Mesi"],["g","Giorni"]].map(([k,l])=>`<button data-per="${k}" aria-pressed="${ST.per===k}">${l}</button>`).join("")}</div></div>

@@ -292,6 +292,7 @@ e16Tema(E16N);</script>
 <div class="foot" id="foot"></div>
 <script src="espn-data.js"></script>
 <script src="cap-data.js"></script>
+<script src="eta-data.js"></script>
 <script src="valori-data.js"></script>
 <script>
 /* ===== SQUADRE (da ESPN Fantasy, 10/11/2026). conf: E = East, W = West. Ordine = ordine della classifica ESPN.
@@ -315,6 +316,12 @@ const TEAMS=[
  {id:"SRO",nome:"Santa Rosa Pirates",gm:"Mattia Zanni",conf:"W",logo:"loghi/sro.png"}
 ];
 const TM=Object.fromEntries(TEAMS.map(t=>[t.id,t]));
+/* (19) ETÀ PRECISE: dalla data di nascita (eta-data.js, rose ESPN). etaOf(nome) = anni compiuti oggi; etaTxt = "23 anni"; u25 = sotto i 25 (regola della tribuna) */
+const NASK={};try{const nn=s=>String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[.'’]/g,"").replace(/\s+(jr|sr|ii|iii|iv)$/,"").trim();for(const n in NASCITA)NASK[nn(n)]=NASCITA[n];window.__nasK=nn}catch(e){}
+function nascOf(n){try{return NASK[__nasK(n)]||null}catch(e){return null}}
+function etaOf(n){const d=nascOf(n);if(!d)return null;const t=new Date(),b=new Date(d+"T12:00:00Z");let a=t.getFullYear()-b.getUTCFullYear();if(t.getMonth()<b.getUTCMonth()||(t.getMonth()===b.getUTCMonth()&&t.getDate()<b.getUTCDate()))a--;return a}
+const etaTxt=n=>{const a=etaOf(n);return a==null?"":a+" anni"};
+const u25=n=>{const a=etaOf(n);return a!=null&&a<25};
 /* (6) colore di ogni squadra (dal logo), usato come in Dreamers per grafici, intestazioni squadra e righe */
 const TCOL={DET:"#4c1d95",CLE:"#1f2937",BOS:"#9a3412",NYS:"#c2410c",QUE:"#6d28d9",CHA:"#b45309",NYP:"#111827",CAN:"#0f766e",HOU:"#ea580c",LVA:"#1e3a8a",HON:"#0e7490",ALB:"#7f1d1d",ALA:"#1d4ed8",WIC:"#c2410c",FAL:"#1e3a8a",SRO:"#0f172a"};
 /* vittorie/sconfitte dagli screenshot ESPN (finché la lega non è collegata). pf/pa = punti fatti/subiti, se noti */
@@ -337,7 +344,7 @@ const ROSE={
  ALA:[["Luka Doncic","LAL","PG","PG"],["Dillon Brooks","PHX","SG","SF,SG"],["Allen Graves","TOR","SF","SF"],["Tari Eason","HOU","PF","SF,PF"],["Bam Adebayo","MIA","C","C,PF"],["Ryan Conwell","MIA","G","SG"],["Stephen Curry","GS","G","PG"],["Gui Santos","GS","F","SF"],["P.J. Washington","DAL","F","PF,SF"],["Jalen Smith","CHI","G/F","PF,C"],["Toumani Camara","POR","UTIL","PF,SF"],["Darius Garland","LAC","UTIL","PG"],["Leonard Miller","CHI","UTIL","SF"],["Robert Williams III","POR","UTIL","C"],["Ebuka Okorie","DET","BE","SG,PG"],["Chet Holmgren","OKC","IR","C,PF"],["Jalen Suggs","ORL","IR","PG,SG"]],
  WIC:[["Nolan Traore","BKN","PG","PG"],["VJ Edgecombe","PHI","SG","SG"],["Ausar Thompson","DET","SF","SF,PF"],["Domantas Sabonis","SAC","PF","C,PF"],["Aday Mara","OKC","C","C"],["Scoot Henderson","POR","G","PG,SG"],["Ty Jerome","MEM","G","SG,PG"],["Nique Clifford","SAC","F","SG,SF"],["Amen Thompson","HOU","F","SF,SG"],["Caleb Wilson","CHI","G/F","SF"],["AJ Dybantsa","WSH","UTIL","SF"],["Ryan Kalkbrenner","CHA","UTIL","C"],["Khaman Maluach","PHX","UTIL","C"],["Braden Smith","IND","UTIL","PG"],["Ja Morant","POR","BE","PG"],["Asa Newell","ATL","BE","PF"],["Maxime Raynaud","SAC","BE","C"]],
  FAL:[["Tyrese Maxey","PHI","PG","PG,SG"],["Nickeil Alexander-Walker","ATL","SG","SG,PG"],["Yaxel Lendeborg","GS","SF","SF,PF"],["Draymond Green","GS","PF","PF,C"],["Sandro Mamukelashvili","LAL","C","C,PF"],["Kris Dunn","LAC","G","PG,SG"],["Collin Gillespie","PHX","G","PG"],["Zuby Ejiofor","ATL","F","PF"],["Mario Hezonja","CLE","F","SF"],["John Collins","DET","G/F","PF,C"],["Ousmane Dieng","MIL","UTIL","SF"],["Isaiah Evans","MIN","UTIL","SG"],["Jaxson Hayes","UTAH","UTIL","C"],["Michael Porter Jr.","BKN","UTIL","SF,PF"],["Tobias Harris","SA","BE","PF,SF"],["Kon Knueppel","CHA","BE","SF,SG"],["Kevin Porter Jr.","MIL","BE","SG,PG"]],
- SRO:[["Isaiah Collier","UTAH","PG","PG"],["Darryn Peterson","UTAH","SG","SG,PG"],["Ace Bailey","UTAH","SF","SF,PF"],["Ronald Holland II","DET","PF","SF,PF"],["Chris Cenac Jr.","BOS","C","PF,C"],["Egor Demin","BKN","G","PG,SG"],["Ziaire Williams","LAL","G","SF,SG"],["Noa Essengue","CHI","F","PF"],["Kyshawn George","WSH","F","SG,SF"],["James Harden","CLE","G/F","PG,SG"],["Jalen Green","PHX","UTIL","SG,SF"],["Yang Hansen","POR","UTIL","C"],["Collin Murray-Boyles","TOR","UTIL","PF"],["Coby White","CHA","UTIL","PG,SG"],["Yves Missi","NO","BE","C"],["Yanic Konan Niederhauser","LAC","BE","C"],["Jeremiah Quaintance","SA","BE","PF,C"/* nome da confermare */]]
+ SRO:[["Isaiah Collier","UTAH","PG","PG"],["Darryn Peterson","UTAH","SG","SG,PG"],["Ace Bailey","UTAH","SF","SF,PF"],["Ronald Holland II","DET","PF","SF,PF"],["Chris Cenac Jr.","BOS","C","PF,C"],["Egor Demin","BKN","G","PG,SG"],["Ziaire Williams","LAL","G","SF,SG"],["Noa Essengue","CHI","F","PF"],["Kyshawn George","WSH","F","SG,SF"],["James Harden","CLE","G/F","PG,SG"],["Jalen Green","PHX","UTIL","SG,SF"],["Yang Hansen","POR","UTIL","C"],["Collin Murray-Boyles","TOR","UTIL","PF"],["Coby White","CHA","UTIL","PG,SG"],["Yves Missi","NO","BE","C"],["Yanic Konan Niederhauser","LAC","BE","C"],["Jayden Quaintance","SA","BE","PF,C"]]
 };
 
 /* ===== PUNTI FANTASY (AVG), regola della lega. Riga del tabellino (vedi tools/espn.mjs):
@@ -456,7 +463,7 @@ document.addEventListener("click",e=>{if(e.target.closest("[data-hqx]")){hq="";r
 /* media AVG di stagione e ultima partita di ogni giocatore (dai tabellini ESPN) */
 let PST=null;window.e16Reset=()=>{PST=null;try{window.e16ResetStats&&e16ResetStats()}catch(e){}};function pstats(){if(PST)return PST;PST={};for(const d of nights())for(const x of rowsOf(d)){const p=PST[x.r[0]]||(PST[x.r[0]]={gp:0,ff:0,min:0,last:null});p.gp++;p.ff+=x.f;p.min+=x.r[3];p.last={d,f:x.f,opp:x.opp}}return PST}
 function vTeam(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P=pstats(),r=REC[id];
- const row=g=>{const p=P[g[0]];return`<tr data-pl="${esc(g[0])}" style="cursor:pointer"><td><div class="e16pl"><span style="display:inline-block;min-width:34px;font:800 11px 'Barlow Condensed';color:var(--mut)">${g[2]}</span>${esc(g[0])}<small>${g[1]} · ${g[3]}</small></div></td><td class="f">${p?f1(p.ff/p.gp):"–"}</td><td>${p?p.gp:0}</td><td>${p?f1(p.min/p.gp):"–"}</td><td>${p&&p.last?f1(p.last.f)+" <small style='color:var(--mut)'>"+dIt(p.last.d)+"</small>":"–"}</td></tr>`};
+ const row=g=>{const p=P[g[0]];return`<tr data-pl="${esc(g[0])}" style="cursor:pointer"><td><div class="e16pl"><span style="display:inline-block;min-width:34px;font:800 11px 'Barlow Condensed';color:var(--mut)">${g[2]}</span>${esc(g[0])}<small>${g[1]} · ${g[3]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}</small></div></td><td class="f">${p?f1(p.ff/p.gp):"–"}</td><td>${p?p.gp:0}</td><td>${p?f1(p.min/p.gp):"–"}</td><td>${p&&p.last?f1(p.last.f)+" <small style='color:var(--mut)'>"+dIt(p.last.d)+"</small>":"–"}</td></tr>`};
  const tit=R0.filter(g=>g[2]!=="BE"&&g[2]!=="IR"),be=R0.filter(g=>g[2]==="BE"||g[2]==="IR");
  const head=`<button class="back" data-back>‹ Indietro</button><div class="card"><div class="th"><img src="${t.logo}" alt=""><div><h2>${esc(t.nome)}</h2><p>${esc(t.gm)} · ${t.conf==="E"?"East":"West"}${r?` · ${r.w}-${r.l}`:""}</p></div></div>
  <div class="seg" style="padding:0 12px">${[["rosa","ROSA"],["cap","SALARY CAP"],["pick","SCELTE"]].map(([k,l])=>`<button class="${tmTab===k?"on":""}" data-tmtab="${k}">${l}</button>`).join("")}</div>`;

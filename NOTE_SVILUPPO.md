@@ -42,3 +42,5 @@
 (17) 10/11/2026 – Binari dei loghi in Home con lo sfondo colore squadra (TCOL) come Dreamers, giorno e notte.
 
 (18) 10/11/2026 – Banner squadra (teamhead): logo grande per tutte le squadre come quello dei Ducks in Dreamers (80px, margini negativi).
+
+(19) 10/11/2026 – Età precise: tools/eta.mjs (con l aggiornamento ESPN) scrive eta-data.js con la data di nascita di ogni giocatore (rose NBA ESPN + ricerca per chi non è in una rosa NBA). etaOf/etaTxt/u25 in index.html. Età mostrata in Campo (titolari e tribuna), Roster, scheda squadra, profilo (con data di nascita), Valori e Calcolatore. Tribuna: «under 25 ✓» o «⚠️ non under 25» (gli IR sono ammessi). Corretto nome Jayden Quaintance.

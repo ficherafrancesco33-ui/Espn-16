@@ -35,7 +35,7 @@ function vLega(){
 /* ---------- ROSTER (come il Roster di Dreamers) ---------- */
 const RL=r=>{const a=String(r||"").split(",");return a[0]==="C"?"C":/G/.test(a[0])?"G":"F"};
 function vRoster(){const t=TM[G.rt]||TEAMS[0],R0=ROSE[t.id]||[],P=pstats(),r=REC[t.id];
- const li=g=>{const p=P[g[0]],v=p?p.ff/p.gp:null;return `<li class="rrow lc" data-pl="${e(g[0])}"><span class="rnm"><b>${e(g[0])}</b><small>${g[1]} · ${g[3]}${g[2]==="IR"?" · IR":g[2]==="BE"?" · tribuna":""}</small></span><span class="rtags"><span class="rpdk">${v!=null?`<span class="pdkx ${xc(v)}">${f1(v)}</span>`:"–"}</span></span></li>`};
+ const li=g=>{const p=P[g[0]],v=p?p.ff/p.gp:null;return `<li class="rrow lc" data-pl="${e(g[0])}"><span class="rnm"><b>${e(g[0])}</b><small>${g[1]} · ${g[3]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${g[2]==="IR"?" · IR":g[2]==="BE"?" · tribuna":""}</small></span><span class="rtags"><span class="rpdk">${v!=null?`<span class="pdkx ${xc(v)}">${f1(v)}</span>`:"–"}</span></span></li>`};
  const tit=R0.filter(g=>g[2]!=="BE"&&g[2]!=="IR"),trib=R0.filter(g=>g[2]==="BE"||g[2]==="IR");
  const sec=(k,lab,L)=>L.length?`<section class="rcg ${k}"><h4><span class="grl ${k}">${k}</span>${lab}<em>${L.length}</em></h4><ul class="gpl" style="grid-template-rows:repeat(${Math.ceil(L.length/2)},auto)">${L.sort((a,b)=>((P[b[0]]||{}).ff/((P[b[0]]||{}).gp||1)||0)-((P[a[0]]||{}).ff/((P[a[0]]||{}).gp||1)||0)).map(li).join("")}</ul></section>`:"";
  const C=CAP[t.id];
