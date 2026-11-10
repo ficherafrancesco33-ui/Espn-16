@@ -60,6 +60,10 @@ window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P
  const name=t.nome.split(" ").slice(-1)[0];
  return `<div class="e16campo">
  <div class="teamhead" style="background:linear-gradient(115deg,${TCOL[id]} 0%,color-mix(in srgb,${TCOL[id]} 55%,#000) 100%);color:#fff;border-bottom:4px solid #0b0b0b"><img class="hlogo" src="${t.logo}" alt=""><div><h3>${e(name)}</h3><p>${e(t.nome.split(" ").slice(0,-1).join(" "))}</p></div><div class="hstats"><div class="rec">${r?r.w+"-"+r.l:"–"}<small>RECORD</small></div><div class="rec">${f1(tot)}<small>SETT. ${wNow}</small></div></div></div>
+ ${(()=>{/* (13) al posto della «Cassa» di Dreamers: il salary cap (dal file della lega) */const C=CAP[id];if(!C)return"";const occ=C.occ||[],lib=C.libero!=null?C.libero:CAP_TOT-(occ[0]||0)-(C.tagli||0);
+  return `<div class="cassa clink" data-team="${id}" data-tab="cap"><div class="csal"><small>Salary cap</small><b>${f1(lib)}<i>liberi</i></b><em>Cap ${CAP_TOT}</em></div>
+  <div class="ctab"><span></span><span>26/27</span><span>27/28</span><span class="rl p">Occupato</span><b>${f1(occ[0]||0)}</b><b>${f1(occ[1]||0)}</b><span class="rl n">Tagli</span><b class="${C.tagli?"n":"z"}">${C.tagli?f1(C.tagli):"—"}</b><b class="z">—</b></div>
+  <div class="cgo">Contratti e scelte ›</div></div>`})()}
  <p class="lbmcap">Settimana ${wNow} · ${dIt(wa)} → ${dIt(wb)} · 14 titolari a punteggio pieno</p>
  <div class="court" style="--tc:${TCOL[id]};border-left:0;border-right:0">${court(t)}
  ${five.map(g=>{const[x,y]=SLOT5[g[2]];return `<button class="cpl dr" data-ist="${g[2]==="IR"?"out":"ok"}" data-pl="${e(g[0])}" style="left:${x}%;top:${y}%;--k:1">${card(t,g,P,W)}</button>`}).join("")}</div>
