@@ -190,6 +190,8 @@ html,body{margin:0}
 .grjs.e16js{display:grid;place-items:center}
 .grjs.e16js img{width:120px;height:120px;object-fit:contain;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45))}
 .snrow[data-pl],.farow,.plink{cursor:pointer}
+/* (17) loghi dei binari Home con lo sfondo colore squadra come Dreamers (anche di notte) */
+html.notte .hrl{background:linear-gradient(160deg,var(--tc),color-mix(in srgb,var(--tc) 45%,#000))!important}
 /* (15) campo: lista Titolari a colori pieni (la Tribuna resta sbiadita) */
 .dptrib.e16tit .bpl{opacity:1!important;filter:none!important}
 .bev .cev.v{background:#8b5cf6!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
@@ -407,7 +409,7 @@ let HSL=null,HWK=null;/* casella della Home: pagina scelta e settimana */
 try{HSL=+localStorage.getItem("e16_hsl")||0}catch(e){}
 function vHome(){
  const N=nights(),d=night&&N.includes(night)?night:N[N.length-1];const i=N.indexOf(d);
- const rail=c=>`<div class="hmrail${c==="W"?" hmrailw":""}">${TEAMS.filter(t=>t.conf===c).map(t=>`<button class="hrl" data-team="${t.id}" title="${esc(t.nome)}"><span class="badge logo lg-${t.id}"></span></button>`).join("")}</div>`;
+ const rail=c=>`<div class="hmrail${c==="W"?" hmrailw":""}">${TEAMS.filter(t=>t.conf===c).map(t=>`<button class="hrl" data-team="${t.id}" style="--tc:${TCOL[t.id]}" title="${esc(t.nome)}"><span class="badge logo lg-${t.id}"></span></button>`).join("")}</div>`;
  let rows=d?rowsOf(d):[];const q=hq.trim();rows.sort((a,b)=>b.f-a.f);
  /* (12) CERCA GIOCATORE come Dreamers: risultati in tutta la lega (rose e svincolati), tocca per aprire il profilo */
  let hres="";if(q.length>=2){const k=__ownKey(q),seen=new Set(),own=[],fa=[];
