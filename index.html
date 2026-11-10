@@ -487,6 +487,8 @@ html body .dsroom .grroom.dsgr:not(#z){min-height:0!important;padding-bottom:10p
 @media (prefers-reduced-motion:reduce){.dsball,.dsdrum.spin .dsball,.dsslot.on{animation:none!important}}
 </style>
 <style>/* (65) tasto maglia come Dreamers (piccolo, blu notte; di giorno stile parquet), solo un po staccato dal bordo sinistro */html body h2.lbmh>.kitbtn{margin-left:14px!important}</style>
+<style>/* (72) intestazione squadra: record e punti della settimana affiancati senza sovrapporsi */html body .teamhead .hstats{display:flex!important;gap:14px;align-items:flex-end;flex:none;min-width:0}html body .teamhead .hstats .rec{font-size:30px!important;white-space:nowrap}html body .teamhead .hstats .rec small{font-size:10.5px!important;letter-spacing:.1em!important}</style>
+<style>/* (72) controllo di tutte le pagine (giorno/notte, iPhone 13 e 360px): niente scritte che si sovrappongono o tagliate a metà *//* duello Lega: cognome lungo già rimpicciolito al minimo (gest.js fitDu) → una riga con i puntini, mai fuori dalla scheda */html body .du .dun b.dufit{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}/* calcolatore: la percentuale dentro una barra quasi vuota (0%) restava tagliata: la casella è larga almeno quanto la scritta */html body .vtbar i{min-width:max-content}/* Roster: «forza prevista 15ª su 16» a 360px perdeva la fine: va a capo */html body .esqk3 em{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.15}/* Sala Draft: riga ruolo · college · età · altezza del rookie: va a capo invece di tagliare l altezza */html body .dsrki small{white-space:normal;overflow:visible;text-overflow:clip}</style>
 </head>
 <body>
 <div id="sbar" aria-hidden="true"></div>
@@ -804,6 +806,7 @@ render();
 <script src="campo.js"></script>
 <script src="que-kit.js"></script><!-- (57) maglie in più dei Quebec Ducks -->
 <script src="kit.js"></script><!-- (57) tasto maglia: Casa, Notte, Alternativa, NBA 2026, Anni 90 -->
+<script src="campo-fx.js"></script><!-- (73) animazioni del campo: tasto accanto alla maglia (palla e canestro, crollo del pavimento, spente) -->
 <script src="dream-e16.js"></script><!-- (67) Modalità Dream: tasto «D» nel tabellone del Campo e dati ESPN 16 per lo stadio 3D (dream.js, caricato al primo tocco) -->
 <script src="fcons.js"></script>
 <script src="livetick.js"></script>

@@ -210,6 +210,13 @@ function vReg(){let N=0;const art=(t,b,up)=>{const n=++N;return `<details class=
 window.GESTV={lega:vLega,roster:vRoster,inf:vInf,reg:vReg};
 window.e16Roster=t=>{G.rt=t;save()};window.e16RT=()=>G.rt;
 (window.NAVX=window.NAVX||[]).push({k:"g",get:()=>({tab:G.tab,rt:G.rt,it:G.it,wk:G.wk,du:G.du}),set:o=>Object.assign(G,o)});
+/* (72) duello: i cognomi lunghi (S. Mamukelashvili, G. Antetokounmpo) non si possono andare a capo e uscivano dalla scheda, fin sotto la maglia
+   della scheda accanto. Dopo ogni disegno la scritta si rimpicciolisce finché ci sta (da 19px fino a 12px); se non basta, puntini (classe dufit). */
+function fitDu(){document.querySelectorAll("#main .du .dun b").forEach(b=>{b.style.fontSize="";b.classList.remove("dufit");if(b.scrollWidth<=b.clientWidth+1)return;
+ let f=parseFloat(getComputedStyle(b).fontSize);while(b.scrollWidth>b.clientWidth+1&&f>12){f-=.5;b.style.fontSize=f+"px"}if(b.scrollWidth>b.clientWidth+1)b.classList.add("dufit")})}
+{const r0=render;render=function(){const o=r0.apply(this,arguments);try{fitDu()}catch(_){}return o}}
+try{document.fonts&&document.fonts.ready.then(fitDu);document.fonts&&document.fonts.addEventListener("loadingdone",fitDu)}catch(_){}
+addEventListener("resize",()=>{try{fitDu()}catch(_){}});
 document.addEventListener("click",ev=>{const c=ev.target.closest("[data-lg2],[data-lgw],[data-rt],[data-it],[data-du],[data-duk]");if(!c)return;const d=c.dataset;
  /* (26) sfida toccata da qualunque pagina (Lega, Home, banner, tabellone del campo) → duello stile Sleeper */
  if(d.du){ev.stopPropagation();if(d.du==="close")G.du=null;else{G.du=d.du.split(",");G.tab="turno";if(d.duw)G.wk=+d.duw;cur="lega";curTeam=null}render();scrollTo(0,0);setTimeout(()=>{const o=document.querySelector(".dumini.on"),st=o&&o.parentElement;if(st)st.scrollLeft=o.offsetLeft-(st.clientWidth-o.offsetWidth)/2},30);return}

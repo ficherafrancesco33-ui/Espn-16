@@ -33,7 +33,7 @@ for (const m of rows) {
   const sp = ((r.match(/mock-row-school-position">([^<]*)/) || [])[1] || "").split("|").map(x => x.trim());
   const ya = r.match(/year-age desktop"><div>([^<]*)<\/div><div>([^<]*)/) || [];
   const hw = r.match(/height-weight"><div>([^<]*)<\/div><div>(\d+)/) || [];
-  list.push({ rk, slug, n: name, pos: sp[0] || m[1], sc: sp[1] || "", yr: ya[1] || m[2], age: num(ya[2]), h: (hw[1] || "").replace(/&#39;/g, "'").replace(/&quot;/g, '"'), w: num(hw[2]) });
+  list.push({ rk, slug, n: name, pos: sp[0] || m[1], sc: (sp[1] || "").replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&"), /* (72) niente entità HTML nei nomi dei college (St. John's) */ yr: ya[1] || m[2], age: num(ya[2]), h: (hw[1] || "").replace(/&#39;/g, "'").replace(/&quot;/g, '"'), w: num(hw[2]) });
 }
 list.sort((a, b) => a.rk - b.rk);
 const top = list.slice(0, N), out = [];
