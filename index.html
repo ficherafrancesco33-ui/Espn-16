@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="fonts.css">
 <link rel="stylesheet" href="skin-giorno.css" id="skg">
-<link rel="stylesheet" href="skin-notte.css" id="skn" disabled>
+<link rel="stylesheet" href="skin-notte.css" id="skn" media="not all">
 <style>/* ===== ESPN 16 – app del Fantabasket Dynasty a 16 squadre (base grafica: app Dreamers) =====
    Colori in variabili: tema arancio come la Home Dreamers. */:root{--c2:#fdf3e1;--c3:#fff7ed;--cb:#f3c48d;--c4:#fbe9cc;--hd1:#f97316;--hd2:#ea580c;--hd3:#c2410c;--bg1:#b8763f;--bg2:#a8652f;--card:var(--c2);--card2:var(--c4);--line:#eed2a6;--ink:#3b1d0a;--mut:#9a5a2b;--acc:#ea580c;--ffp:#7c3aed;--win:#16a34a;--loss:#dc2626;--east:#2563eb;--west:#dc2626}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -270,6 +270,7 @@ html.notte .e16 .bx span,html.notte .e16 .bxm span,html.notte .e16 .brm,html.not
 html.notte .e16 .rules b,html.notte .e16 .pk b{color:#f1ecff}
 html.notte .e16 .gn b{color:#e9d5ff}
 
+::view-transition-old(root),::view-transition-new(root){animation-duration:.25s}
 </style>
 </head>
 <body>
@@ -278,7 +279,8 @@ function e16Tema(nt){const H=document.documentElement,B=document.body;
  const C="--duchrl:#7c3aed;--sepw:1px;--sepc:#0b0b12;--bxc:#e8631a;--bxbc:#e8631a;--bxg:#22a34a;--bxr:#e02424;--bxn:#ffffff;--sj:1;--sn:1;--st:1;--sp:1;--sov:-10;--hh:112px;";
  const D="--fg:#2b1608;--bg:#c88a4c;--panel:#fff6e4;--panel2:#f6e2bd;--line:#d9b27a;--muted:#7a5632;--glow:#e9b878;--hd1:#e85a0c;--hd2:#c2410c;--red:#e85a0c;--red2:#c2410c;--gold:#b45309;--onred:#ffffff;--pn1:#fff6e4;--pn2:#f6e2bd;";
  H.className=nt?"notte lvoff texn":"dlt-parquet lvoff texn";B.classList.toggle("notte",nt);H.setAttribute("style",nt?C:C+D);
- const g=document.getElementById("skg"),n=document.getElementById("skn");if(g)g.disabled=nt;if(n)n.disabled=!nt;
+ /* (28) cambio giorno/notte fluido come Dreamers: i due fogli restano sempre scaricati e letti; si cambia solo media (con disabled Safari li ricaricava: lampo bianco e pagina senza stile) */
+ const g=document.getElementById("skg"),n=document.getElementById("skn");if(g){g.disabled=false;g.media=nt?"not all":"all"}if(n){n.disabled=false;n.media=nt?"all":"not all"}
  const sw=document.getElementById("sw");if(sw){sw.classList.toggle("on",nt);sw.setAttribute("aria-checked",nt?"true":"false")}
  const tc=document.querySelector('meta[name="theme-color"]');if(tc)tc.content=nt?"#2a1065":"#e85a0c"}
 let E16N=false;try{E16N=localStorage.getItem("e16_notte")==="1"}catch(e){}
@@ -378,7 +380,7 @@ function render(){
  m.innerHTML='<div class="view">'+(curTeam?'<div class="e16">'+vTeam(curTeam)+'</div>':window.STATV&&STATV[cur]?STATV[cur]():cur==="campo"&&window.vCampo?`<div class="chips">${TEAMS.map(x=>`<button class="chip" data-team="${x.id}" aria-pressed="${x.id===e16RT()}"><span class="badge logo lg-${x.id}"></span>${esc(x.nome.split(" ").slice(-1)[0])}</button>`).join("")}</div>`+vCampo(e16RT()):window.GESTV&&GESTV[cur]?GESTV[cur]():window.TRADEV&&TRADEV[cur]?TRADEV[cur]():cur==="tv"?vTv():cur==="cap"?'<div class="e16">'+vCapAll()+'</div>':vHome())+'</div>';
  if(cur==="tv"){const w=document.getElementById("tvweek"),b=w&&w.querySelector('[aria-pressed="true"]');if(b)w.scrollLeft=b.offsetLeft-w.clientWidth/2+b.clientWidth/2}
 }
-document.addEventListener("click",e=>{if(e.target.closest("#sw")){E16N=!E16N;try{localStorage.setItem("e16_notte",E16N?"1":"0")}catch(_){}e16Tema(E16N);render();return}
+document.addEventListener("click",e=>{if(e.target.closest("#sw")){E16N=!E16N;try{localStorage.setItem("e16_notte",E16N?"1":"0")}catch(_){}/* (28) dissolvenza breve tra giorno e notte dove il telefono la supporta */const go=()=>{e16Tema(E16N);render()};if(document.startViewTransition&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.startViewTransition(go);else go();return}
  if(e.target.closest("#setbtn")){location.reload();return}
  const mn=e.target.closest("[data-menu]");if(mn){const sn=document.getElementById("subnav"),r=mn.getBoundingClientRect();const L=mn.dataset.menu==="scambi"?SUB2:SUB,open=!sn.hidden&&sn.dataset.m===mn.dataset.menu;sn.dataset.m=mn.dataset.menu;sn.innerHTML=L.map(([k,l])=>`<button data-go="${k}" aria-selected="${cur===k}"><span>${l}</span></button>`).join("");if(open){sn.hidden=true;return}sn.hidden=false;sn.style.left=Math.max(8,Math.min(r.left,innerWidth-200))+"px";sn.style.top=(r.bottom+4)+"px";sn.style.minWidth="180px";return}
  if(!e.target.closest("#subnav")){const sn=document.getElementById("subnav");if(sn&&!sn.hidden)sn.hidden=true}

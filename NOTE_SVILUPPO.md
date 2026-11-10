@@ -60,3 +60,5 @@
 (26) 10/11/2026 – Sfide → duello stile Sleeper ovunque: Home (pagina Settimana sfide e banner) e Lega aprono il duello (data-du/data-duw, gestito in gest.js). Campo: tabellone come Dreamers (h2.lbmh) sopra il campo con loghi, punteggi migliori 14, partite giocate/totali (sotto senza IR); toccandolo si apre il duello, le frecce cambiano settimana (CW in campo.js).
 
 (27) 10/11/2026 – Dynasty TV tabellino: AVG 50+ viola (td.pdkl.pv), regola Dreamers mancante nelle skin estratte; aggiunta in fondo a skin-giorno.css e skin-notte.css (se si rigenerano le skin, rimetterla).
+
+(28) 10/11/2026 – Cambio giorno/notte fluido: skin-giorno/notte sempre caricate, si cambia solo media (con disabled Safari le ricaricava: lampo bianco e lente gigante = pagina senza stile). Dissolvenza 0,25 s con View Transition dove supportata.
