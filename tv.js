@@ -21,7 +21,7 @@ function defDay(){const D=Object.keys(ESPN.days).sort(),t=nyDay();if(D.includes(
  const done=D.filter(d=>d<=t&&(ESPN.days[d]||[]).some(id=>ESPN.box[id]));return done[done.length-1]||t}
 /* (38) SCONTRI DIRETTI della lega sotto le partite NBA, come «Dreamers» nella Dynasty TV di Dreamers: le sfide della settimana del giorno scelto,
    (44) punteggio = ufficiale ESPN (settimane finite) o somma dei 14 titolari della formazione ESPN del lunedì, quanti dei 14 hanno già giocato, giorni giocati della settimana e i migliori di ogni squadra.
-   Tocca una sfida → duello stile Sleeper della Lega (data-du, gestito in gest.js). */
+   Tocca una sfida → (74) box score della sfida in stile Dynasty TV di Dreamers (vDr); da lì «Apri la sfida» porta al duello della Lega. */
 function e16Sfide(d){try{const w=weekOf(d<W1?W1:d),M=MATCHUPS[w]||[];if(!M.length)return"";const[a,b]=weekRange(w),WS=sfidaScores(w),wNow=weekOf(nyToday()<W1?W1:nyToday());
  const days=Object.keys(ESPN.days).filter(k=>k>=a&&k<=b&&(ESPN.days[k]||[]).length).sort(),done=days.filter(k=>(ESPN.days[k]||[]).every(id=>ESPN.games[id]&&ESPN.games[id][4]==="F")).length;
  const fin=w===8?false:w<wNow||(days.length&&done===days.length),st=fin?"Finale":w===8&&w<wNow?"Continua nella 9":w>wNow?"Da giocare":"In corso";
@@ -29,7 +29,7 @@ function e16Sfide(d){try{const w=weekOf(d<W1?W1:d),M=MATCHUPS[w]||[];if(!M.lengt
   const pl=T=>T.L.filter(x=>x.on&&x.n>0).length,best=T=>T.L[0]&&T.L[0].n?T.L[0]:null;
   const side=(id,sc,T,win)=>`<div class="tvt${win?" win":""}"><span class="drtvl" style="--tc:${TCOL[id]}"><span class="badge logo lg-${id}" role="img" aria-label="${e(TM[id].nome)}"></span></span><span class="tvnm"><b>${e(TM[id].nome.split(" ").slice(-1)[0])}</b><small>${w===9?"totale sett. 8+9":WS.off?"punteggio ufficiale ESPN":pl(T)+"/14 hanno giocato"}</small></span><span class="tvsc">${f1(sc)}</span></div>`;
   const ba=best({L:TA.L.filter(x=>x.on)}),bb=best({L:TB.L.filter(x=>x.on)});
-  return `<button class="tvg drtvg" data-du="${A},${B}" data-duw="${w}" aria-label="${e(TM[A].nome)} contro ${e(TM[B].nome)}"><div class="tvteams">${side(A,sa,TA,fin&&sa>sb)}${side(B,sb,TB,fin&&sb>sa)}</div>
+  return `<button class="tvg drtvg" data-drtv="${A},${B},${w}" aria-label="${e(TM[A].nome)} contro ${e(TM[B].nome)}"><div class="tvteams">${side(A,sa,TA,fin&&sa>sb)}${side(B,sb,TB,fin&&sb>sa)}</div>
   <div class="tvst"><b class="pre">${st}</b><small>${done}/${days.length} giorni · sfida ›</small></div>${ba||bb?`<div class="tvtop"><span>Migliori: ${ba?`<b>${e(last(ba.g[0]))}</b> (${A}) <span class="pdkx ${xc(ba.tot/ba.n)}">${f1(ba.tot)}</span>`:""}${ba&&bb?" · ":""}${bb?`<b>${e(last(bb.g[0]))}</b> (${B}) <span class="pdkx ${xc(bb.tot/bb.n)}">${f1(bb.tot)}</span>`:""}</span></div>`:""}</button>`};
  return `<div class="drtvh"><h2><span class="t"><span>ESPN 16</span></span><em>Settimana ${w} · ${done} su ${days.length} giorni${is89(w)?" · sfida unica 8–9, si sommano":""}</em></h2></div><div class="tvlist">${M.map(card).join("")}</div>`}catch(_){return""}}
 function vList(){const D=Object.keys(ESPN.days).sort();const d=TVS.d&&ESPN.days[TVS.d]?TVS.d:defDay();TVS.d=d;const i=D.indexOf(d);
@@ -59,12 +59,39 @@ function vGame(){const id=TVS.g,g=ESPN.games[id];if(!g){TVS.g=null;return vList(
  <tr class="tot"><td>Totale squadra</td><td class="sqc"></td><td class="pdkl">${f1(tot)}</td><td></td><td>${s(4)}</td><td>${s(11)+s(12)}</td><td>${s(13)}</td><td>${s(14)}</td><td>${s(15)}</td><td>${s(16)}</td><td>${s(5)}-${s(6)}</td><td>${s(7)}-${s(8)}</td><td>${s(9)}-${s(10)}</td><td>${s(11)}</td><td>${s(12)}</td><td>${s(17)}</td><td></td></tr>
  <tr class="pct"><td>Percentuali</td><td class="sqc"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>${pct(s(5),s(6))}</td><td>${pct(s(7),s(8))}</td><td>${pct(s(9),s(10))}</td><td></td><td></td><td></td><td></td></tr></tbody></table></div>`:`<p class="note">Tabellino non ancora disponibile${g[4]==="S"?": la partita non è iniziata":""}.</p>`}
  <p class="note">Tabellino ESPN. AVG = punti della lega (vedi Statistiche). SQ = squadra del fanta. Pt punti, RIM rimbalzi, AST assist, STL palle rubate, BLK stoppate, TOV palle perse, Off/Dif rimbalzi offensivi/difensivi, T tecnico, F flagrante${g[4]==="L"?", ● in campo adesso":""}.</p>`}
-window.vTv=()=>TVS.g?vGame():vList();
+/* (74) SFIDA ESPN 16 IN STILE DYNASTY TV (come «tvDrGame» di Dreamers): tabellone con i due loghi e il punteggio, schede delle due squadre,
+   tabella con Titolari (formazione ESPN del lunedì), In attesa (titolari che non hanno ancora giocato) e Tribuna; AVG = punti della settimana,
+   statistiche = somma delle partite della settimana dai tabellini ESPN (si scorre a destra come nel box NBA). */
+function vDr(){try{const[A,B,ws]=TVS.dr.split(","),w=+ws,WS=sfidaScores(w),TA=wkTeam(A,w),TB=wkTeam(B,w),sa=WS.S[A],sb=WS.S[B];
+ const[a0,b0]=weekRange(w),wNow=weekOf(nyToday()<W1?W1:nyToday()),days=Object.keys(ESPN.days).filter(k=>k>=a0&&k<=b0&&(ESPN.days[k]||[]).length).sort(),done=days.filter(k=>(ESPN.days[k]||[]).every(id=>ESPN.games[id]&&ESPN.games[id][4]==="F")).length;
+ const fin=w===8?false:w<wNow||(days.length&&done===days.length),live=[TA,TB].some(T=>T.L.some(x=>x.G.some(g=>g.lv)));
+ const side=TVS.drs==="b"?"b":"a",id=side==="a"?A:B,T=side==="a"?TA:TB;
+ const nick=t=>e(TM[t].nome.split(" ").slice(-1)[0]),lg=t=>`<span class="drsbl"><span class="badge logo lg-${t}" role="img" aria-label="${e(TM[t].nome)}"></span></span>`;
+ const pl=T=>T.L.filter(x=>x.on&&x.n>0).length;
+ const NS=11,st=x=>{const r={m:0,p:0,rb:0,as:0,s:0,b:0,to:0,fm:0,fa:0,tm:0,ta:0,lm:0,la:0};for(const g of x.G){if(g.f==null)continue;const R=(ESPN.box[g.id]||[]).find(q=>__ownKey(q[0])===__ownKey(x.g[0]));if(!R)continue;r.m+=+R[3]||0;r.p+=R[4];r.fm+=R[5];r.fa+=R[6];r.tm+=R[7];r.ta+=R[8];r.lm+=R[9];r.la+=R[10];r.rb+=R[11]+R[12];r.as+=R[13];r.s+=R[14];r.b+=R[15];r.to+=R[16]}return r};
+ const row=(x,grp)=>{const r=x.n?st(x):null,lv=x.G.some(g=>g.lv&&g.f!=null),cells=r?`<td>${x.n}</td><td>${Math.round(r.m)}</td><td class="pts">${r.p}</td><td>${r.rb}</td><td>${r.as}</td><td>${r.s}</td><td>${r.b}</td><td>${r.to}</td><td>${r.fm}-${r.fa}</td><td>${r.tm}-${r.ta}</td><td>${r.lm}-${r.la}</td>`:`<td>0</td>${"<td>—</td>".repeat(NS-1)}`;
+  return`<tr><td><div class="tvpn"><div class="plk" data-pl="${e(x.g[0])}">${lv?'<i class="lvd"></i>● ':""}${e(nm(x.g[0]))}<small><i class="tvps">${e(x.team||"")}${x.rem?` · ${x.rem} da gioc.`:""}</i></small></div></div></td><td class="pdkl ${x.n?pc(x.tot/x.n):""}">${x.n?`<span class="pdkb">${f1(x.tot)}</span>`:'<span class="dash">—</span>'}</td>${cells}</tr>`};
+ const grp=(lab,arr,g)=>arr.length?`<tr class="grp"><td>${lab}</td><td colspan="${1+NS}"></td></tr>${arr.map(x=>row(x,g)).join("")}`:"";
+ const tit=T.L.filter(x=>x.on&&x.n>0),att=T.L.filter(x=>x.on&&!x.n),trib=T.L.filter(x=>!x.on);
+ const x=dd(TVS.d||nyDay()),dl=`${x.getUTCDate()} ${MM[x.getUTCMonth()]}`,sc=v=>v==null?"—":f1(v);
+ return`<button class="gback tvback" data-tvback="1">‹ Partite del ${dl}</button>
+ <div class="tvsb" style="--ca:${TCOL[A]};--ch:${TCOL[B]}"><div class="tside">${lg(A)}<b>${nick(A)}</b><small>${pl(TA)}/14 hanno giocato</small></div>
+  <div class="tmid"><div><span class="${fin&&sa<sb?"lo":""}">${sc(sa)}</span><i>–</i><span class="${fin&&sb<sa?"lo":""}">${sc(sb)}</span></div><small>${live?'<span class="hmlv">LIVE</span> ':""}${fin?"Finale":w===8&&w<wNow?"Continua nella 9":w>wNow?"Da giocare":"In corso"}</small><em class="drsbn">ESPN 16 · settimana ${w}${w===9?" (8+9)":""}</em></div>
+  <div class="tside">${lg(B)}<b>${nick(B)}</b><small>${pl(TB)}/14 hanno giocato</small></div></div>
+ <div class="tvtabs"><button class="tvtab" data-drside="a" aria-pressed="${side==="a"}"><span class="drtvl"><span class="badge logo lg-${A}"></span></span>${nick(A)}</button><button class="tvtab" data-drside="b" aria-pressed="${side==="b"}"><span class="drtvl"><span class="badge logo lg-${B}"></span></span>${nick(B)}</button></div>
+ <div class="tbl-wrap tvw"><table class="ptbl tvbox drbox drbxs"><thead><tr><th>Giocatore</th><th class="pdkl">AVG</th><th>G</th><th>Min</th><th>Pt</th><th>RIM</th><th>AST</th><th>STL</th><th>BLK</th><th>TOV</th><th>Tiri</th><th>Da 3</th><th>Liberi</th></tr></thead>
+ <tbody>${grp("Titolari",tit,"on")}${grp(fin?"Non hanno giocato":"In attesa",att,"wait")}${grp("Tribuna · non contano",trib,"trib")}
+ <tr class="tot"><td>Punteggio squadra</td><td class="pdkl dfp">${sc(side==="a"?sa:sb)}</td>${"<td></td>".repeat(NS)}</tr></tbody></table></div>
+ <button class="advbtn" data-du="${A},${B}" data-duw="${w}">Apri la sfida ›</button>
+ <p class="note">Settimana ${w} · ${done} su ${days.length} giorni${w===9?" · sfida unica 8–9: il punteggio somma le due settimane, la tabella mostra la 9":""}. I 14 titolari sono la formazione ESPN del lunedì; chi è in tribuna non conta. AVG = punti della lega nella settimana; G partite giocate; statistiche sommate sulle partite della settimana (scorri a destra).${WS.off?" Punteggio ufficiale ESPN.":""}</p>`}catch(er){return""}}
+window.vTv=()=>{if(TVS.dr){const h=vDr();if(h)return h;TVS.dr=null}return TVS.g?vGame():vList()};
 window.TVS=TVS;
-(window.NAVX=window.NAVX||[]).push({k:"tv",get:()=>({d:TVS.d,g:TVS.g,side:TVS.side}),set:o=>Object.assign(TVS,o)});
-document.addEventListener("click",ev=>{if(cur!=="tv")return;const c=ev.target.closest("[data-tvd],[data-tvg],[data-tvback],[data-tvside]");if(!c)return;const d=c.dataset;
- if(d.tvd){TVS.d=d.tvd;TVS.g=null;render();const w=document.getElementById("tvweek"),b=w&&w.querySelector('[aria-pressed="true"]');if(b)w.scrollLeft=b.offsetLeft-w.clientWidth/2+b.clientWidth/2;return}
+(window.NAVX=window.NAVX||[]).push({k:"tv",get:()=>({d:TVS.d,g:TVS.g,side:TVS.side,dr:TVS.dr||null,drs:TVS.drs||"a"}),set:o=>Object.assign(TVS,o)});
+document.addEventListener("click",ev=>{if(cur!=="tv")return;const c=ev.target.closest("[data-tvd],[data-tvg],[data-tvback],[data-tvside],[data-drtv],[data-drside]");if(!c)return;const d=c.dataset;
+ if(d.drtv){TVS.dr=d.drtv;TVS.drs="a";TVS.g=null;render();scrollTo(0,0);return}/* (74) */
+ if(d.drside){TVS.drs=d.drside;const y=scrollY;render();scrollTo(0,y);return}
+ if(d.tvd){TVS.d=d.tvd;TVS.g=null;TVS.dr=null;render();const w=document.getElementById("tvweek"),b=w&&w.querySelector('[aria-pressed="true"]');if(b)w.scrollLeft=b.offsetLeft-w.clientWidth/2+b.clientWidth/2;return}
  if(d.tvg){TVS.g=d.tvg;TVS.side="a";render();scrollTo(0,0);return}
- if(d.tvback){TVS.g=null;render();return}
+ if(d.tvback){TVS.g=null;TVS.dr=null;render();return}
  if(d.tvside){TVS.side=d.tvside;render();return}},true);
 })();
