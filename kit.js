@@ -157,8 +157,9 @@ const kitBtnCol=t=>{let h=t==="QUE"?"#8b5cf6":((typeof TCOL!=="undefined"?TCOL:{
 const kitBtn=t=>t==="FA"?"":`<button class="kitbtn" id="kitbtn" type="button" data-kitt="${t}" aria-label="Cambia maglia: ${e(kitNome(t,kitDi(t)))}" title="Maglia: ${e(kitNome(t,kitDi(t)))}">${kitIco(t)}</button>`;
 let JID=0;
 /* maglia (stessa sagoma e luci delle maglie Dreamers). t = squadra, num = numero, nick = nome della squadra sul petto, pl = giocatore (serve per NBA 2026 / Anni 90) */
-function jersey(t,num,nick,pl){
- let kd=kitDi(t);const n=num==null?"":String(num);
+/* (67) kf = maglia forzata (facoltativa): la usa lo stadio Dream (dream-e16.js) per vestire gli armadietti con Casa / Notte / Alternativa come Dreamers */
+function jersey(t,num,nick,pl,kf){
+ let kd=kf!=null&&kitLista(t).includes(kf)?kf:kitDi(t);const n=num==null?"":String(num);
  const nba=(kd===3||kd===4)?nbaDi(t,pl):null,nk=nba?(kd===4?(NBA_KIT_90[nba]||NBA_BIANCA):NBA_KIT[nba]):null;
  if(t==="QUE"&&!nk){const Q=QUE_KITS[queIdx(kd)]||QUE_KITS[notte()?1:0];return Q.svg().replace(/__K__/g,"qk"+(JID++)).replace(/__NUM__/g,n)}
  const c=nk?{...COLB(t),jstroke:undefined,outer:undefined,jsw:undefined,ns:undefined,nf:undefined,...nk}:kitC(t,(kd===3||kd===4)?0:kd),k="e"+(JID++),fs=n.length>1?38:44;
