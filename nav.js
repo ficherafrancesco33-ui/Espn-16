@@ -4,7 +4,7 @@
    - La scritta del tasto «‹» dice dove porta.
    - Toccando il logo dell app in alto la pagina si aggiorna (scarica dati e app nuovi); toccando la scritta ESPN 16 si torna alla Home. */
 (function(){
-const NAV=[];let last=null,restoring=false,pend=null;
+const NAV=[];let last=null,restoring=false,pend=null,fromMenu=false;
 const NX=()=>window.NAVX||[];
 function snap(){return{cur,curTeam,tmTab,lgTab,night,x:NX().map(m=>({k:m.k,v:JSON.parse(JSON.stringify(m.get()))})),y:scrollY,sel:null}}
 function sig(s){const x=Object.fromEntries(s.x.map(o=>[o.k,o.v]));const c=s.cur;
@@ -17,7 +17,7 @@ function label(s){if(!s)return"Home";if(s.curTeam)return TM[s.curTeam]?TM[s.curT
 const BK=".gback,.grback,.drexit,.bk,.bk2,.back,[data-back],[data-tvback],.tvback";
 /* dopo ogni disegno: se la pagina è cambiata, quella di prima entra nella pila */
 const r0=render;render=function(){const out=r0.apply(this,arguments);try{
-  const s=snap();if(last&&!restoring&&sig(s)!==sig(last)){if(pend&&pend.sig===sig(last)){last.y=pend.y;last.sel=pend.sel}
+  const s=snap();if(fromMenu&&!restoring){fromMenu=false;NAV.length=0}else if(last&&!restoring&&sig(s)!==sig(last)){if(pend&&pend.sig===sig(last)){last.y=pend.y;last.sel=pend.sel}
    /* (70) se la pagina nuova è già nella pila (A → B → A) si torna a quel punto invece di allungare la pila: il tasto ‹ non gira più a vuoto */
    const ns=sig(s),k=NAV.findIndex(z=>sig(z)===ns);if(k>=0)NAV.length=k;else{NAV.push(last);if(NAV.length>50)NAV.shift()}
    /* niente doppioni di fila */for(let i=NAV.length-1;i>0;i--)if(sig(NAV[i])===sig(NAV[i-1]))NAV.splice(i,1)}
@@ -29,6 +29,8 @@ addEventListener("scroll",()=>{if(last)last.y=scrollY},{passive:true});
 const selOf=el=>{for(let e=el;e&&e.id!=="main";e=e.parentElement){if(!e.attributes)continue;const d=[...e.attributes].filter(a=>a.name.startsWith("data-")&&a.value!==""&&!/^data-(pq|pqc)$/.test(a.name)).slice(0,2);if(d.length)return e.tagName.toLowerCase()+d.map(a=>`[${a.name}="${CSS.escape(a.value)}"]`).join("")}return null};
 addEventListener("click",e=>{const m=document.getElementById("main");if(!m||!m.contains(e.target)||e.target.closest(BK))return;if(last)pend={sig:sig(last),y:scrollY,sel:selOf(e.target)}},true);
 let navT=0;
+/* (76) cambiare sezione dal menu in alto (o dal sottomenu) riparte da zero: il tasto ‹ porta alla Home, non alla sezione di prima */
+addEventListener("click",e=>{const b=e.target.closest("nav button,#subnav button,#subnav [data-go]");if(b&&!b.hasAttribute("data-menu"))fromMenu=true},true);
 function back(){const n=Date.now();if(n-navT<350)return true;navT=n;const s=NAV.pop();if(!s){if(cur==="home"&&!curTeam)return false;cur="home";curTeam=null;restoring=true;render();restoring=false;scrollTo(0,0);return true}
  restoring=true;apply(s);render();restoring=false;last=snap();
  setTimeout(()=>{let el=null;try{el=s.sel&&document.querySelector("#main "+s.sel)}catch(_){}if(el){el.scrollIntoView({block:"center"});el.classList.add("navhl");setTimeout(()=>el.classList.remove("navhl"),1300)}else scrollTo(0,s.y||0)},40);return true}
