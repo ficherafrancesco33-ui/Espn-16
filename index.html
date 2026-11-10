@@ -189,6 +189,8 @@ html,body{margin:0}
 .grjs.e16js{display:grid;place-items:center}
 .grjs.e16js img{width:120px;height:120px;border-radius:50%;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45))}
 .snrow[data-pl],.farow,.plink{cursor:pointer}
+/* (8) pagina Lega: logo sotto il tasto «Torna all app» */
+.drroom .drhd{padding-top:30px}
 /* (7) casella Home: scorrimento */
 .hmtrk.anim{transition:transform .34s cubic-bezier(.22,.8,.3,1)}
 .hmcl[data-team],.hmtm[data-team]{cursor:pointer}
@@ -266,6 +268,7 @@ e16Tema(E16N);</script>
   <div class="wrap">
     <div class="top"><div class="brandwrap"><img class="lglogo" src="logo-app.png" alt="ESPN 16" data-go="home"><div class="brand" data-go="home" style="cursor:pointer">ESPN 16</div></div><div class="topbtns"><button class="hnt hnthd" id="sw" type="button" role="switch" aria-checked="false" aria-label="Modalità notte"><span class="hntk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" fill="currentColor"></path></svg></span></button><button class="setbtn" id="setbtn" aria-label="Aggiorna" title="Aggiorna"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.7 7.7 0 0 0 0-2l2.1-1.6a.5.5 0 0 0 .1-.6l-2-3.4a.5.5 0 0 0-.6-.2l-2.5 1a7.6 7.6 0 0 0-1.7-1l-.4-2.6a.5.5 0 0 0-.5-.4h-4a.5.5 0 0 0-.5.4l-.4 2.6a7.6 7.6 0 0 0-1.7 1l-2.5-1a.5.5 0 0 0-.6.2l-2 3.4a.5.5 0 0 0 .1.6L4.6 11a7.7 7.7 0 0 0 0 2l-2.1 1.6a.5.5 0 0 0-.1.6l2 3.4c.1.2.4.3.6.2l2.5-1c.5.4 1.1.7 1.7 1l.4 2.6c0 .2.2.4.5.4h4c.3 0 .5-.2.5-.4l.4-2.6c.6-.3 1.2-.6 1.7-1l2.5 1c.2.1.5 0 .6-.2l2-3.4a.5.5 0 0 0-.1-.6zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"></path></svg></button></div></div>
     <nav role="tablist" id="nav"></nav>
+    <div class="subnav" id="subnav" role="menu" hidden></div>
   </div>
 </header>
 <main class="wrap" id="main"></main>
@@ -328,25 +331,30 @@ const f1=v=>(Math.round(v*10)/10).toLocaleString("it-IT",{minimumFractionDigits:
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 /* ===== NAVIGAZIONE ===== */
-const TABS=[["home","Home"],["lega","Lega"],["tv","Dynasty TV"],["stat","Statistiche"],["cap","Cap & Scelte"]];
+const TABS=[["home","Home"],["lega","Lega"],["tv","Dynasty TV"],["stat","Statistiche"],["gest","Centro gestione"]];
+/* (8) menu Centro gestione come Dreamers */
+const SUB=[["roster","Roster"],["inf","Centro Medico"],["reg","Regolamento"],["cap","Cap & Scelte"]];
 let tmTab="rosa",cur="home",curTeam=null,lgTab="cls",night=null,stQ={per:"all",nba:"",sort:"ffa",min:0},hq="";
 try{const s=JSON.parse(localStorage.getItem("e16_st")||"{}");Object.assign(stQ,s)}catch(e){}
 function go(v){cur=v;curTeam=null;render();scrollTo(0,0)}
 function render(){
- document.getElementById("nav").innerHTML=TABS.map(([k,l])=>`<button role="tab" data-go="${k}" aria-selected="${cur===k&&!curTeam||k==="stat"&&!!(window.STATV&&STATV[cur])||k==="lega"&&!!curTeam?"true":"false"}"><span>${l}</span></button>`).join("");
+ document.getElementById("nav").innerHTML=TABS.map(([k,l])=>`<button role="tab" data-go="${k}" aria-selected="${cur===k&&!curTeam||k==="stat"&&!!(window.STATV&&STATV[cur])||k==="gest"&&(SUB.some(x=>x[0]===cur)||!!curTeam)?"true":"false"}"${k==="gest"?' data-menu="1" aria-haspopup="true"':""}><span>${l}${k==="gest"?'<i class="car">▾</i>':""}</span></button>`).join("");
+ {const sn=document.getElementById("subnav");sn.innerHTML=SUB.map(([k,l])=>`<button data-go="${k}" aria-selected="${cur===k}"><span>${l}</span></button>`).join("");sn.hidden=true}
  /* (6) come Dreamers: body[data-v] dice in che pagina siamo (alcuni stili Dreamers dipendono da questo) */
- document.body.dataset.v=curTeam?"squadra":({stat:"efficienza",sgioc:"fa",gioc:"grafico",comp:"compar",ssq:"effsquadra"})[cur]||cur;
+ document.body.dataset.v=curTeam?"squadra":({stat:"efficienza",sgioc:"fa",gioc:"grafico",comp:"compar",ssq:"effsquadra",lega:"dreamers",inf:"infortuni",reg:"regolamento"})[cur]||cur;
  e16Tema(E16N);
  document.getElementById("foot").textContent=typeof ESPN!=="undefined"?"ULTIMO AGGIORNAMENTO ESPN: "+ESPN.upd:"";
  const m=document.getElementById("main");
  /* (6) le pagine proprie di ESPN 16 (squadra, lega, cap) stanno dentro .e16: le loro regole non toccano le classi Dreamers */
- m.innerHTML='<div class="view">'+(curTeam?'<div class="e16">'+vTeam(curTeam)+'</div>':window.STATV&&STATV[cur]?STATV[cur]():cur==="tv"?vTv():cur==="cap"?'<div class="e16">'+vCapAll()+'</div>':cur==="lega"?'<div class="e16">'+vLega()+'</div>':vHome())+'</div>';
+ m.innerHTML='<div class="view">'+(curTeam?'<div class="e16">'+vTeam(curTeam)+'</div>':window.STATV&&STATV[cur]?STATV[cur]():window.GESTV&&GESTV[cur]?GESTV[cur]():cur==="tv"?vTv():cur==="cap"?'<div class="e16">'+vCapAll()+'</div>':vHome())+'</div>';
  if(cur==="tv"){const w=document.getElementById("tvweek"),b=w&&w.querySelector('[aria-pressed="true"]');if(b)w.scrollLeft=b.offsetLeft-w.clientWidth/2+b.clientWidth/2}
 }
 document.addEventListener("click",e=>{if(e.target.closest("#sw")){E16N=!E16N;try{localStorage.setItem("e16_notte",E16N?"1":"0")}catch(_){}e16Tema(E16N);render();return}
  if(e.target.closest("#setbtn")){location.reload();return}
+ const mn=e.target.closest("[data-menu]");if(mn){const sn=document.getElementById("subnav"),r=mn.getBoundingClientRect();sn.style.left=Math.max(8,Math.min(r.left,innerWidth-200))+"px";sn.style.top=(r.bottom+4)+"px";sn.style.minWidth="180px";sn.hidden=!sn.hidden;return}
+ if(!e.target.closest("#subnav")){const sn=document.getElementById("subnav");if(sn&&!sn.hidden)sn.hidden=true}
  const g=e.target.closest("[data-go]");if(g){go(g.dataset.go);return}
- const t=e.target.closest("[data-team]");if(t){curTeam=t.dataset.team;if(t.dataset.tab)tmTab=t.dataset.tab;render();scrollTo(0,0);return}
+ const t=e.target.closest("[data-team]");if(t){if(!t.dataset.tab){try{e16Roster(t.dataset.team)}catch(_){}curTeam=null;cur="roster";render();scrollTo(0,0);return}curTeam=t.dataset.team;tmTab=t.dataset.tab;render();scrollTo(0,0);return}
  const tt=e.target.closest("[data-tmtab]");if(tt){tmTab=tt.dataset.tmtab;render();return}
  const n=e.target.closest("[data-night]");if(n){night=n.dataset.night;render();return}
  const l=e.target.closest("[data-lg]");if(l){lgTab=l.dataset.lg;render();return}
@@ -476,6 +484,7 @@ render();
 </script>
 <script src="stats.js"></script>
 <script src="tv.js"></script>
+<script src="gest.js"></script>
 <script src="live.js"></script>
 <script src="parquet.js"></script>
 <script>render();
