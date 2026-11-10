@@ -113,3 +113,5 @@
 (53) 10/11/2026 – Statistiche: tasto grande «Free agent» (verde acqua, stessa forma di Giocatori e Squadre) sotto Squadre, apre la pagina Free agent.
 
 (54) 10/11/2026 – Ordinamento toccando le intestazioni (primo tocco decrescente ▼, ritocco crescente ▲): Statistiche › Giocatori (ST.dir), Free agent (Età/AVG/Prezzo, FA.dir; «Più giovani» = età crescente), Valori giocatori (Età/AVG/Valore, T.vs/T.vd) e, in generale, le tabelle complete (Live stanotte del campo, Osservatorio, partite del profilo, tabella della formazione consigliata) con un ordinatore comune in index.html.
+
+(55) 10/11/2026 – Liste (.fatbl): colonna del numero di posizione larga 40px, il nome non finisce più sopra ai numeri a 3 cifre (Free agent, Giocatori, Valori).
