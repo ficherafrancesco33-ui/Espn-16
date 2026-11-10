@@ -4,7 +4,9 @@
    costruiti con i dati ESPN 16 e passati a dream.js come parametri (window.DRM_E16.args, stesso ordine dell'intestazione di dream.js).
    - Colori dello stadio: TCOL (colore della squadra) + COL di campo.js (scritte e bordi); logo da loghi/; maglie con jersey() di kit.js.
    - Giocatori stanotte: tabellini ESPN (ESPN.days/games/box, aggiornati da live.js) nel formato della Dynasty TV di Dreamers.
-   - Sala trofei / albo d'oro: vuoti (nessun dato storico ESPN 16): bacheca «il primo trofeo è vicino».
+   - (87) Sala trofei / albo d'oro: dati veri da trofei.js (window.ALBO). Titoli NBA → STORIA {anno,ordine:[campione]} (coppe d'oro giganti,
+     stendardi, quadri dell ufficio); titoli di conference e miglior record → window.DRM_TROFEI(t) (coppa d argento e targa nella bacheca).
+     Chi non ha trofei trova la bacheca «il primo trofeo è vicino».
    - Niente Dream City (solo arena, spogliatoi, sala trofei, ufficio): si entra sempre con {solo:true} come dal tasto D di Dreamers.
    Il tasto viola «D» sta a destra nel tabellone del Campo (h2.lbmh), specchio del tasto maglia; dream.js si scarica solo al primo tocco. */
 (function(){
@@ -47,7 +49,12 @@ function jersey(t,num,nk){const K=window.KITO;let kf;if(K!=null){kf=K;try{if(t==
   return window.E16KIT?E16KIT.jersey(t,num,nk||nick(t),undefined,kf):(window.e16Jersey?e16Jersey(t,num,nk||nick(t)):"")}
 const pdkF=v=>f1(v),pdkLvl=v=>v==null?"na":v>=50?"v":v>=35?"g":v>=20?"y":"r";
 const tvEspn=async()=>{try{if(window.e16Live)await e16Live()}catch(e){}tv()};
-D.refresh=()=>{squadre();rose();tv();SC={}};
+/* (87) albo d oro per la sala trofei: STORIA riempito sul posto (dream.js tiene il riferimento all array) */
+function albo(){const A=window.ALBO;D.STORIA.length=0;if(!A)return;const an=r=>(r.a-1)+"/"+String(r.a).slice(2)+(r.nota||"")/* stagione come nella pagina: 2025/26, 2023/24* */;
+  (A.titoli||[]).slice().sort((x,y)=>x.a-y.a).forEach(r=>D.STORIA.push({anno:an(r),ordine:[r.t]}));
+  window.DRM_TROFEI=t=>[...(A.conf||[]).filter(r=>r.t===t).sort((x,y)=>x.a-y.a).map(r=>({k:"conf",l1:"CAMPIONI "+(TM[t]&&TM[t].conf==="E"?"EST":"OVEST"),l2:"ANNO "+an(r)})),
+    ...(A.record||[]).filter(r=>r.t===t).sort((x,y)=>x.a-y.a).map(r=>({k:"plq",l1:"MIGLIOR RECORD",l2:"ANNO "+an(r)}))]}
+D.refresh=()=>{squadre();rose();tv();albo();SC={}};
 /* stesso ordine dei parametri di dream.js */
 D.args=[D.TEAMS,D.ROSTER,D.LOGO,D.LOGO_DUC0,D.TV,D.TVL,D.STORIA,D.STATI,D.INFORTUNI,D.INJ_RIENTRI,campoNotteMap,nm,tvEspn,()=>{},nyToday,jersey,undefined,pdkF,pdkLvl,drCurWeek,drPO,drPairs,drStand,drTeam,drWeek,undefined,[],"menu",{},undefined,{},()=>{},null];
 window.DRM_E16=D;
@@ -58,7 +65,7 @@ document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest
   /* iPhone: audio e voce della modalità Dream si sbloccano solo dentro il tocco (come Dreamers) */
   try{const AC=window.AudioContext||window.webkitAudioContext;if(AC&&!window.__drmAC){try{if(navigator.audioSession)navigator.audioSession.type="playback"}catch(_){}window.__drmAC=new AC();window.__drmAC.resume()}const S=window.speechSynthesis;if(S){const u=new SpeechSynthesisUtterance(" ");u.volume=0;u.lang="it-IT";S.speak(u)}}catch(_){}
   const go=()=>{try{D.refresh();window.dreamOpen(t,{solo:true})}catch(er){console.error(er)}};
-  if(window.dreamOpen)return go();const s=document.createElement("script");s.src="dream.js?v=67";s.onload=go;s.onerror=()=>alert("Modalità Dream non disponibile: controlla la connessione.");document.head.appendChild(s)},true);
+  if(window.dreamOpen)return go();const s=document.createElement("script");s.src="dream.js?v=87"/* (87) albo d oro nella sala trofei */;s.onload=go;s.onerror=()=>alert("Modalità Dream non disponibile: controlla la connessione.");document.head.appendChild(s)},true);
 /* iPhone: chiusa la modalità Dream si spegne l audio (come Dreamers) */
 (function(){const off=()=>{try{const a=window.__drmAC;if(a&&a.state!=="closed")a.close()}catch(e){}window.__drmAC=null;try{if(navigator.audioSession)navigator.audioSession.type="auto"}catch(e){}try{speechSynthesis.cancel()}catch(e){}};
  const hook=()=>{if(window.dreamClose&&!window.dreamClose.__ofx){const C=window.dreamClose;window.dreamClose=function(){const r=C.apply(this,arguments);setTimeout(off,300);return r};window.dreamClose.__ofx=1}};
