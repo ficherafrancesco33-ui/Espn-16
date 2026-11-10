@@ -68,7 +68,7 @@ function optimize(P){const n=P.length,k=Math.max(0,n-14);let best=null,relaxed=f
 function vFcons(){const t=FC.t&&TM[FC.t]?FC.t:"QUE",T=TM[t],wNow=weekOf(nyToday()<W1?W1:nyToday()),maxW=Math.max(...Object.keys(MATCHUPS).map(Number));
  const w=FC.w&&FC.w>=wNow&&FC.w<=maxW?FC.w:Math.min(maxW,wNow+1);FC.w=w;fetchMissing(w);
  const[wa,wb]=weekRange(w),R0=ROSE[t]||[],P=R0.map(g=>player(g,w)),best=optimize(P);
- const nick=T.nome.split(" ").slice(-1)[0],jer=n=>window.e16Jersey?e16Jersey(t,window.e16Num?e16Num(n):"",nick):"";
+ const nick=T.nome.split(" ").slice(-1)[0],jer=n=>window.e16Jersey?e16Jersey(t,window.e16Num?e16Num(n):"",nick,n):"";/* (57) col giocatore per le maglie NBA */
  /* formazione ESPN attuale (quella della settimana se c è, altrimenti gli slot di oggi) */
  let curSet=null;try{const L=(LEGA.line||{})[w]&&LEGA.line[w][t];curSet=new Set((L||R0.filter(g=>g[2]!=="BE"&&g[2]!=="IR").map(g=>g[0])).map(K))}catch(_){curSet=new Set(R0.filter(g=>g[2]!=="BE"&&g[2]!=="IR").map(g=>K(g[0])))}
  const curTot=P.filter(p=>curSet.has(K(p.n))).reduce((a,p)=>a+p.tot,0);

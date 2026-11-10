@@ -196,7 +196,7 @@ function vPl(){const ok=needOld();const n=ST.pl;const o=ownOf(n),t=o&&TM[o.t]?o.
  const stat=(lab,val,sub="")=>`<div class="gst"><small>${lab}</small><b>${val}</b>${sub?`<em>${sub}</em>`:""}</div>`;
  const SEG=window.e16SegBtn?e16SegBtn(n,1):"";
  const SH=`<span class="segi shpl" data-plsh="1" role="button" tabindex="0" aria-label="Condividi la scheda del giocatore">${SH_ICO}<em>Condividi</em></span>`;
- const jer=window.e16Jersey?(t?e16Jersey(t,num,nkOf(t)):e16Jersey("FA",num,"Free Agent")):(nba?`<img src="loghi/nba/${String(nba).toLowerCase()}.svg" alt="" style="width:96px;height:96px;object-fit:contain;display:block;margin:auto">`:"");/* (45) svincolati: maglia bianca FREE AGENT */
+ const jer=window.e16Jersey?(t?e16Jersey(t,num,nkOf(t),n)/* (57) */:e16Jersey("FA",num,"Free Agent")):(nba?`<img src="loghi/nba/${String(nba).toLowerCase()}.svg" alt="" style="width:96px;height:96px;object-fit:contain;display:block;margin:auto">`:"");/* (45) svincolati: maglia bianca FREE AGENT */
  const MESI=["","Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
  const by={};GL.forEach(x=>{const k=x.d.slice(0,7);(by[k]=by[k]||[]).push(x)});const ms=Object.keys(by).sort().reverse();
  return `<button class="gback" data-sv="${ST.back||"sgioc"}">‹ Indietro</button>
@@ -251,7 +251,7 @@ async function shHead(c,W,S,y0,hh){const T=S.t?TM[S.t]:null,bg=T?TCOL[S.t]:"#334
  c.save();shRR(c,56,y0,W-112,hh,28);c.clip();const dk=(h,k)=>{const v=parseInt(h.slice(1),16),q=x=>Math.round(x*(1-k)).toString(16).padStart(2,"0");return"#"+q(v>>16)+q((v>>8)&255)+q(v&255)};
  const gg=c.createLinearGradient(56,y0,W-56,y0+hh);gg.addColorStop(0,bg);gg.addColorStop(1,dk(bg,.4));c.fillStyle=gg;c.fillRect(56,y0,W-112,hh);
  c.strokeStyle="rgba(255,255,255,.07)";c.lineWidth=18;c.beginPath();for(let x=-hh;x<W;x+=44){c.moveTo(x+56,y0+hh);c.lineTo(x+56+hh,y0)}c.stroke();c.fillStyle="#0b0b0b";c.fillRect(56,y0+hh-10,W-112,10);c.restore();
- let ic=null;try{if(window.e16Jersey){const s=S.t?e16Jersey(S.t,S.num,nkOf(S.t)):e16Jersey("FA",S.num,"Free Agent");ic=await shImg("data:image/svg+xml;charset=utf-8,"+encodeURIComponent(s.includes("xmlns=")?s:s.replace("<svg",'<svg xmlns="http://www.w3.org/2000/svg"')))}else if(S.nba)ic=await shImg(`loghi/nba/${String(S.nba).toLowerCase()}.svg`)}catch(e){}
+ let ic=null;try{if(window.e16Jersey){const s=S.t?e16Jersey(S.t,S.num,nkOf(S.t),S.n)/* (57) */:e16Jersey("FA",S.num,"Free Agent");ic=await shImg("data:image/svg+xml;charset=utf-8,"+encodeURIComponent(s.includes("xmlns=")?s:s.replace("<svg",'<svg xmlns="http://www.w3.org/2000/svg"')))}else if(S.nba)ic=await shImg(`loghi/nba/${String(S.nba).toLowerCase()}.svg`)}catch(e){}
  if(ic){const bx=230,r=Math.min(bx/ic.width,bx/ic.height),w=ic.width*r,h=ic.height*r;c.drawImage(ic,56+20+(bx-w)/2,y0+(hh-h)/2,w,h)}
  const tx=56+20+250+16,tw=W-56-24-tx;c.textAlign="left";c.fillStyle="#fff";const nm=S.n.toUpperCase();let fs=92;c.font=SH_F(800,fs,1);while(fs>44&&c.measureText(nm).width>tw){fs-=2;c.font=SH_F(800,fs,1)}c.fillText(nm,tx,y0+112);
  c.font=SH_F(700,38,1);c.globalAlpha=.85;c.fillText(fit(c,[S.r.toUpperCase(),S.nba||null,S.num!==""?"#"+S.num:null].filter(Boolean).join(" · "),tw),tx,y0+170);c.globalAlpha=1;

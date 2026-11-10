@@ -89,7 +89,7 @@ const SH_ICO='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke
 function shImg(src){return new Promise(r=>{if(!src)return r(null);const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src})}
 async function shLogoAt(c,t,x,y,z){const lg=await shImg((TM[t]||{}).logo);if(lg){const r=Math.min(z/lg.width,z/lg.height);c.drawImage(lg,x+(z-lg.width*r)/2,y+(z-lg.height*r)/2,lg.width*r,lg.height*r)}}
 /* maglia della squadra (la stessa del campo, campo.js) disegnata da SVG */
-async function shJersey(t,n){try{if(!window.e16Jersey)return null;const s=e16Jersey(t,e16Num(n),nick(t));return await shImg("data:image/svg+xml;charset=utf-8,"+encodeURIComponent(s.includes("xmlns=")?s:s.replace("<svg",'<svg xmlns="http://www.w3.org/2000/svg"')))}catch(e){return null}}
+async function shJersey(t,n){try{if(!window.e16Jersey)return null;const s=e16Jersey(t,e16Num(n),nick(t),n);/* (57) */return await shImg("data:image/svg+xml;charset=utf-8,"+encodeURIComponent(s.includes("xmlns=")?s:s.replace("<svg",'<svg xmlns="http://www.w3.org/2000/svg"')))}catch(e){return null}}
 /* di giorno lo stile parquet di Dreamers: i viola del disegno vengono rimappati sui colori parquet (come shThemeCtx di Dreamers) */
 const TH_PQ={bg:["#b9763a","#9b5f2c"],deep:[30,15,5],pan:[48,25,10],pan2:[104,56,22],acc:[242,112,26],lt:[255,184,108],stripe:"rgba(0,0,0,.07)",ang:90};
 const shTheme=()=>(typeof E16N!=="undefined"&&E16N)?null:TH_PQ;
