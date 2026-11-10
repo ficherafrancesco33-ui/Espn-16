@@ -50,3 +50,5 @@
 (21) 10/11/2026 – livetick.js: banner stats live sopra il campo come Dreamers (1494-1497): durante le partite scorrono le righe dei giocatori della squadra in campo (AVG, PT, RIM, AST, STL, STOP, TOV); ogni stat nuova passa una volta da sola. Giorno bianco con scritta colore squadra, notte colore squadra; attaccato al bordo alto del campo; sparisce a partite finite.
 
 (22) 10/11/2026 – Calendario sfide settimane 1-16 (MATCHUPS, [casa, ospite]) dagli screenshot ESPN League Schedule, verificato incrociando tutte le squadre (NYP ricavato dagli avversari). SCORES = punteggi ufficiali ESPN settimane 1-3; dalla 4 punteggio calcolato live (somma AVG titolari).
+
+(23) 10/11/2026 – Playoff come ESPN: 10 squadre su 16; seed 1-2 = prime di ogni conference, poi per V-P e punti fatti (verificato uguale al tabellone ESPN). Turno 1 (8-14 feb) 8-9 e 7-10, 1-6 riposano; quarti (15 feb-7 mar) 1-v89, 4-5, 3-6, 2-v710; semifinali (8-21 mar); finale. REC calcolato da SCORES (W, L, punti fatti/subiti). seeds() in index.html.
