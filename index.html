@@ -424,7 +424,7 @@ const dIt=d=>{const[y,m,g]=d.split("-");return g+"/"+m};
    Qui i binari sono due: East a sinistra, West a destra. */
 const OWNH={};try{const nn=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[.'’]/g,"").replace(/\s+(jr|sr|ii|iii|iv)$/,"").trim();for(const t in ROSE)for(const g of ROSE[t])OWNH[nn(g[0])]=t;window.__ownKey=nn}catch(e){}
 const ownH=n=>OWNH[window.__ownKey?__ownKey(n):n]||"";
-const nbaLogo=a=>`https://a.espncdn.com/i/teamlogos/nba/500/${String(a).toLowerCase()}.png`;
+const nbaLogo=a=>`loghi/nba/${String(a).toLowerCase()}.svg`;
 const pdkC=v=>v>=50?"v":v>=35?"g":v>=20?"y":"r";
 /* (7) SETTIMANE della lega (come ESPN Fantasy): la 1ª va da martedì 20/10 a domenica 25/10, poi da lunedì a domenica.
    Punteggio di una squadra in una settimana = somma degli AVG dei 14 titolari (rosa attuale, slot diversi da BE e IR) in tutte le loro partite della settimana: punteggio pieno, nessun ruolo, nessun cap. */

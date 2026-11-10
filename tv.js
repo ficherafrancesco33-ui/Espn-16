@@ -10,7 +10,7 @@ const e=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"
 const f1=v=>(Math.round(v*100)/100).toLocaleString("it-IT",{maximumFractionDigits:2});
 const nm=n=>{const p=String(n).split(" ");return p.length>1?p[0][0]+". "+p.slice(1).join(" "):n};
 const last=n=>{const p=String(n).split(" ");return p[p.length-1]==="Jr."||p[p.length-1]==="II"||p[p.length-1]==="III"?p[p.length-2]:p[p.length-1]};
-const nbaLg=a=>`https://a.espncdn.com/i/teamlogos/nba/500/${String(a).toLowerCase()}.png`;
+const nbaLg=a=>`loghi/nba/${String(a).toLowerCase()}.svg`;
 const T=a=>(ESPN.teams&&ESPN.teams[a])||[a,"#333333",""];
 const lw=a=>`<span class="tvlw ok" style="background:${T(a)[1]}"><em>${a}</em><img src="${nbaLg(a)}" alt=""></span>`;
 const pc=v=>v>=50?"pv":v>=35?"pg":v>=20?"py":"pr";
