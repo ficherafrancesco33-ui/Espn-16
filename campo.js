@@ -67,8 +67,7 @@ window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P
   return `<div class="cassa clink" data-team="${id}" data-tab="cap"><div class="csal"><small>Salary cap</small><b>${f1(lib)}<i>liberi</i></b><em>Cap ${CAP_TOT}</em></div>
   <div class="ctab"><span></span><span>26/27</span><span>27/28</span><span class="rl p">Occupato</span><b>${f1(occ[0]||0)}</b><b>${f1(occ[1]||0)}</b><span class="rl n">Tagli</span><b class="${C.tagli?"n":"z"}">${C.tagli?f1(C.tagli):"—"}</b><b class="z">—</b></div>
   <div class="cgo">Contratti e scelte ›</div></div>`})()}
- <p class="lbmcap">Settimana ${wNow} · ${dIt(wa)} → ${dIt(wb)} · 14 titolari a punteggio pieno</p>
- <div class="court" style="--tc:${TCOL[id]};border-left:0;border-right:0">${court(t)}
+  <div class="court" style="--tc:${TCOL[id]};border-left:0;border-right:0;border-top:4px solid ${id==="QUE"?(E16N?"#5b21b6":"#ffffff"):(COL[id]||COL.FAL).fr}!important;margin-top:10px">${court(t)}
  ${five.map(g=>{const[x,y]=SLOT5[g[2]];return `<button class="cpl dr" data-ist="${g[2]==="IR"?"out":"ok"}" data-pl="${e(g[0])}" style="left:${x}%;top:${y}%;--k:1">${card(t,g,P,W)}</button>`}).join("")}</div>
  <h2><span class="t"><span>Titolari</span></span><em>altri ${rest.length} · 100% AVG</em></h2>
  <div class="bench dptrib e16tit">${rest.map(g=>{const p=P[g[0]],v=p?p.ff/p.gp:null,w=W[g[0]];return `<button class="bpl" data-pl="${e(g[0])}">${jersey(id,numOf(g[0]),name)}<span class="bnm"><i class="rtr ${RL(g[3])}"></i>${e(g[0])}<small>${({G:"Guardia",F:"Ala",C:"Centro"})[RL(g[3])]} · ${g[1]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${w?` · sett. ${f1(w.f)} (${w.n}P)`:""}</small></span><span class="trlk"></span><span class="bev"><span class="cev ${v!=null?pcls(v):"wait"}">${v!=null?f1(v):"–"}</span></span></button>`}).join("")}</div>
