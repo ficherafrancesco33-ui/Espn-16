@@ -10,3 +10,5 @@
 - sw.js: prima la rete, cache solo offline; cambiare V a ogni pubblicazione.
 
 (2) 10/11/2026 – Rose delle 16 squadre e record (V-P) inseriti dagli screenshot ESPN (ROSE, REC in index.html). Scheda squadra con titolari/panchina/IR, media FFPS, partite, minuti, ultima partita. Da confermare: J. Williams OKC dei New York pandas (messo Jalen), J. Quaintance dei Santa Rosa.
+
+(3) 10/11/2026 – Salary cap e scelte dal file della lega (FantaBasket_USA_2palle.pdf): cap-data.js generato con tools/cap_pdf.py + tools/cap_gen.py. Cap 190. Scheda squadra con schede ROSA / SALARY CAP / SCELTE; nuova pagina CAP & SCELTE con tutte le squadre per conference. Nel PDF: Seattle Sonics = Fallon Mavericks, Toronto Huskies = Quebec Ducks. Totali del PDF da verificare: Las Vegas (somma 165,0, foglio 157,8) e Alaska (somma 169,4, foglio 158,4).

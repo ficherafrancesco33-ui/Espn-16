@@ -90,6 +90,30 @@ td{font:600 14px Barlow;padding:7px 6px;border-bottom:1px solid var(--line);text
 .pl small{display:block;font:500 11px Barlow;color:var(--mut)}
 .rules{padding:4px 14px 12px;font:500 13px Barlow;color:var(--mut)}
 .rules b{color:var(--ink)}
+/* salary cap e scelte */
+.capbox{margin:0 12px 10px;padding:12px;border-radius:14px;background:#fff7ed;border:2px solid var(--line)}
+.capn{display:grid;grid-template-columns:repeat(4,1fr);text-align:center}
+.capn b{display:block;font:800 italic 26px/1 'Barlow Condensed'}
+.capn div:first-child b{color:var(--win)}
+.capn span{font:800 11px 'Barlow Condensed';color:var(--mut);letter-spacing:.8px}
+.capbar{display:flex;height:12px;border-radius:7px;overflow:hidden;margin:10px 0 6px;background:#eee}
+.capleg{display:flex;gap:12px;justify-content:center;font:600 11.5px Barlow;color:var(--mut)}
+.capleg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px}
+.ct td,.ct th{padding:7px 5px}
+.ct td.e{color:#d6b48d}
+.ct tr.tot td{font:800 13px 'Barlow Condensed';background:#fbe9cc;letter-spacing:.3px}
+.ct tr[data-team]{cursor:pointer}
+.rk{display:inline-block;font:800 10px/1 'Barlow Condensed';color:#fff;background:var(--ffp);border-radius:4px;padding:2px 4px;vertical-align:2px}
+.pky{margin:0 12px 10px;border:2px solid var(--line);border-radius:14px;padding:8px 10px;background:#fff7ed}
+.pkyh{display:flex;justify-content:space-between;font:800 italic 17px 'Barlow Condensed';color:var(--acc);letter-spacing:1px;margin-bottom:4px}
+.pkyh span{font:700 12px Barlow;color:var(--mut);letter-spacing:0;font-style:normal}
+.pk{display:flex;align-items:center;gap:9px;padding:6px 0;border-top:1px solid var(--line)}
+.pk img{width:30px;height:30px;border-radius:50%;flex:none}
+.pk b{display:block;font:700 14.5px Barlow}
+.pk small{display:block;font:500 12px Barlow;color:var(--mut)}
+.gr{flex:none;width:40px;text-align:center;border-radius:8px;color:#fff;font:800 italic 17px/1 'Barlow Condensed';padding:4px 0 3px}
+.gr i{display:block;font:800 8.5px 'Barlow Condensed';font-style:normal;letter-spacing:.6px}
+.gr.g1{background:#16a34a}.gr.g2{background:#ea580c}.gr.g3{background:#9a5a2b}
 /* scheda squadra */
 .th{display:flex;align-items:center;gap:14px;padding:16px}
 .th img{width:84px;height:84px;border-radius:50%}
@@ -106,6 +130,7 @@ td{font:600 14px Barlow;padding:7px 6px;border-bottom:1px solid var(--line);text
 </header>
 <main id="main"></main>
 <script src="espn-data.js"></script>
+<script src="cap-data.js"></script>
 <script>
 /* ===== SQUADRE (da ESPN Fantasy, 10/11/2026). conf: E = East, W = West. Ordine = ordine della classifica ESPN.
    I nomi con "…" sono tagliati nello screenshot: da completare (o arriveranno dal collegamento alla lega ESPN). */
@@ -160,18 +185,19 @@ const f1=v=>(Math.round(v*10)/10).toLocaleString("it-IT",{minimumFractionDigits:
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 /* ===== NAVIGAZIONE ===== */
-const TABS=[["home","HOME"],["lega","LEGA"],["stat","STATISTICHE"]];
-let cur="home",curTeam=null,lgTab="cls",night=null,stQ={per:"all",nba:"",sort:"ffa",min:0},hq="";
+const TABS=[["home","HOME"],["lega","LEGA"],["cap","CAP & SCELTE"],["stat","STATISTICHE"]];
+let tmTab="rosa",cur="home",curTeam=null,lgTab="cls",night=null,stQ={per:"all",nba:"",sort:"ffa",min:0},hq="";
 try{const s=JSON.parse(localStorage.getItem("e16_st")||"{}");Object.assign(stQ,s)}catch(e){}
 function go(v){cur=v;curTeam=null;render();scrollTo(0,0)}
 function render(){
  document.getElementById("nav").innerHTML=TABS.map(([k,l])=>`<button class="${cur===k?"on":""}" data-go="${k}">${l}</button>`).join("");
  document.getElementById("upd").innerHTML=typeof ESPN!=="undefined"?"Dati ESPN<br>"+esc(ESPN.upd):"";
  const m=document.getElementById("main");
- m.innerHTML=curTeam?vTeam(curTeam):cur==="lega"?vLega():cur==="stat"?vStat():vHome();
+ m.innerHTML=curTeam?vTeam(curTeam):cur==="cap"?vCapAll():cur==="lega"?vLega():cur==="stat"?vStat():vHome();
 }
 document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g){go(g.dataset.go);return}
- const t=e.target.closest("[data-team]");if(t){curTeam=t.dataset.team;render();scrollTo(0,0);return}
+ const t=e.target.closest("[data-team]");if(t){curTeam=t.dataset.team;if(t.dataset.tab)tmTab=t.dataset.tab;render();scrollTo(0,0);return}
+ const tt=e.target.closest("[data-tmtab]");if(tt){tmTab=tt.dataset.tmtab;render();return}
  const n=e.target.closest("[data-night]");if(n){night=n.dataset.night;render();return}
  const l=e.target.closest("[data-lg]");if(l){lgTab=l.dataset.lg;render();return}
  const s=e.target.closest("[data-sort]");if(s){stQ.sort=s.dataset.sort;saveSt();render();return}
@@ -212,8 +238,39 @@ let PST=null;function pstats(){if(PST)return PST;PST={};for(const d of nights())
 function vTeam(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P=pstats(),r=REC[id];
  const row=g=>{const p=P[g[0]];return`<tr><td><div class="pl"><span style="display:inline-block;min-width:34px;font:800 11px 'Barlow Condensed';color:var(--mut)">${g[2]}</span>${esc(g[0])}<small>${g[1]} · ${g[3]}</small></div></td><td class="f">${p?f1(p.ff/p.gp):"–"}</td><td>${p?p.gp:0}</td><td>${p?f1(p.min/p.gp):"–"}</td><td>${p&&p.last?f1(p.last.f)+" <small style='color:var(--mut)'>"+dIt(p.last.d)+"</small>":"–"}</td></tr>`};
  const tit=R0.filter(g=>g[2]!=="BE"&&g[2]!=="IR"),be=R0.filter(g=>g[2]==="BE"||g[2]==="IR");
- return `<button class="back" data-back>‹ Indietro</button><div class="card"><div class="th"><img src="${t.logo}" alt=""><div><h2>${esc(t.nome)}</h2><p>${esc(t.gm)} · ${t.conf==="E"?"East":"West"}${r?` · ${r.w}-${r.l}`:""}</p></div></div>
- ${R0.length?`<div class="tw"><table><tr><th>TITOLARI</th><th>FFPS/G</th><th>G</th><th>MIN</th><th>ULTIMA</th></tr>${tit.map(row).join("")}<tr><th>PANCHINA</th><th></th><th></th><th></th><th></th></tr>${be.map(row).join("")}</table></div><div class="note">Rosa dallo screenshot ESPN. Media FFPS di stagione ricalcolata dai tabellini.</div>`:`<div class="note">Rosa non ancora inserita.</div>`}</div>`}
+ const head=`<button class="back" data-back>‹ Indietro</button><div class="card"><div class="th"><img src="${t.logo}" alt=""><div><h2>${esc(t.nome)}</h2><p>${esc(t.gm)} · ${t.conf==="E"?"East":"West"}${r?` · ${r.w}-${r.l}`:""}</p></div></div>
+ <div class="seg" style="padding:0 12px">${[["rosa","ROSA"],["cap","SALARY CAP"],["pick","SCELTE"]].map(([k,l])=>`<button class="${tmTab===k?"on":""}" data-tmtab="${k}">${l}</button>`).join("")}</div>`;
+ if(tmTab==="cap")return head+capHtml(id)+`</div>`;
+ if(tmTab==="pick")return head+pickHtml(id)+`</div>`;
+ return head+`${R0.length?`<div class="tw"><table><tr><th>TITOLARI</th><th>FFPS/G</th><th>G</th><th>MIN</th><th>ULTIMA</th></tr>${tit.map(row).join("")}<tr><th>PANCHINA</th><th></th><th></th><th></th><th></th></tr>${be.map(row).join("")}</table></div><div class="note">Rosa dallo screenshot ESPN. Media FFPS di stagione ricalcolata dai tabellini.</div>`:`<div class="note">Rosa non ancora inserita.</div>`}</div>`}
+/* ===== SALARY CAP e SCELTE (dati in cap-data.js, dal file della lega) ===== */
+const YL=["26/27","27/28","28/29","29/30","30/31"];
+const c1=v=>v==null?"":(Math.round(v*10)/10).toLocaleString("it-IT",{maximumFractionDigits:1});
+function capHtml(id){const C=CAP[id];if(!C)return`<div class="note">Contratti non disponibili.</div>`;
+ const occ=C.occ[0]||0,tg=C.tagli||0,lib=C.libero!=null?C.libero:CAP_TOT-occ-tg,pc=x=>Math.max(0,Math.min(100,x/CAP_TOT*100));
+ const L=C.pl.slice().sort((a,b)=>(b[1][0]||0)-(a[1][0]||0));
+ const scad=p=>p[1].length;/* anni di contratto rimasti */
+ return `<div class="capbox"><div class="capn"><div><b>${c1(lib)}</b><span>LIBERO</span></div><div><b>${c1(occ)}</b><span>OCCUPATO</span></div><div><b>${c1(tg)}</b><span>TAGLI</span></div><div><b>${CAP_TOT}</b><span>CAP</span></div></div>
+ <div class="capbar"><i style="width:${pc(occ)}%;background:var(--acc)"></i><i style="width:${pc(tg)}%;background:#9ca3af"></i><i style="width:${pc(lib)}%;background:var(--win)"></i></div>
+ <div class="capleg"><span><i style="background:var(--acc)"></i>Occupato</span><span><i style="background:#9ca3af"></i>Tagli</span><span><i style="background:var(--win)"></i>Libero</span></div></div>
+ <div class="tw"><table class="ct"><tr><th>GIOCATORE</th>${YL.map(y=>`<th>${y}</th>`).join("")}</tr>
+ ${L.map(p=>`<tr><td><div class="pl">${esc(p[0])}${p[2]?` <span class="rk">R</span>`:""}<small>${scad(p)===1?"scade a fine stagione":scad(p)+" anni"}</small></div></td>${YL.map((y,i)=>`<td class="${p[1][i]!=null?"":"e"}">${p[1][i]!=null?c1(p[1][i]):"–"}</td>`).join("")}</tr>`).join("")}
+ <tr class="tot"><td>TOTALE OCCUPATO</td>${YL.map((y,i)=>`<td>${c1(C.occ[i]||0)}</td>`).join("")}</tr>
+ <tr class="tot"><td>LIBERO (su ${CAP_TOT})</td>${YL.map((y,i)=>`<td style="color:var(--win)">${c1(CAP_TOT-(C.occ[i]||0)-(i?0:tg))}</td>`).join("")}</tr></table></div>
+ <div class="note">Cifre in milioni di crediti, dal file della lega. <span class="rk">R</span> = contratto da rookie. Gli anni futuri non contano tagli e nuovi contratti.</div>`}
+function pickHtml(id){const C=CAP[id];if(!C)return`<div class="note">Scelte non disponibili.</div>`;
+ const Y=[2027,2028,2029,2030,2031];
+ return Y.map(y=>{const P=C.pk.filter(p=>p[0]===y);
+  return `<div class="pky"><div class="pkyh">DRAFT ${y}<span>${P.length} scelt${P.length===1?"a":"e"}</span></div>${P.length?P.map(p=>{const o=TM[p[2]],own=p[2]===id;
+   return `<div class="pk"><span class="gr g${p[1]}">${p[1]}°<i>GIRO</i></span><img src="${o?o.logo:""}" alt=""><div><b>${own?"Propria":"Da "+esc(o?o.nome:p[2])}</b>${p[3]?`<small>${esc(p[3].toLowerCase().replace(/^./,c=>c.toUpperCase()))}</small>`:""}</div></div>`}).join(""):`<div class="note" style="padding:6px 2px">Nessuna scelta</div>`}</div>`}).join("")+
+ `<div class="note">Dal file della lega. Le scelte cedute ad altre squadre non compaiono.</div>`}
+function vCapAll(){
+ const row=t=>{const C=CAP[t.id]||{occ:[0],tagli:0,libero:0,pk:[]},lib=C.libero,n1=C.pk.filter(p=>p[1]===1).length,n=C.pk.length;
+  return `<tr data-team="${t.id}" data-tab="cap"><td><div class="tm"><img src="${t.logo}" alt=""><span>${esc(t.nome)}<small>${esc(t.gm)}</small></span></div></td><td style="color:var(--win);font-weight:800">${c1(lib)}</td><td>${c1(C.occ[0])}</td><td>${c1(C.occ[1])}</td><td>${n1}<small style="color:var(--mut)"> / ${n}</small></td></tr>`};
+ return ["E","W"].map(c=>{const L=TEAMS.filter(t=>t.conf===c).slice().sort((a,b)=>(CAP[b.id]?.libero||0)-(CAP[a.id]?.libero||0));
+  return `<div class="card" style="margin-bottom:12px"><div class="ttl"><span class="dot" style="background:${c==="E"?"var(--east)":"var(--west)"}"></span>${c==="E"?"EAST":"WEST"} · SALARY CAP</div>
+  <div class="tw"><table class="ct"><tr><th>SQUADRA</th><th>LIBERO</th><th>OCC. 26/27</th><th>OCC. 27/28</th><th>1° GIRO / SCELTE</th></tr>${L.map(row).join("")}</table></div></div>`}).join("")+
+  `<div class="note" style="color:#fff">Cap ${CAP_TOT} per squadra. Tocca una squadra per vedere contratti e scelte.</div>`}
 
 /* ===== LEGA: classifica, scontri diretti, playoff ===== */
 function standings(conf){return TEAMS.filter(t=>t.conf===conf).map((t,i)=>{const r=REC[t.id]||{w:0,l:0,pf:0,pa:0};return{...t,...r,ord:i}}).sort((a,b)=>(b.w-a.w)||(a.l-b.l)||(b.pf-a.pf)||(a.ord-b.ord))}
