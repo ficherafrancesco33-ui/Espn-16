@@ -12,8 +12,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="fonts.css">
-<link rel="stylesheet" href="skin-giorno.css" id="skg">
-<link rel="stylesheet" href="skin-notte.css" id="skn" media="not all">
+<link rel="stylesheet" href="skin-giorno.css" id="skg" media="not all">
+<link rel="stylesheet" href="skin-notte.css" id="skn">
 <style>/* ===== ESPN 16 – app del Fantabasket Dynasty a 16 squadre (base grafica: app Dreamers) =====
    Colori in variabili: tema arancio come la Home Dreamers. */:root{--c2:#fdf3e1;--c3:#fff7ed;--cb:#f3c48d;--c4:#fbe9cc;--hd1:#f97316;--hd2:#ea580c;--hd3:#c2410c;--bg1:#b8763f;--bg2:#a8652f;--card:var(--c2);--card2:var(--c4);--line:#eed2a6;--ink:#3b1d0a;--mut:#9a5a2b;--acc:#ea580c;--ffp:#7c3aed;--win:#16a34a;--loss:#dc2626;--east:#2563eb;--west:#dc2626}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -498,7 +498,7 @@ function e16Tema(nt){const H=document.documentElement,B=document.body;
  const g=document.getElementById("skg"),n=document.getElementById("skn");if(g){g.disabled=false;g.media=nt?"not all":"all"}if(n){n.disabled=false;n.media=nt?"all":"not all"}
  const sw=document.getElementById("sw");if(sw){sw.classList.toggle("on",nt);sw.setAttribute("aria-checked",nt?"true":"false")}
  const tc=document.querySelector('meta[name="theme-color"]');if(tc)tc.content=nt?"#3e2577":"#e7590c"}
-let E16N=false;try{E16N=localStorage.getItem("e16_notte")==="1"}catch(e){}
+/* (59) l app parte SEMPRE in modalità notte; il giorno si accende con l interruttore e vale finché l app resta aperta (sessionStorage e16_tema) */let E16N=true;try{E16N=sessionStorage.getItem("e16_tema")!=="g"}catch(e){}
 e16Tema(E16N);</script>
 <header>
   <div class="wrap">
@@ -601,7 +601,7 @@ function render(){
  m.innerHTML='<div class="view">'+(curTeam?'<div class="e16">'+vTeam(curTeam)+'</div>':window.STATV&&STATV[cur]?STATV[cur]():cur==="campo"&&window.vCampo?`<div class="chips">${TEAMS.map(x=>`<button class="chip" data-team="${x.id}" aria-pressed="${x.id===e16RT()}"><span class="badge logo lg-${x.id}"></span>${esc(x.nome.split(" ").slice(-1)[0])}</button>`).join("")}</div>`+vCampo(e16RT()):window.GESTV&&GESTV[cur]?GESTV[cur]():window.SCAMBIV&&SCAMBIV[cur]?SCAMBIV[cur]():window.TRADEV&&TRADEV[cur]?TRADEV[cur]():cur==="tv"?vTv():cur==="cap"?'<div class="e16">'+vCapAll()+'</div>':vHome())+'</div>';
  if(cur==="tv"){const w=document.getElementById("tvweek"),b=w&&w.querySelector('[aria-pressed="true"]');if(b)w.scrollLeft=b.offsetLeft-w.clientWidth/2+b.clientWidth/2}
 }
-document.addEventListener("click",e=>{if(e.target.closest("#sw")){E16N=!E16N;try{localStorage.setItem("e16_notte",E16N?"1":"0")}catch(_){}/* (28) dissolvenza breve tra giorno e notte dove il telefono la supporta */const go=()=>{e16Tema(E16N);render()};if(document.startViewTransition&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.startViewTransition(go);else go();return}
+document.addEventListener("click",e=>{if(e.target.closest("#sw")){E16N=!E16N;try{sessionStorage.setItem("e16_tema",E16N?"n":"g")}catch(_){}/* (59) *//* (28) dissolvenza breve tra giorno e notte dove il telefono la supporta */const go=()=>{e16Tema(E16N);render()};if(document.startViewTransition&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.startViewTransition(go);else go();return}
  if(e.target.closest("#setbtn")){location.reload();return}
  const mn=e.target.closest("[data-menu]");if(mn){const sn=document.getElementById("subnav"),r=mn.getBoundingClientRect();const L=mn.dataset.menu==="scambi"?SUB2.flatMap(x=>{/* (31) voce mostrata solo se la sua pagina esiste; finché manca l IA Trade nuova resta quella di prima */const ok=k=>!!((window.SCAMBIV&&SCAMBIV[k])||(window.TRADEV&&TRADEV[k])||(window.STATV&&STATV[k]));return ok(x[0])?[x]:x[0]==="gusti"&&ok("ia")?[["ia","IA trade"]]:[]}):SUB,open=!sn.hidden&&sn.dataset.m===mn.dataset.menu;sn.dataset.m=mn.dataset.menu;sn.innerHTML=L.map(([k,l])=>`<button data-go="${k}" aria-selected="${cur===k}"><span>${l}</span></button>`).join("");if(open){sn.hidden=true;return}sn.hidden=false;/* (42) posizione rispetto al contenitore del menu (la testata), non allo schermo: sull iPhone la zona dell orologio spostava il menu in basso */const op=(sn.offsetParent||document.body).getBoundingClientRect();sn.style.left=(Math.max(8,Math.min(r.left,innerWidth-200))-op.left)+"px";sn.style.top=(r.bottom+4-op.top)+"px";sn.style.minWidth="180px";return}
  if(!e.target.closest("#subnav")){const sn=document.getElementById("subnav");if(sn&&!sn.hidden)sn.hidden=true}

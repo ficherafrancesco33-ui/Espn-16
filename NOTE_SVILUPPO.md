@@ -122,3 +122,4 @@
 
 (58) 10/11/2026 – Playoff: date come su ESPN (foto e impostazioni della lega): 1º turno 8–14 feb, 2º turno 15 feb–7 mar, semifinali 8–21 mar, finale 22 mar–4 apr.
 (58) La scelta dei Mavericks avuta dai Ducks (scambio con Honolulu) è la 3ª 2028, non la 2029: tolta ai Mavericks, la loro 3ª 2029 torna a loro.
+(59) L app parte sempre in modalità notte; il giorno si accende con l interruttore e resta finché l app è aperta (sessionStorage e16_tema, non più localStorage e16_notte).
