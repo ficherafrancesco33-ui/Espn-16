@@ -110,7 +110,7 @@ td{font:600 14px Barlow;padding:7px 6px;border-bottom:1px solid var(--line);text
 /* ===== SQUADRE (da ESPN Fantasy, 10/11/2026). conf: E = East, W = West. Ordine = ordine della classifica ESPN.
    I nomi con "…" sono tagliati nello screenshot: da completare (o arriveranno dal collegamento alla lega ESPN). */
 const TEAMS=[
- {id:"DET",nome:"Detroit Pythons",gm:"D. Borracci",conf:"E",logo:"loghi/det.png"},
+ {id:"DET",nome:"Detroit Pythons",gm:"Domenico Borracci",conf:"E",logo:"loghi/det.png"},
  {id:"CLE",nome:"Cleveland Cadav…",gm:"Andrea Ce",conf:"E",logo:"loghi/cle.png"},
  {id:"BOS",nome:"Boston TeaBags",gm:"G. Formica",conf:"E",logo:"loghi/bos.png"},
  {id:"NYS",nome:"NY samb",gm:"M. Di Fazi",conf:"E",logo:"loghi/nys.png"},
@@ -128,8 +128,13 @@ const TEAMS=[
  {id:"SRO",nome:"Santa Rosa Pirates",gm:"Mattia Zanni",conf:"W",logo:"loghi/sro.png"}
 ];
 const TM=Object.fromEntries(TEAMS.map(t=>[t.id,t]));
-/* vittorie/sconfitte: arriveranno dalla lega ESPN; per ora 0-0 */
-const REC={};
+/* vittorie/sconfitte dagli screenshot ESPN (finché la lega non è collegata). pf/pa = punti fatti/subiti, se noti */
+const REC={DET:{w:2,l:1,pf:0,pa:0}};
+/* ===== ROSE dagli screenshot ESPN. [nome completo come nei tabellini ESPN, squadra NBA, slot in formazione ESPN, ruoli ESPN]
+   slot: PG SG SF PF C G F G/F UTIL = titolari; BE = panchina; IR = infortunati */
+const ROSE={
+ DET:[["Ayo Dosunmu","MIN","PG","SG,PG"],["Kingston Flemings","ATL","SG","SG,PG"],["Paul George","BOS","SF","SF,PF"],["Giannis Antetokounmpo","MIA","PF","PF,C"],["Donovan Clingan","POR","C","C"],["Cedric Coward","MEM","G","SF,SG"],["Davion Mitchell","MIA","G","PG"],["Jerami Grant","MEM","F","PF"],["Spencer Jones","DEN","F","SF,PF"],["Zion Williamson","NO","G/F","PF,C"],["RJ Barrett","TOR","UTIL","SF,SG"],["Jakob Poeltl","TOR","UTIL","C"],["Anfernee Simons","PHI","UTIL","SG,PG"],["Kel'el Ware","MIL","UTIL","C"],["Cameron Carr","LAL","BE","SF,SG"],["Kasparas Jakucionis","MIL","BE","PG"],["Meleek Thomas","CLE","BE","SG"]]
+};
 
 /* ===== PUNTI FANTASY (FFPS), regola della lega. Riga del tabellino (vedi tools/espn.mjs):
    [nome, squadra NBA, titolare, MIN, PTS, FGM, FGA, 3PM, 3PA, FTM, FTA, OREB, DREB, AST, STL, BLK, TO, PF, TF, FF, idESPN]
@@ -187,9 +192,13 @@ function vHome(){
 }
 
 /* ===== SCHEDA SQUADRA ===== */
-function vTeam(id){const t=TM[id];if(!t)return"";
- return `<button class="back" data-back>‹ Indietro</button><div class="card"><div class="th"><img src="${t.logo}" alt=""><div><h2>${esc(t.nome)}</h2><p>${esc(t.gm)} · ${t.conf==="E"?"East":"West"}</p></div></div>
- <div class="note">La rosa arriverà dal collegamento con la lega ESPN.</div></div>`}
+/* media FFPS di stagione e ultima partita di ogni giocatore (dai tabellini ESPN) */
+let PST=null;function pstats(){if(PST)return PST;PST={};for(const d of nights())for(const x of rowsOf(d)){const p=PST[x.r[0]]||(PST[x.r[0]]={gp:0,ff:0,min:0,last:null});p.gp++;p.ff+=x.f;p.min+=x.r[3];p.last={d,f:x.f,opp:x.opp}}return PST}
+function vTeam(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P=pstats(),r=REC[id];
+ const row=g=>{const p=P[g[0]];return`<tr><td><div class="pl"><span style="display:inline-block;min-width:34px;font:800 11px 'Barlow Condensed';color:var(--mut)">${g[2]}</span>${esc(g[0])}<small>${g[1]} · ${g[3]}</small></div></td><td class="f">${p?f1(p.ff/p.gp):"–"}</td><td>${p?p.gp:0}</td><td>${p?f1(p.min/p.gp):"–"}</td><td>${p&&p.last?f1(p.last.f)+" <small style='color:var(--mut)'>"+dIt(p.last.d)+"</small>":"–"}</td></tr>`};
+ const tit=R0.filter(g=>g[2]!=="BE"&&g[2]!=="IR"),be=R0.filter(g=>g[2]==="BE"||g[2]==="IR");
+ return `<button class="back" data-back>‹ Indietro</button><div class="card"><div class="th"><img src="${t.logo}" alt=""><div><h2>${esc(t.nome)}</h2><p>${esc(t.gm)} · ${t.conf==="E"?"East":"West"}${r?` · ${r.w}-${r.l}`:""}</p></div></div>
+ ${R0.length?`<div class="tw"><table><tr><th>TITOLARI</th><th>FFPS/G</th><th>G</th><th>MIN</th><th>ULTIMA</th></tr>${tit.map(row).join("")}<tr><th>PANCHINA</th><th></th><th></th><th></th><th></th></tr>${be.map(row).join("")}</table></div><div class="note">Rosa dallo screenshot ESPN. Media FFPS di stagione ricalcolata dai tabellini.</div>`:`<div class="note">Rosa non ancora inserita.</div>`}</div>`}
 
 /* ===== LEGA: classifica, scontri diretti, playoff ===== */
 function standings(conf){return TEAMS.filter(t=>t.conf===conf).map((t,i)=>{const r=REC[t.id]||{w:0,l:0,pf:0,pa:0};return{...t,...r,ord:i}}).sort((a,b)=>(b.w-a.w)||(a.l-b.l)||(b.pf-a.pf)||(a.ord-b.ord))}
