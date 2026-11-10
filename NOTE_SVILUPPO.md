@@ -87,3 +87,5 @@
 (40) 10/11/2026 – Statistiche › Squadre: prima l elenco delle 16 squadre con logo e colori (vSqList, STATV.ssql, classi sqpk di Dreamers), poi la pagina della squadra scelta (ssq) dove si cambia squadra con i chip; indietro torna all elenco.
 
 (41) 10/11/2026 – Area riservata Ducks (dax.js) come Dreamers: tasto accensione quasi invisibile nel banner del campo Ducks, stessa password dell area Ducks di Dreamers (verificata decifrando lo stesso archivio cifrato, la password non è nel codice), «vai via» se sbagliata. Dentro: tasto Statistiche ultimi 2 anni (localStorage e16_dax2). Versione ufficiale: Statistiche solo stagione in corso (stats.js: OLD vuoto, SEAS/SZPf filtrano 24/25 e 25/26).
+
+(42) 10/11/2026 – Menu a tendina (Centro gestione, Scambi) posizionato rispetto alla testata e non allo schermo: sull iPhone la zona dell orologio lo spostava troppo in basso.
