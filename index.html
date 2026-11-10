@@ -620,7 +620,7 @@ function ftReport(){const r=[],ok=t=>`<b class="ok">✓</b> ${t}`,ko=t=>`<b clas
   const wN=weekOf(nyToday()<W1?W1:nyToday()),L=LEGA.line&&LEGA.line[wN];const nL=L?Object.keys(L).length:0;r.push((nL===TEAMS.length?ok:ko)(`Formazioni del lunedì, settimana ${wN}: ${nL} su ${TEAMS.length}`));
   const lv=LEGA.live&&LEGA.live[wN];r.push(lv?ok(`Punteggi ESPN della settimana ${wN} salvati alle ${new Date(LEGA.liveTs).toLocaleTimeString("it-IT",{timeZone:"Europe/Rome",hour:"2-digit",minute:"2-digit"})}`):ko(`Punteggi ESPN della settimana ${wN} non ancora salvati`));
   const ch=Object.keys(LEGA.score||{}).length;r.push(ok(`Settimane chiuse con risultato ufficiale ESPN: ${ch}`))}
- if(typeof INFLIVE!=="undefined")r.push(ok(`Infortuni: ${INFLIVE.l.length} giocatori · salvati il ${INFLIVE.upd} (GitHub ogni 5 minuti; il telefono rilegge ESPN ogni 4)`));else r.push(ko("Infortuni: file dell app non trovato"));
+ {const n=(ESPN.inj||[]).length;r.push((n?ok:ko)(`Infortuni: ${n} giocatori salvati nell app con i dati del mattino · ${ESPN.upd} (con l app aperta il telefono li rilegge da ESPN ogni 2 minuti)`))}
  }catch(_){r.push(ko("Resoconto non disponibile"))}
  return`<div class="ftbox">${r.map(x=>`<p>${x}</p>`).join("")}<p class="ftn">Questi dati sono salvati nell app da GitHub (non sul telefono): tutti vedono gli stessi. Durante le partite il telefono aggiunge il live.</p></div>`}
 document.addEventListener("click",e=>{if(e.target.closest("[data-ftrep]")){window.__ftOpen=!window.__ftOpen;const y=scrollY;render();scrollTo(0,y)}});
@@ -643,7 +643,7 @@ e16Tema(E16N);</script>
 </header>
 <main class="wrap" id="main"></main>
 <div class="foot" id="foot"></div>
-<script src="espn-data.js"></script><script src="infortuni-data.js"></script><!-- (93) infortuni ESPN salvati da GitHub ogni 5 minuti -->
+<script src="espn-data.js"></script>
 <script src="cap-data.js"></script>
 <script src="listino-data.js"></script>
 <script src="stipendi-data.js"></script>
