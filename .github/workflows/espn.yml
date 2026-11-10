@@ -1,0 +1,33 @@
+# ESPN 16: scarica i tabellini NBA da ESPN e aggiorna espn-data.js (tecnici e flagranti dalla cronaca).
+# Gira da solo: ogni 30 minuti durante la notte NBA (ora UTC 23-07) e due volte di giorno. Nessuno deve lanciare niente a mano.
+name: espn-dati
+on:
+  schedule:
+    - cron: "*/30 0-7 * * *"
+    - cron: "17 23 * * *"
+    - cron: "43 10,16 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: espn
+  cancel-in-progress: false
+jobs:
+  dati:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Scarica i tabellini ESPN
+        run: node tools/espn.mjs
+      - name: Salva se ci sono novità
+        run: |
+          git config user.name "espn-bot"
+          git config user.email "espn-bot@users.noreply.github.com"
+          if git diff --quiet -- espn-data.js; then echo "Nessuna novità"; exit 0; fi
+          git add espn-data.js
+          git commit -m "Dati ESPN aggiornati [automatico]"
+          for i in 1 2 3; do git pull --rebase -X theirs origin main && git push origin HEAD:main && exit 0; sleep 5; done
+          exit 1

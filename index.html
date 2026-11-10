@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ea580c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>ESPN 16</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600;700;800&display=swap">
+<style>
+/* ===== ESPN 16 – app del Fantabasket Dynasty a 16 squadre (base grafica: app Dreamers) =====
+   Colori in variabili: tema arancio come la Home Dreamers. */
+:root{--hd1:#f97316;--hd2:#ea580c;--hd3:#c2410c;--bg1:#b8763f;--bg2:#a8652f;--card:#fdf3e1;--card2:#fbe9cc;--line:#eed2a6;--ink:#3b1d0a;--mut:#9a5a2b;--acc:#ea580c;--ffp:#7c3aed;--win:#16a34a;--loss:#dc2626;--east:#2563eb;--west:#dc2626}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{font-family:Barlow,system-ui,sans-serif;color:var(--ink);min-height:100vh;
+ background:repeating-linear-gradient(90deg,var(--bg1) 0 46px,var(--bg2) 46px 92px);}
+.bc{font-family:'Barlow Condensed',system-ui,sans-serif}
+header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,var(--hd1),var(--hd2));border-bottom:4px solid var(--hd3);box-shadow:0 6px 18px rgba(0,0,0,.25);padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 0}
+.top{display:flex;align-items:center;gap:12px}
+.applg{width:46px;height:46px;border-radius:13px;background:linear-gradient(160deg,#fb923c,#c2410c);display:grid;place-items:center;box-shadow:inset 0 0 0 2px rgba(255,255,255,.18)}
+.applg b{font:800 italic 17px 'Barlow Condensed';color:#fff;letter-spacing:.5px}
+.appn{font:800 italic 30px/1 'Barlow Condensed';color:#fff;letter-spacing:.5px;text-shadow:0 2px 0 rgba(0,0,0,.15)}
+.upd{margin-left:auto;font:600 11px Barlow;color:#ffedd5;text-align:right}
+nav{display:flex;gap:6px;overflow-x:auto;margin-top:10px;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:none;border:0;background:rgba(255,255,255,.08);color:#fff;font:800 italic 17px 'Barlow Condensed';letter-spacing:.6px;padding:10px 14px 9px;border-radius:8px 8px 0 0;cursor:pointer}
+nav button.on{background:var(--hd3)}
+main{padding:14px 12px 40px;max-width:900px;margin:0 auto}
+.card{background:var(--card);border-radius:18px;box-shadow:0 4px 0 rgba(0,0,0,.12),0 8px 20px rgba(0,0,0,.12)}
+/* HOME: 8 squadre East a sinistra, 8 West a destra, finestra della notte al centro (più stretta che in Dreamers) */
+.hgrid{display:grid;grid-template-columns:56px minmax(0,1fr) 56px;gap:8px;align-items:start}
+.hcol{display:flex;flex-direction:column;gap:7px}
+.hconf{font:800 italic 12px 'Barlow Condensed';color:#fff;text-align:center;letter-spacing:1px;padding:3px 0;border-radius:6px}
+.hconf.e{background:var(--east)}.hconf.w{background:var(--west)}
+.tile{display:block;width:56px;height:56px;border-radius:14px;border:0;padding:3px;cursor:pointer;background:linear-gradient(160deg,#fff7ed,#fed7aa);box-shadow:0 3px 0 rgba(0,0,0,.18)}
+.tile img{width:100%;height:100%;border-radius:50%;display:block}
+.night{padding:12px 10px 6px}
+.nhd{display:flex;align-items:center;justify-content:space-between;font:800 italic 18px 'Barlow Condensed';color:var(--acc);letter-spacing:1.5px}
+.nhd button{border:0;background:none;font:800 22px 'Barlow Condensed';color:var(--acc);padding:2px 8px;cursor:pointer}
+.nsub{display:flex;justify-content:space-between;font:800 italic 12.5px 'Barlow Condensed';color:var(--mut);letter-spacing:.8px;border-bottom:2px solid var(--line);padding:8px 2px 6px;margin-bottom:4px}
+.pr{padding:9px 2px;border-bottom:1px solid var(--line)}
+.prn{display:flex;align-items:center;gap:7px}
+.prn b{font:600 17px Barlow;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fb{flex:none;font:800 italic 14px 'Barlow Condensed';color:#fff;background:var(--ffp);border-radius:7px;padding:2px 7px}
+.prs{font:500 13px Barlow;color:var(--mut);margin:2px 0 6px}
+.bx{display:flex;flex-wrap:wrap;gap:4px}
+.bx span{min-width:34px;text-align:center;border:1.5px solid #f3c48d;border-radius:8px;background:#fff7ed;padding:2px 3px 1px;font:800 16px/1 'Barlow Condensed'}
+.bx span i{display:block;font:700 9px 'Barlow Condensed';color:var(--mut);font-style:normal;margin-top:2px}
+.bx span.g{color:var(--win)}.bx span.r{color:var(--loss)}
+.empty{padding:22px 8px;text-align:center;color:var(--mut);font:600 14px Barlow}
+.srch{display:flex;align-items:center;gap:8px;background:#fdf3e1;border:2px solid #f3c48d;border-radius:30px;padding:9px 14px;margin-bottom:12px}
+.srch input{border:0;background:none;font:500 17px Barlow;color:var(--ink);outline:none;width:100%}
+/* LEGA */
+.seg{display:flex;gap:6px;margin-bottom:12px}
+.seg button{flex:1;border:0;border-radius:10px;padding:9px 4px;font:800 italic 16px 'Barlow Condensed';letter-spacing:.6px;background:#fdf3e1;color:var(--mut);cursor:pointer}
+.seg button.on{background:var(--acc);color:#fff}
+.ttl{font:800 italic 20px 'Barlow Condensed';letter-spacing:1px;padding:12px 14px 6px;display:flex;align-items:center;gap:8px}
+.ttl .dot{width:10px;height:10px;border-radius:50%}
+table{width:100%;border-collapse:collapse}
+th{font:800 11.5px 'Barlow Condensed';color:var(--mut);letter-spacing:.6px;text-align:right;padding:6px 6px;border-bottom:2px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{font:600 14px Barlow;padding:7px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.tm{display:flex;align-items:center;gap:8px;min-width:0}
+.tm img{width:30px;height:30px;border-radius:50%;flex:none}
+.tm span{overflow:hidden;text-overflow:ellipsis}
+.tm small{display:block;font:500 11.5px Barlow;color:var(--mut)}
+.po td{background:rgba(22,163,74,.07)}.po2 td{background:rgba(234,88,12,.06)}
+.note{font:500 12.5px Barlow;color:var(--mut);padding:8px 14px 12px}
+.mt{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.mt .tm:last-child{flex-direction:row-reverse;text-align:right}
+.mt .vs{font:800 italic 14px 'Barlow Condensed';color:var(--mut)}
+.br{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:6px 12px 14px}
+.brm{border:2px solid var(--line);border-radius:12px;padding:6px 8px;background:#fff7ed}
+.brm div{display:flex;align-items:center;gap:6px;font:700 13px Barlow;padding:3px 0}
+.brm img{width:22px;height:22px;border-radius:50%}
+.brm em{font:800 italic 12px 'Barlow Condensed';color:var(--mut);font-style:normal;width:16px}
+/* STATISTICHE */
+.flt{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.flt select{border:2px solid #f3c48d;border-radius:10px;background:#fdf3e1;font:700 14px Barlow;color:var(--ink);padding:7px 8px}
+.tw{overflow-x:auto}
+.tw th{cursor:pointer;position:sticky;top:0;background:var(--card)}
+.tw th.on{color:var(--acc)}
+.tw td.f{font:800 italic 16px 'Barlow Condensed';color:var(--ffp)}
+.pl{font:600 14px Barlow;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+.pl small{display:block;font:500 11px Barlow;color:var(--mut)}
+.rules{padding:4px 14px 12px;font:500 13px Barlow;color:var(--mut)}
+.rules b{color:var(--ink)}
+/* scheda squadra */
+.th{display:flex;align-items:center;gap:14px;padding:16px}
+.th img{width:84px;height:84px;border-radius:50%}
+.th h2{margin:0;font:800 italic 28px/1 'Barlow Condensed'}
+.th p{margin:4px 0 0;font:600 14px Barlow;color:var(--mut)}
+.back{border:0;background:#fdf3e1;border-radius:10px;font:800 italic 15px 'Barlow Condensed';color:var(--acc);padding:7px 12px;margin-bottom:10px;cursor:pointer}
+@media (min-width:600px){.hgrid{grid-template-columns:72px minmax(0,1fr) 72px}.tile{width:72px;height:72px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="top"><div class="applg"><b>E16</b></div><div class="appn">ESPN 16</div><div class="upd" id="upd"></div></div>
+ <nav id="nav"></nav>
+</header>
+<main id="main"></main>
+<script src="espn-data.js"></script>
+<script>
+/* ===== SQUADRE (da ESPN Fantasy, 10/11/2026). conf: E = East, W = West. Ordine = ordine della classifica ESPN.
+   I nomi con "…" sono tagliati nello screenshot: da completare (o arriveranno dal collegamento alla lega ESPN). */
+const TEAMS=[
+ {id:"DET",nome:"Detroit Pythons",gm:"D. Borracci",conf:"E",logo:"loghi/det.png"},
+ {id:"CLE",nome:"Cleveland Cadav…",gm:"Andrea Ce",conf:"E",logo:"loghi/cle.png"},
+ {id:"BOS",nome:"Boston TeaBags",gm:"G. Formica",conf:"E",logo:"loghi/bos.png"},
+ {id:"NYS",nome:"NY samb",gm:"M. Di Fazi",conf:"E",logo:"loghi/nys.png"},
+ {id:"QUE",nome:"Quebec Ducks",gm:"HC. Ducks",conf:"E",logo:"loghi/que.png"},
+ {id:"CHA",nome:"Charlotte Cougars",gm:"A. Indovino",conf:"E",logo:"loghi/cha.png"},
+ {id:"NYP",nome:"New York pandas",gm:"M. MisterfBio",conf:"E",logo:"loghi/nyp.png"},
+ {id:"CAN",nome:"Cancùn Mayans",gm:"F. Montrucchio",conf:"E",logo:"loghi/can.png"},
+ {id:"HOU",nome:"Houston Orange Lions",gm:"M. Van den Berg",conf:"W",logo:"loghi/hou.png"},
+ {id:"LVA",nome:"Las Vegas Aliens",gm:"Claudio Monga",conf:"W",logo:"loghi/lvg.png"},
+ {id:"HON",nome:"Honolulu Monk Seals",gm:"Matteo Pagani",conf:"W",logo:"loghi/hon.png"},
+ {id:"ALB",nome:"Albuquerque Blu…",gm:"T. Di Vincenzo",conf:"W",logo:"loghi/alb.png"},
+ {id:"ALA",nome:"Alaska Whales",gm:"Andrea Panci",conf:"W",logo:"loghi/ala.png"},
+ {id:"WIC",nome:"Wichita Aviators",gm:"A. Maccarrone",conf:"W",logo:"loghi/wic.png"},
+ {id:"FAL",nome:"Fallon Mavericks",gm:"G. Durante",conf:"W",logo:"loghi/fal.png"},
+ {id:"SRO",nome:"Santa Rosa Pirates",gm:"Mattia Zanni",conf:"W",logo:"loghi/sro.png"}
+];
+const TM=Object.fromEntries(TEAMS.map(t=>[t.id,t]));
+/* vittorie/sconfitte: arriveranno dalla lega ESPN; per ora 0-0 */
+const REC={};
+
+/* ===== PUNTI FANTASY (FFPS), regola della lega. Riga del tabellino (vedi tools/espn.mjs):
+   [nome, squadra NBA, titolare, MIN, PTS, FGM, FGA, 3PM, 3PA, FTM, FTA, OREB, DREB, AST, STL, BLK, TO, PF, TF, FF, idESPN]
+   PTS +1 · FGM +2 · FGA −1 · 3PM +1 · FTM +1 · FTA −1 · OREB +2,5 · DREB +2 · AST +2 · STL +4 · BLK +4 · TO −2 · PF −1 · TF −1 · FF −3
+   Esempio del regolamento: 20 pt, 7/14, 2 triple, 4/5 tl, 2+5 rimbalzi, 4 ast, 1 rec, 1 stop, 3 perse, 2 falli = 44 */
+function ffps(r){return r[4]+2*r[5]-r[6]+r[7]+r[9]-r[10]+2.5*r[11]+2*r[12]+2*r[13]+4*r[14]+4*r[15]-2*r[16]-r[17]-r[18]-3*r[19]}
+const f1=v=>(Math.round(v*10)/10).toLocaleString("it-IT",{minimumFractionDigits:1,maximumFractionDigits:1});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ===== NAVIGAZIONE ===== */
+const TABS=[["home","HOME"],["lega","LEGA"],["stat","STATISTICHE"]];
+let cur="home",curTeam=null,lgTab="cls",night=null,stQ={per:"all",nba:"",sort:"ffa",min:0},hq="";
+try{const s=JSON.parse(localStorage.getItem("e16_st")||"{}");Object.assign(stQ,s)}catch(e){}
+function go(v){cur=v;curTeam=null;render();scrollTo(0,0)}
+function render(){
+ document.getElementById("nav").innerHTML=TABS.map(([k,l])=>`<button class="${cur===k?"on":""}" data-go="${k}">${l}</button>`).join("");
+ document.getElementById("upd").innerHTML=typeof ESPN!=="undefined"?"Dati ESPN<br>"+esc(ESPN.upd):"";
+ const m=document.getElementById("main");
+ m.innerHTML=curTeam?vTeam(curTeam):cur==="lega"?vLega():cur==="stat"?vStat():vHome();
+}
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g){go(g.dataset.go);return}
+ const t=e.target.closest("[data-team]");if(t){curTeam=t.dataset.team;render();scrollTo(0,0);return}
+ const n=e.target.closest("[data-night]");if(n){night=n.dataset.night;render();return}
+ const l=e.target.closest("[data-lg]");if(l){lgTab=l.dataset.lg;render();return}
+ const s=e.target.closest("[data-sort]");if(s){stQ.sort=s.dataset.sort;saveSt();render();return}
+ if(e.target.closest("[data-back]")){curTeam=null;render();return}});
+document.addEventListener("change",e=>{const k=e.target.dataset.st;if(k){stQ[k]=e.target.value;saveSt();render()}});
+document.addEventListener("input",e=>{if(e.target.id==="hq"){hq=e.target.value;const p=e.target.selectionStart;render();const i=document.getElementById("hq");i.focus();try{i.setSelectionRange(p,p)}catch(_){}}});
+function saveSt(){try{localStorage.setItem("e16_st",JSON.stringify(stQ))}catch(e){}}
+
+/* ===== DATI: notti e righe ===== */
+const nights=()=>typeof ESPN==="undefined"?[]:Object.keys(ESPN.days).filter(d=>ESPN.days[d].some(id=>ESPN.box[id])).sort();
+function rowsOf(d){const out=[];for(const id of (ESPN.days[d]||[])){const g=ESPN.games[id],B=ESPN.box[id];if(!B)continue;for(const r of B){const opp=r[1]===g[0]?g[1]:g[0];out.push({r,g,opp,id,f:ffps(r)})}}return out}
+const dIt=d=>{const[y,m,g]=d.split("-");return g+"/"+m};
+
+/* ===== HOME ===== */
+function vHome(){
+ const N=nights(),d=night&&N.includes(night)?night:N[N.length-1];const i=N.indexOf(d);
+ const tile=t=>`<button class="tile" data-team="${t.id}" aria-label="${esc(t.nome)}"><img src="${t.logo}" alt=""></button>`;
+ let rows=d?rowsOf(d):[];const q=hq.trim().toLowerCase();if(q)rows=rows.filter(x=>x.r[0].toLowerCase().includes(q));
+ rows.sort((a,b)=>b.f-a.f);
+ const box=x=>{const r=x.r,miss=(r[6]-r[5])+(r[10]-r[9]);return`<div class="bx"><span>${r[4]}<i>PT</i></span><span>${r[11]+r[12]}<i>RB</i></span><span>${r[13]}<i>AS</i></span><span>${r[14]}<i>ST</i></span><span>${r[15]}<i>BL</i></span><span>${r[7]}<i>3P</i></span><span class="${r[16]>=4?"r":""}">${r[16]}<i>TO</i></span><span>${r[17]}<i>PF</i></span><span class="${miss>=10?"r":""}">${miss}<i>ERR</i></span>${r[18]||r[19]?`<span class="r">${r[18]?r[18]+"T":""}${r[19]?" "+r[19]+"F":""}<i>TEC/FLA</i></span>`:""}</div>`};
+ const st=x=>x.g[4]==="L"?`<b style="color:var(--loss)">LIVE</b>`:"Finale";
+ const list=rows.slice(0,q?60:40).map(x=>`<div class="pr"><div class="prn"><b>${esc(x.r[0])}</b><span class="fb">${f1(x.f)}</span></div><div class="prs">${x.r[1]} vs ${x.opp} · ${st(x)} · ${x.r[3]} min</div>${box(x)}</div>`).join("")||`<div class="empty">${q?"Nessun giocatore":"Nessuna partita"}</div>`;
+ return `<label class="srch"><svg width="20" height="20" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="#9a5a2b" stroke-width="2.4"/><path d="M20 20l-4-4" stroke="#9a5a2b" stroke-width="2.4" stroke-linecap="round"/></svg><input id="hq" type="search" placeholder="Cerca giocatore" value="${esc(hq)}" autocomplete="off"></label>
+ <div class="hgrid">
+  <div class="hcol"><div class="hconf e">EAST</div>${TEAMS.filter(t=>t.conf==="E").map(tile).join("")}</div>
+  <div class="card night">
+   <div class="nhd"><button ${i>0?`data-night="${N[i-1]}"`:"disabled"} aria-label="Notte precedente">‹</button><span>NOTTE DEL ${d?dIt(d):"—"}</span><button ${i>=0&&i<N.length-1?`data-night="${N[i+1]}"`:"disabled"} aria-label="Notte successiva">›</button></div>
+   <div class="nsub"><span>TUTTI I GIOCATORI</span><span>${rows.length} GIOCATORI · FFPS</span></div>
+   ${list}
+  </div>
+  <div class="hcol"><div class="hconf w">WEST</div>${TEAMS.filter(t=>t.conf==="W").map(tile).join("")}</div>
+ </div>`;
+}
+
+/* ===== SCHEDA SQUADRA ===== */
+function vTeam(id){const t=TM[id];if(!t)return"";
+ return `<button class="back" data-back>‹ Indietro</button><div class="card"><div class="th"><img src="${t.logo}" alt=""><div><h2>${esc(t.nome)}</h2><p>${esc(t.gm)} · ${t.conf==="E"?"East":"West"}</p></div></div>
+ <div class="note">La rosa arriverà dal collegamento con la lega ESPN.</div></div>`}
+
+/* ===== LEGA: classifica, scontri diretti, playoff ===== */
+function standings(conf){return TEAMS.filter(t=>t.conf===conf).map((t,i)=>{const r=REC[t.id]||{w:0,l:0,pf:0,pa:0};return{...t,...r,ord:i}}).sort((a,b)=>(b.w-a.w)||(a.l-b.l)||(b.pf-a.pf)||(a.ord-b.ord))}
+function vLega(){
+ const seg=`<div class="seg">${[["cls","CLASSIFICA"],["sfide","SCONTRI DIRETTI"],["po","PLAYOFF"]].map(([k,l])=>`<button class="${lgTab===k?"on":""}" data-lg="${k}">${l}</button>`).join("")}</div>`;
+ const tm=t=>`<div class="tm" data-team="${t.id}"><img src="${t.logo}" alt=""><span>${esc(t.nome)}<small>${esc(t.gm)}</small></span></div>`;
+ if(lgTab==="sfide")return seg+`<div class="card"><div class="ttl">SCONTRI DIRETTI</div><div class="note">Il calendario delle sfide arriverà dal collegamento con la lega ESPN.</div></div>`;
+ if(lgTab==="po"){/* (provvisorio) regole Dreamers applicate per conference: 1ª–4ª tabellone per il titolo, 5ª–8ª l'altro tabellone (1-4 e 2-3) */
+  const br=(L,a,lab)=>`<div class="ttl" style="font-size:16px">${lab}</div><div class="br">${[[0,3],[1,2]].map(([x,y])=>`<div class="brm"><div><em>${a+x+1}</em><img src="${L[a+x].logo}" alt="">${esc(L[a+x].nome)}</div><div><em>${a+y+1}</em><img src="${L[a+y].logo}" alt="">${esc(L[a+y].nome)}</div></div>`).join("")}</div>`;
+  return seg+["E","W"].map(c=>{const L=standings(c);return`<div class="card" style="margin-bottom:12px"><div class="ttl"><span class="dot" style="background:${c==="E"?"var(--east)":"var(--west)"}"></span>${c==="E"?"EAST":"WEST"}</div>${br(L,0,"Tabellone titolo (1ª–4ª)")}${br(L,4,"Altro tabellone (5ª–8ª)")}</div>`}).join("")+`<div class="note" style="color:#fff">Provvisorio: regole playoff Dreamers per ogni conference, in attesa delle regole della lega.</div>`}
+ return seg+["E","W"].map(c=>{const L=standings(c);return`<div class="card" style="margin-bottom:12px"><div class="ttl"><span class="dot" style="background:${c==="E"?"var(--east)":"var(--west)"}"></span>${c==="E"?"EASTERN CONFERENCE":"WESTERN CONFERENCE"}</div>
+  <table><tr><th>SQUADRA</th><th>V</th><th>P</th><th>PF</th><th>PS</th></tr>${L.map((t,i)=>`<tr class="${i<4?"po":"po2"}"><td>${tm(t)}</td><td>${t.w}</td><td>${t.l}</td><td>${f1(t.pf)}</td><td>${f1(t.pa)}</td></tr>`).join("")}</table>
+  <div class="note">Verde: 1ª–4ª (tabellone titolo) · arancio: 5ª–8ª. Vittorie e punti arriveranno dalla lega ESPN.</div></div>`}).join("");
+}
+
+/* ===== STATISTICHE: tutti i giocatori NBA con i punti FFPS ricalcolati dai tabellini ESPN ===== */
+function vStat(){
+ const N=nights(),last=N[N.length-1],from=stQ.per==="7"?N[Math.max(0,N.length-7)]:stQ.per==="1"?last:N[0];
+ const P={};for(const d of N){if(d<from)continue;for(const x of rowsOf(d)){const r=x.r,k=r[20]||r[0];const p=P[k]||(P[k]={n:r[0],t:r[1],gp:0,min:0,ff:0,s:new Array(21).fill(0)});p.t=r[1];p.gp++;p.min+=r[3];p.ff+=x.f;for(let j=3;j<20;j++)p.s[j]+=r[j]}}
+ let L=Object.values(P);if(stQ.nba)L=L.filter(p=>p.t===stQ.nba);const mn=+stQ.min||0;if(mn)L=L.filter(p=>p.min/p.gp>=mn);
+ const C=[["ffa","FFPS/G",p=>p.ff/p.gp,1],["fft","FFPS",p=>p.ff,1],["gp","G",p=>p.gp,0],["min","MIN",p=>p.min/p.gp,1],["pts","PT",p=>p.s[4]/p.gp,1],["reb","RB",p=>(p.s[11]+p.s[12])/p.gp,1],["ast","AS",p=>p.s[13]/p.gp,1],["stl","ST",p=>p.s[14]/p.gp,1],["blk","BL",p=>p.s[15]/p.gp,1],["to","TO",p=>p.s[16]/p.gp,1],["fg","TIRI",p=>p.s[6]?p.s[5]/p.s[6]*100:0,2],["tf","TEC",p=>p.s[18],0],["ff","FLA",p=>p.s[19],0]];
+ const c=C.find(x=>x[0]===stQ.sort)||C[0];L.sort((a,b)=>c[2](b)-c[2](a));
+ const nba=[...new Set(Object.values(ESPN.games).flatMap(g=>[g[0],g[1]]))].sort();
+ const fmt=(col,p)=>{const v=col[2](p);return col[3]===2?(p.s[6]?`${p.s[5]}/${p.s[6]}`:"–"):col[3]?f1(v):v};
+ return `<div class="flt"><select data-st="per"><option value="all"${stQ.per==="all"?" selected":""}>Stagione</option><option value="7"${stQ.per==="7"?" selected":""}>Ultime 7 notti</option><option value="1"${stQ.per==="1"?" selected":""}>Ultima notte</option></select>
+ <select data-st="nba"><option value="">Tutte le squadre NBA</option>${nba.map(t=>`<option${stQ.nba===t?" selected":""}>${t}</option>`).join("")}</select>
+ <select data-st="min"><option value="0">Tutti i minuti</option>${[10,20,25,30].map(m=>`<option value="${m}"${+stQ.min===m?" selected":""}>Almeno ${m} min</option>`).join("")}</select></div>
+ <div class="card"><div class="ttl">STATISTICHE · PUNTI FFPS</div><div class="rules">Punti della lega su ogni partita: <b>PT +1 · canestro dal campo +2 · tiro tentato −1 · tripla +1 · libero segnato +1 · libero tentato −1 · rimb. off. +2,5 · rimb. dif. +2 · assist +2 · recupero +4 · stoppata +4 · persa −2 · fallo −1 · tecnico −1 · flagrante −3</b>. Tocca un titolo per ordinare.</div>
+ <div class="tw"><table><tr><th>GIOCATORE</th>${C.map(x=>`<th class="${x===c?"on":""}" data-sort="${x[0]}">${x[1]}</th>`).join("")}</tr>
+ ${L.slice(0,150).map((p,i)=>`<tr><td><div class="pl">${i+1}. ${esc(p.n)}<small>${p.t}</small></div></td>${C.map(x=>`<td class="${x[0]==="ffa"?"f":""}">${fmt(x,p)}</td>`).join("")}</tr>`).join("")}</table></div>
+ <div class="note">${L.length} giocatori · primi 150 · ${N.length} notti dal ${N[0]?dIt(N[0]):"—"}</div></div>`;
+}
+render();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
