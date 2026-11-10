@@ -32,14 +32,18 @@ const weekStart = w => w === 1 ? START : dOf(spOf("2026-10-26") + (w - 2) * 7);
 const T = await get("?view=mTeam");
 const MAP = {};
 for (const t of T.teams) { const n = nn(t.name || (t.location + " " + t.nickname)); const m = TEAMS.find(x => nn(x.nome) === n) || TEAMS.find(x => n.includes(nn(x.nome).split(" ").slice(-1)[0])); if (m) MAP[t.id] = m.id }
+/* (91) controllo: tutte le 16 squadre devono essere riconosciute (col nome «Monk\u00a0Seals» Honolulu era sparita senza avvisi). Se ne manca una lo script si ferma e GitHub manda la mail di errore */
+if (Object.keys(MAP).length !== TEAMS.length) { const miss = TEAMS.filter(x => !Object.values(MAP).includes(x.id)).map(x => x.nome); throw new Error("Squadre ESPN non riconosciute: " + miss.join(", ")) }
 const ent = e => { const p = e.playerPoolEntry.player; return [p.fullName, PRO[p.proTeamId] || "FA", SLOT[e.lineupSlotId] || "BE", pos(p)] };
 /* rose di adesso */
 const R = await get("?view=mRoster"), rose = {};
 for (const t of R.teams) if (MAP[t.id]) rose[MAP[t.id]] = t.roster.entries.map(ent);
 /* sfide e punteggi ufficiali */
-const M = await get("?view=mMatchupScore"), match = {}, score = {};
+const M = await get("?view=mMatchupScore"), match = {}, score = {}, live = {};
 for (const x of M.schedule) { const w = x.matchupPeriodId, h = MAP[x.home && x.home.teamId], a = MAP[x.away && x.away.teamId]; if (!h || !a) continue;
   (match[w] = match[w] || []).push([h, a]);
+  /* (91) punteggio ESPN della settimana in corso (totalPointsLive), preso a ogni giro: è il punteggio vero di ESPN, formazioni comprese */
+  if (!(x.winner && x.winner !== "UNDECIDED")) { const lv = v => v && (v.totalPointsLive ?? v.totalPoints); if (lv(x.home) != null) { (live[w] = live[w] || {})[h] = lv(x.home); live[w][a] = lv(x.away) } }
   if (x.winner && x.winner !== "UNDECIDED") { (score[w] = score[w] || {})[h] = x.home.totalPoints; score[w][a] = x.away.totalPoints } }
 /* formazioni del lunedì: per ogni settimana iniziata, i titolari del primo giorno (le settimane chiuse non si riscaricano) */
 const line = OLD.line || {};
@@ -62,6 +66,8 @@ for (let sp = 0; sp <= spOf(today); sp++) { let X; try { X = await get(`?view=mT
 const tr = {}; for (const t of R.teams) for (const e of t.roster.entries) if (e.acquisitionType === "TRADE" && MAP[t.id]) { const k = Math.round(e.acquisitionDate / 6e4); (tr[k] = tr[k] || []).push([MAP[t.id], e.playerPoolEntry.player.fullName]) }
 const trades = Object.keys(tr).sort((a, b) => b - a).map(k => ({ d: +k * 6e4, l: tr[k] }));
 mov.sort((a, b) => b.d - a.d);
-const LEGA = { upd: new Intl.DateTimeFormat("it-IT", { timeZone: "Europe/Rome", dateStyle: "short", timeStyle: "short" }).format(new Date()), map: MAP, rose, match, score, line, fa, mov: mov.slice(0, 300), trades };
+/* (91) controllo prima di salvare: formazione del lunedì di tutte e 16 le squadre per ogni settimana iniziata */
+for (const w of curW) { const n = Object.keys(line[w] || {}).length; if (n !== TEAMS.length) throw new Error(`Settimana ${w}: formazioni ESPN di ${n} squadre su ${TEAMS.length}`) }
+const LEGA = { liveTs: Date.now(), live, upd: new Intl.DateTimeFormat("it-IT", { timeZone: "Europe/Rome", dateStyle: "short", timeStyle: "short" }).format(new Date()), map: MAP, rose, match, score, line, fa, mov: mov.slice(0, 300), trades };
 writeFileSync(OUT, "/* ESPN 16 – generato da tools/lega.mjs dalla lega ESPN (pubblica), non modificare a mano */\nconst LEGA=" + JSON.stringify(LEGA) + ";\n");
 console.log("lega:", Object.keys(rose).length, "squadre,", Object.keys(line).length, "settimane di formazioni,", fa.length, "free agent,", mov.length, "movimenti,", trades.length, "scambi");

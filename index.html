@@ -802,7 +802,11 @@ function wkTeam(t,w){const[a,b]=weekRange(w),P=pstats(),LN=lineOf(t,w),R0=(ROSE[
  else{out=all.filter(x=>x.g[2]!=="ESPN");out.forEach((x,i)=>x.on=i<14)}
  const ON=out.filter(x=>x.on),S=ON.reduce((s,x)=>s+x.tot,0),PR=ON.reduce((s,x)=>s+x.proj,0);
  return{L:out,S,PR,nOn:ON.length,G:ON.reduce((s,x)=>s+x.n,0),rem:ON.reduce((s,x)=>s+x.rem,0),best:BEST,espn:!!LN}}
-let WK=null;function weekScores(w){if(SCORES[w]){const G={};TEAMS.forEach(t=>G[t.id]=0);return{S:{...SCORES[w]},G,off:1}}const S={},G={};TEAMS.forEach(t=>{const T=wkTeam(t.id,w);S[t.id]=T.S;G[t.id]=T.G});return{S,G}}
+let WK=null;function weekScores(w){if(SCORES[w]){const G={};TEAMS.forEach(t=>G[t.id]=0);return{S:{...SCORES[w]},G,off:1}}const S={},G={};TEAMS.forEach(t=>{const T=wkTeam(t.id,w);S[t.id]=T.S;G[t.id]=T.G});
+ /* (91) settimana in corso: se nessuna partita è in corso e l ultimo scaricamento ESPN è arrivato dopo la fine delle partite già iniziate, vale il punteggio di ESPN (ufficiale, come il report Dunkest su Dreamers); durante le partite resta il calcolo live dell app */
+ try{const L=typeof LEGA!=="undefined"&&LEGA.live&&LEGA.live[w];if(L&&TEAMS.every(t=>L[t.id]!=null)){const[a,b]=weekRange(w);let lv=false,last=0;for(const d of Object.keys(ESPN.days))if(d>=a&&d<=b)for(const id of ESPN.days[d]){const g=ESPN.games[id];if(!g||g[4]==="S")continue;if(g[4]==="L")lv=true;const t0=new Date(g[5]).getTime();if(t0>last)last=t0}
+  if(!lv&&(!last||LEGA.liveTs>last+3.5*36e5)){TEAMS.forEach(t=>S[t.id]=L[t.id]);return{S,G,esp:1,ts:LEGA.liveTs}}}}catch(_){}
+ return{S,G}}
 /* (56) settimane 8–9 = sfida unica: is89(w), etichetta «8–9», punteggio della sfida (alla 9 si somma la 8), sfida finita solo dopo la 9 */
 const is89=w=>+w===8||+w===9;const wkLab=w=>is89(w)?"8–9":String(w);const sfFin=(w,wNow)=>(+w===8?9:+w)<wNow;
 function sfidaScores(w){const WS=weekScores(w);if(+w!==9)return WS;const W8=weekScores(8),S={},Gm={};TEAMS.forEach(t=>{S[t.id]=(W8.S[t.id]||0)+(WS.S[t.id]||0);Gm[t.id]=(W8.G[t.id]||0)+(WS.G[t.id]||0)});return{S,G:Gm,off:WS.off&&W8.off,s8:W8.S,s9:WS.S}}

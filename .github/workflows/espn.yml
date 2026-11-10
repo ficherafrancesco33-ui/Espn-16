@@ -1,11 +1,14 @@
 # ESPN 16: scarica i tabellini NBA da ESPN e aggiorna espn-data.js (tecnici e flagranti dalla cronaca).
-# Gira da solo: ogni 30 minuti durante la notte NBA (ora UTC 23-07) e due volte di giorno. Nessuno deve lanciare niente a mano.
+# Gira da solo: ogni 30 minuti durante la notte NBA (ora UTC 23-07), alle 8:07 italiane (chiusura della notte) e due volte di giorno.
+# (91) Se una squadra non viene riconosciuta o manca una formazione, tools/lega.mjs si ferma con errore: GitHub manda la mail e i dati vecchi restano. Nessuno deve lanciare niente a mano.
 name: espn-dati
 on:
   schedule:
     - cron: "*/30 0-7 * * *"
     - cron: "17 23 * * *"
     - cron: "43 10,16 * * *"
+    # (91) chiusura della notte: alle 8:07 italiane (7:07 UTC in inverno) i dati ESPN della notte diventano quelli ufficiali dell app
+    - cron: "7 7 * * *"
   workflow_dispatch:
 permissions:
   contents: write
@@ -23,7 +26,7 @@ jobs:
       - name: Scarica i tabellini ESPN
         run: node tools/espn.mjs
       - name: Lega ESPN (rose, formazioni del lunedì, punteggi, free agent, scambi)
-        run: node tools/lega.mjs || true
+        run: node tools/lega.mjs || touch /tmp/lega_ko
       - name: Date di nascita (età)
         run: node tools/eta.mjs || true
       - name: Salva se ci sono novità
@@ -35,3 +38,6 @@ jobs:
           git commit -m "Dati ESPN aggiornati [automatico]"
           for i in 1 2 3; do git pull --rebase -X theirs origin main && git push origin HEAD:main && exit 0; sleep 5; done
           exit 1
+      - name: Avviso se la lega ESPN non è stata letta bene
+        run: |
+          if [ -f /tmp/lega_ko ]; then echo "::error::tools/lega.mjs ha trovato un problema (vedi sopra), dati della lega non aggiornati"; exit 1; fi
