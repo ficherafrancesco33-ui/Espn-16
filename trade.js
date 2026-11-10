@@ -61,20 +61,43 @@ const PKRULE={
  "CAN|2031|1|CAN":{f:S=>rk(S,["CAN","NYS"],0),t:"Swap: i Mayans prendono la migliore tra la loro scelta e quella dei Samb."},
  "NYS|2031|1|NYS":{f:S=>rk(S,["CAN","NYS"],1),t:"Swap con i Mayans: ai Samb resta la peggiore delle due."}};
 /* ordine del Draft simulato (seme fisso: stessi numeri a ogni apertura) */
+/* (56) SIMULAZIONE DEL DRAFT CON LA LOTTERY DEL REGOLAMENTO (4000 stagioni simulate per anno, seme fisso).
+   - Forza attesa di ogni squadra: posizione di oggi (valore dei migliori 14 + record), che negli anni lontani torna verso metà classifica,
+     più l effetto GIOVINEZZA: età media pesata sul valore della rosa vs 26,5 anni → rose giovani salgono, rose vecchie scendono
+     (0,45 posizioni per anno di differenza d età per ogni stagione di distanza, al massimo ±4 posizioni).
+   - Ogni stagione simulata: classifica per conference; 1ª–3ª ai playoff, play-in 4ª vs 5ª (vince più spesso la più forte).
+     Fuori dai playoff: le altre 3 per conference + le 2 perdenti del play-in = 8 squadre in Lottery.
+   - Lottery per le scelte 1–3 tra le 8 escluse (dalla peggiore alla migliore) con 161, 161, 161, 143, 120, 103, 85, 66 numeri su 1000
+     (+10 numeri alla vincitrice del consolation ladder, simulata a caso tra le 8); poi le altre escluse in ordine inverso di classifica (4–8),
+     poi le 8 squadre dei playoff in ordine inverso (9–16).
+   - 2° giro: ordine inverso di classifica (senza lottery); 3° giro: ordine di classifica (snake draft).
+   Ogni stagione simulata = {s1: scelta 1° giro, s2, s3} per squadra. */
+const LOTT_N=[161,161,161,143,120,103,85,66];
+let AGEW=null;function ageW(){if(AGEW)return AGEW;AGEW={};for(const t of TEAMS){let a=0,w=0;for(const g of ROSE[t.id]||[]){const v=val(g[0]),e2=typeof etaOf==="function"?etaOf(g[0]):null;if(e2==null||!v)continue;a+=e2*v;w+=v}AGEW[t.id]=w?a/w:26.5}return AGEW}
 let SIMC={},PKMEMO={};function simDraft(y){if(SIMC[y])return SIMC[y];let sd=1234567+y;const rnd=()=>{sd=(sd*16807)%2147483647;return sd/2147483647};
  const gau=()=>{let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
- const k=Math.min(.75,Math.max(0,(y-2027)*.25)),sdv=2.2+1.8*Math.max(0,y-2027),E={};for(const t of TEAMS){const R=str().rank[t.id]||8.5;E[t.id]=(17-R)*(1-k)+8.5*k}
- const L=[];for(let i=0;i<4000;i++){const sc=TEAMS.map(t=>[t.id,E[t.id]+gau()*sdv]).sort((a,b)=>a[1]-b[1]),S={};sc.forEach((x,j)=>S[x[0]]=j+1);L.push(S)}return SIMC[y]=L}
+ const yy=Math.max(0,y-2027),k=Math.min(.75,yy*.25),sdv=2.2+1.8*yy,E={},AG=ageW();
+ for(const t of TEAMS){const R=str().rank[t.id]||8.5;const young=Math.max(-4,Math.min(4,(26.5-AG[t.id])*.45*yy));E[t.id]=(17-R)*(1-k)+8.5*k+young}
+ const L=[];for(let it=0;it<4000;it++){const sc={};for(const t of TEAMS)sc[t.id]=E[t.id]+gau()*sdv;
+  const po=new Set(),out=[];for(const c of ["E","W"]){const C=TEAMS.filter(t=>t.conf===c).map(t=>t.id).sort((a,b)=>sc[b]-sc[a]);
+   C.slice(0,3).forEach(t=>po.add(t));const a=C[3],b=C[4],pa=1/(1+Math.exp(-(sc[a]-sc[b])/2.5)),win=rnd()<pa?a:b;po.add(win);out.push(win===a?b:a,...C.slice(5))}
+  const worst=out.sort((a,b)=>sc[a]-sc[b]);/* le 8 escluse dalla peggiore alla migliore */
+  const nums=worst.map((t,i)=>LOTT_N[i]);nums[Math.floor(rnd()*8)]+=10;/* consolation ladder */
+  const s1={},left=worst.slice(),wts=nums.slice();for(let pk=1;pk<=3;pk++){const tot=wts.reduce((a,b)=>a+b,0);let r=rnd()*tot,i=0;while(r>wts[i]&&i<wts.length-1){r-=wts[i];i++}s1[left[i]]=pk;left.splice(i,1);wts.splice(i,1)}
+  let n=4;for(const t of left)s1[t]=n++;const pl=[...po].sort((a,b)=>sc[a]-sc[b]);for(const t of pl)s1[t]=n++;
+  const inv=TEAMS.map(t=>t.id).sort((a,b)=>sc[a]-sc[b]),s2={},s3={};inv.forEach((t,i)=>{s2[t]=i+1;s3[t]=16-i});
+  L.push({s1,s2,s3})}return SIMC[y]=L}
+window.e16Top3=(y,t)=>{const L=simDraft(y);let n=0;for(const S of L)if(S.s1[t]<=3)n++;return n/L.length};
 const ruleOf=(h,p)=>PKRULE[h+"|"+p[0]+"|"+p[1]+"|"+p[2]];
-function pickInfo(p,holder){/* p = [anno, giro, squadra d origine, nota]; holder = squadra che la detiene (per protezioni e swap) */const R=str().rank[p[2]]||8.5,slot0=17-R,k=Math.min(.75,Math.max(0,(p[0]-2027)*.25)),slot=slot0*(1-k)+8.5*k;
- let v=PICKV(p[1],slot)*Math.pow(.92,Math.max(0,p[0]-2027));let s=Math.max(1,Math.min(16,Math.round(slot)));let q=slot<=4?"alta":slot<=10?"media":"bassa";
+function pickInfo(p,holder,prot){/* p = [anno, giro, squadra d origine, nota]; holder = squadra che la detiene (protezioni e swap del file); prot = protezione top N scelta nel calcolatore */
+ const rk="s"+Math.min(3,p[1]),dec=Math.pow(.92,Math.max(0,p[0]-2027));
  if(holder===undefined)holder=(()=>{try{for(const t in CAP)if((CAP[t].pk||[]).includes(p))return t}catch(_){}return null})();
- const ru=holder&&ruleOf(holder,p);let extra=null;
- if(ru&&PKMEMO[holder+'|'+p.join('|')]){const m=PKMEMO[holder+'|'+p.join('|')];v*=m.r;s=m.s||s;q=m.q||q;extra=m.x}
- else if(ru){const L=simDraft(p[0]);let a=0,b=0,n=0;const got=[];for(const S of L){b+=PICKV(p[1],S[p[2]]);const f=ru.f(S);if(f!=null){a+=PICKV(p[1],f);n++;got.push(f)}}
-  v*=b?a/b:1;got.sort((x,y)=>x-y);const med=got.length?got[Math.floor(got.length/2)]:null;if(med){s=med;q=med<=4?"alta":med<=10?"media":"bassa"}
-  extra={txt:ru.t,prob:Math.round(n/L.length*100)};PKMEMO[holder+'|'+p.join('|')]={r:b?a/b:1,s:med,q:med?q:null,x:extra}}
- return{slot:s,q,v:Math.round(v/5)*5,rule:extra}}
+ const ru=holder&&p[1]===1?ruleOf(holder,p):null,key=[holder,p.join("|"),prot||0].join("~");
+ if(PKMEMO[key])return PKMEMO[key];
+ const L=simDraft(p[0]);let a=0,n=0;const got=[];
+ for(const S of L){let f=S[rk][p[2]];if(ru){f=ru.f(S.s1);}if(f!=null&&prot&&f<=prot)f=null;if(f!=null){a+=PICKV(p[1],f);n++;got.push(f)}}
+ got.sort((x,y)=>x-y);const med=got.length?got[Math.floor(got.length/2)]:null,s=med||Math.round(L.reduce((q,S)=>q+S[rk][p[2]],0)/L.length),q=s<=4?"alta":s<=10?"media":"bassa";
+ const prob=Math.round(n/L.length*100);const out={slot:s,q,v:Math.round(a/L.length*dec/5)*5,rule:ru?{txt:ru.t,prob}:null,prob};return PKMEMO[key]=out}
 window.e16Pick=pickInfo;
 function teamValue(id){const pl=(ROSE[id]||[]).reduce((a,g)=>a+val(g[0]),0),pk=((CAP[id]||{}).pk||[]).reduce((a,p)=>a+pickInfo(p).v,0);return{pl,pk,tot:pl+pk}}
 window.e16TeamValue=teamValue;window.e16Val=val;window.e16Str=()=>str();
@@ -115,9 +138,12 @@ const lgS=(t,s)=>`<span class="drlg ${s||"m"}" style="--tc:${TCOL[t]}"><span cla
 const wdg=t=>`<span class="wedge" style="--tc:${TCOL[t]}"><span class="badge logo lg-${t}"></span></span>`;
 const tOpts=sel=>TEAMS.map(x=>`<option value="${x.id}" ${x.id===sel?"selected":""}>${e(x.nome)}</option>`).join("");
 const pkLab=(t,p)=>`${String(p[0]).slice(2)} ${p[1]}°${p[2]!==t?" "+nick(TM[p[2]]).slice(0,3):""}`;
-const itPts=x=>x.ty==="pl"?vtPts(val(x.n)):vtPts(pickInfo(x.p).v);
-const itVal=x=>x.ty==="pl"?val(x.n):pickInfo(x.p).v;
-const itLab=x=>x.ty==="pl"?x.n:`Scelta ${x.p[0]} · ${x.p[1]}° giro${x.p[2]!==x.from?" (da "+nick(TM[x.p[2]])+")":""}`;
+/* (56) protezione scelte: la scelta protetta vale solo nelle simulazioni in cui NON cade nella protezione */
+const PROTS=[[0,"nessuna"],[3,"Top 3"],[5,"Top 5"],[8,"Top 8 (lottery)"],[10,"Top 10"]];
+const itPI=x=>pickInfo(x.p,undefined,x.prot||0);
+const itPts=x=>x.ty==="pl"?vtPts(val(x.n)):vtPts(itPI(x).v);
+const itVal=x=>x.ty==="pl"?val(x.n):itPI(x).v;
+const itLab=x=>x.ty==="pl"?x.n:`Scelta ${x.p[0]} · ${x.p[1]}° giro${x.p[2]!==x.from?" (da "+nick(TM[x.p[2]])+")":""}${x.prot?" (protetta top "+x.prot+")":""}`;
 const itSal=x=>x.ty==="pl"?sal(x.from,x.n):0;
 const trArt=n=>/^[aeiou]/i.test(n)?"gli":"i";
 const verd=(d,w,l)=>d<.10?["Trade equilibrata","ok"]:d<.30?[`Vincitore trade ${nick(TM[w])}`,"mid"]:d<.40?[`Grande truffa dei ${nick(TM[w])}`,"bad"]:d<.50?[`Truffa pazzesca dei ${nick(TM[w])}`,"bad"]:d<.60?["Mamma mia che inculata","bad"]:[`Ma ${trArt(nick(TM[l]))} ${nick(TM[l])} ne capiscono di basket?`,"bad"];
@@ -172,7 +198,8 @@ function cardHTML(k){const T2=tms(),t=T2[k],I=VT.it.filter(x=>x.from===t&&T2.inc
  const ros=(ROSE[t]||[]).map(g=>({n:g[0],r:roleOf(g[0]),v:val(g[0])})).sort((a,b)=>(RO[a.r]-RO[b.r])||(b.v-a.v));
  const pks=((CAP[t]||{}).pk||[]);
  return `<div class="vtcard" style="--tc:${TCOL[t]}"><div class="vthd">${wdg(t)}<select data-vtsel="${k}">${tOpts(t)}</select><span class="vtgv">dà</span></div>
- <div class="${T2.length>2?"v3items":"vtitems"}">${I.map(x=>`<button class="vtit" data-vt="rm" data-id="${e(x.id)}"><span>${e(itLab(x))}${T2.length>2?` → <b>${e(nick(TM[x.to]))}</b>`:""}</span><b>${fmt(itVal(x))}</b><i>✕</i></button>`).join("")||`<em>Niente ancora: tocca i giocatori qui sotto</em>`}</div>
+ <div class="${T2.length>2?"v3items":"vtitems"}">${I.map(x=>{const bt=`<button class="vtit" data-vt="rm" data-id="${e(x.id)}"><span>${e(itLab(x))}${T2.length>2?` → <b>${e(nick(TM[x.to]))}</b>`:""}</span><b>${x.ty==="pk"&&x.prot?`<s>${fmt(pickInfo(x.p).v)}</s> → `:""}${fmt(itVal(x))}</b><i>✕</i></button>`;if(x.ty!=="pk")return bt;
+  const P=itPI(x);return `<span class="vtpkw">${bt}<label class="vtprot">Protezione <select data-vtprot="${e(x.id)}">${PROTS.map(([n,l])=>`<option value="${n}"${(x.prot||0)===n?" selected":""}>${l}</option>`).join("")}</select></label>${x.prot?`<small class="vtpkn">valore ${fmt(pickInfo(x.p).v)} → ${fmt(P.v)} (protetta top ${x.prot}, arriva nel ${P.prob}%)</small>`:""}</span>`}).join("")||`<em>Niente ancora: tocca i giocatori qui sotto</em>`}</div>
  ${pks.length?`<div class="vtpk"><span>Scelte</span>${pks.map((p,i)=>`<button data-vt="pk" data-k="${k}" data-i="${i}" aria-pressed="${I.some(x=>x.ty==="pk"&&x.pi===i)}">${pkLab(t,p)}<small>${fmt(pickInfo(p).v)}</small></button>`).join("")}</div>`:""}
  <div class="vtros">${ros.map((p,i)=>`${i===0||ros[i-1].r!==p.r?`<div class="vtrh ${p.r}">${RLAB[p.r]}</div>`:""}<button class="vtp ${sel.has(p.n)?"on":""}" data-vt="pl" data-k="${k}" data-n="${e(p.n)}"><i class="rc ${p.r}"></i><span>${e(p.n)}</span><b>${fmt(p.v)}</b></button>`).join("")}</div></div>`}
 function vCalc(){const tabs=`<div class="ctabs vttabs">${[["calc","2 squadre"],["calc3","3 squadre"],["calc4","4 squadre"],["list","Valori lega"]].map(([k,l])=>`<button data-vt="tab" data-k="${k}" aria-pressed="${VT.tab===k}">${l}</button>`).join("")}</div>`;
@@ -279,6 +306,7 @@ document.addEventListener("change",ev=>{const t=ev.target;if(t.dataset.vtsel!=nu
  if(t.dataset.iasel&&cur==="ia"){IA.me=t.value;IA.give=[];IA.keep=[];IA.want=IA.want.filter(n=>ownerOf(n)!==t.value);IA.res=null;iaSave();render()}});
 document.addEventListener("input",ev=>{const t=ev.target;if(t.id==="vtq"&&cur==="calc"){VT.q=t.value;const p=t.selectionStart;render();const i=document.getElementById("vtq");i.focus();try{i.setSelectionRange(p,p)}catch(_){}}
  if(t.id==="iaq"&&cur==="ia"){IA.q=t.value;const p=t.selectionStart;render();const i=document.getElementById("iaq");i.focus();try{i.setSelectionRange(p,p)}catch(_){}}});
+document.addEventListener("change",ev=>{const t=ev.target;if(t.dataset.vtprot!=null){const x=VT.it.find(y=>y.id===t.dataset.vtprot);if(x){x.prot=+t.value||0;vtSave();render()}}});
 document.addEventListener("change",ev=>{if(ev.target.dataset.tg){T.tg=ev.target.value;save();render()}});
 document.addEventListener("input",ev=>{if(ev.target.id==="tvq"){T.q=ev.target.value;save();const p=ev.target.selectionStart;render();const i=document.getElementById("tvq");i.focus();try{i.setSelectionRange(p,p)}catch(_){}}});
 })();

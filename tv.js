@@ -22,16 +22,16 @@ function defDay(){const D=Object.keys(ESPN.days).sort(),t=nyDay();if(D.includes(
 /* (38) SCONTRI DIRETTI della lega sotto le partite NBA, come «Dreamers» nella Dynasty TV di Dreamers: le sfide della settimana del giorno scelto,
    (44) punteggio = ufficiale ESPN (settimane finite) o somma dei 14 titolari della formazione ESPN del lunedì, quanti dei 14 hanno già giocato, giorni giocati della settimana e i migliori di ogni squadra.
    Tocca una sfida → duello stile Sleeper della Lega (data-du, gestito in gest.js). */
-function e16Sfide(d){try{const w=weekOf(d<W1?W1:d),M=MATCHUPS[w]||[];if(!M.length)return"";const[a,b]=weekRange(w),WS=weekScores(w),wNow=weekOf(nyToday()<W1?W1:nyToday());
+function e16Sfide(d){try{const w=weekOf(d<W1?W1:d),M=MATCHUPS[w]||[];if(!M.length)return"";const[a,b]=weekRange(w),WS=sfidaScores(w),wNow=weekOf(nyToday()<W1?W1:nyToday());
  const days=Object.keys(ESPN.days).filter(k=>k>=a&&k<=b&&(ESPN.days[k]||[]).length).sort(),done=days.filter(k=>(ESPN.days[k]||[]).every(id=>ESPN.games[id]&&ESPN.games[id][4]==="F")).length;
- const fin=w<wNow||(days.length&&done===days.length),st=fin?"Finale":w>wNow?"Da giocare":"In corso";
+ const fin=w===8?false:w<wNow||(days.length&&done===days.length),st=fin?"Finale":w===8&&w<wNow?"Continua nella 9":w>wNow?"Da giocare":"In corso";
  const card=([A,B])=>{const TA=wkTeam(A,w),TB=wkTeam(B,w),sa=WS.S[A],sb=WS.S[B];
   const pl=T=>T.L.filter(x=>x.on&&x.n>0).length,best=T=>T.L[0]&&T.L[0].n?T.L[0]:null;
-  const side=(id,sc,T,win)=>`<div class="tvt${win?" win":""}"><span class="drtvl" style="--tc:${TCOL[id]}"><span class="badge logo lg-${id}" role="img" aria-label="${e(TM[id].nome)}"></span></span><span class="tvnm"><b>${e(TM[id].nome.split(" ").slice(-1)[0])}</b><small>${WS.off?"punteggio ufficiale ESPN":pl(T)+"/14 hanno giocato"}</small></span><span class="tvsc">${f1(sc)}</span></div>`;
+  const side=(id,sc,T,win)=>`<div class="tvt${win?" win":""}"><span class="drtvl" style="--tc:${TCOL[id]}"><span class="badge logo lg-${id}" role="img" aria-label="${e(TM[id].nome)}"></span></span><span class="tvnm"><b>${e(TM[id].nome.split(" ").slice(-1)[0])}</b><small>${w===9?"totale sett. 8+9":WS.off?"punteggio ufficiale ESPN":pl(T)+"/14 hanno giocato"}</small></span><span class="tvsc">${f1(sc)}</span></div>`;
   const ba=best({L:TA.L.filter(x=>x.on)}),bb=best({L:TB.L.filter(x=>x.on)});
   return `<button class="tvg drtvg" data-du="${A},${B}" data-duw="${w}" aria-label="${e(TM[A].nome)} contro ${e(TM[B].nome)}"><div class="tvteams">${side(A,sa,TA,fin&&sa>sb)}${side(B,sb,TB,fin&&sb>sa)}</div>
   <div class="tvst"><b class="pre">${st}</b><small>${done}/${days.length} giorni · sfida ›</small></div>${ba||bb?`<div class="tvtop"><span>Migliori: ${ba?`<b>${e(last(ba.g[0]))}</b> (${A}) <span class="pdkx ${xc(ba.tot/ba.n)}">${f1(ba.tot)}</span>`:""}${ba&&bb?" · ":""}${bb?`<b>${e(last(bb.g[0]))}</b> (${B}) <span class="pdkx ${xc(bb.tot/bb.n)}">${f1(bb.tot)}</span>`:""}</span></div>`:""}</button>`};
- return `<div class="drtvh"><h2><span class="t"><span>ESPN 16</span></span><em>Settimana ${w} · ${done} su ${days.length} giorni</em></h2></div><div class="tvlist">${M.map(card).join("")}</div>`}catch(_){return""}}
+ return `<div class="drtvh"><h2><span class="t"><span>ESPN 16</span></span><em>Settimana ${w} · ${done} su ${days.length} giorni${is89(w)?" · sfida unica 8–9, si sommano":""}</em></h2></div><div class="tvlist">${M.map(card).join("")}</div>`}catch(_){return""}}
 function vList(){const D=Object.keys(ESPN.days).sort();const d=TVS.d&&ESPN.days[TVS.d]?TVS.d:defDay();TVS.d=d;const i=D.indexOf(d);
  const G=(ESPN.days[d]||[]).map(id=>[id,ESPN.games[id]]).filter(x=>x[1]).sort((a,b)=>a[1][5]<b[1][5]?-1:1);
  const nF=G.filter(x=>x[1][4]==="F").length,nL=G.filter(x=>x[1][4]==="L").length;
