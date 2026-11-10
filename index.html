@@ -117,7 +117,7 @@ const TEAMS=[
  {id:"QUE",nome:"Quebec Ducks",gm:"HC. Ducks",conf:"E",logo:"loghi/que.png"},
  {id:"CHA",nome:"Charlotte Cougars",gm:"Andrea Indovino",conf:"E",logo:"loghi/cha.png"},
  {id:"NYP",nome:"New York pandas",gm:"M. MisterfBio",conf:"E",logo:"loghi/nyp.png"},
- {id:"CAN",nome:"Cancùn Mayans",gm:"F. Montrucchio",conf:"E",logo:"loghi/can.png"},
+ {id:"CAN",nome:"Cancùn Mayans",gm:"Fabio Umberto Montrucchio",conf:"E",logo:"loghi/can.png"},
  {id:"HOU",nome:"Houston Orange Lions",gm:"M. Van den Berg",conf:"W",logo:"loghi/hou.png"},
  {id:"LVA",nome:"Las Vegas Aliens",gm:"Claudio Monga",conf:"W",logo:"loghi/lvg.png"},
  {id:"HON",nome:"Honolulu Monk Seals",gm:"Matteo Pagani",conf:"W",logo:"loghi/hon.png"},
@@ -129,7 +129,7 @@ const TEAMS=[
 ];
 const TM=Object.fromEntries(TEAMS.map(t=>[t.id,t]));
 /* vittorie/sconfitte dagli screenshot ESPN (finché la lega non è collegata). pf/pa = punti fatti/subiti, se noti */
-const REC={DET:{w:2,l:1,pf:0,pa:0},CLE:{w:2,l:1,pf:0,pa:0},BOS:{w:2,l:1,pf:0,pa:0},NYS:{w:1,l:2,pf:0,pa:0},QUE:{w:1,l:2,pf:0,pa:0},CHA:{w:0,l:3,pf:0,pa:0},NYP:{w:0,l:3,pf:0,pa:0}};
+const REC={DET:{w:2,l:1,pf:0,pa:0},CLE:{w:2,l:1,pf:0,pa:0},BOS:{w:2,l:1,pf:0,pa:0},NYS:{w:1,l:2,pf:0,pa:0},QUE:{w:1,l:2,pf:0,pa:0},CHA:{w:0,l:3,pf:0,pa:0},NYP:{w:0,l:3,pf:0,pa:0},CAN:{w:0,l:3,pf:0,pa:0}};
 /* ===== ROSE dagli screenshot ESPN. [nome completo come nei tabellini ESPN, squadra NBA, slot in formazione ESPN, ruoli ESPN]
    slot: PG SG SF PF C G F G/F UTIL = titolari; BE = panchina; IR = infortunati */
 const ROSE={
@@ -139,7 +139,8 @@ const ROSE={
  NYS:[["Tyler Herro","MIL","PG","SG,PG"],["Mikal Bridges","NY","SG","SF,SG"],["Kyle Kuzma","MIL","SF","PF,SF"],["Paul Reed","DET","PF","C,PF"],["Deandre Ayton","WSH","C","C"],["LaMelo Ball","MIN","G","PG"],["Trae Young","WSH","G","PG"],["Carter Bryant","SA","F","SF"],["Will Riley","WSH","F","SF"],["Cameron Johnson","DEN","G/F","SF,PF"],["Devin Booker","PHX","UTIL","PG,SG"],["Andre Drummond","NY","UTIL","C"],["Isaiah Stewart","MEM","UTIL","C,PF"],["Myles Turner","MIL","UTIL","C"],["Anthony Edwards","MIN","BE","SG,SF"],["Joshua Jefferson","BKN","BE","SF,PF"],["Jimmy Butler III","GS","IR","SF,SG"]],
  QUE:[["Tre Jones","CHI","PG","PG"],["Brandon Miller","CHA","SG","SF,SG"],["Jake LaRavia","LAL","SF","PF,SF"],["Obi Toppin","IND","PF","PF"],["Day'Ron Sharpe","BKN","C","C"],["Luguentz Dort","ATL","G","SG,SF"],["Kelly Oubre Jr.","IND","G","SF,SG"],["Santi Aldama","DAL","F","PF,SF"],["Herbert Jones","NO","F","SF,PF"],["Christian Braun","DEN","G/F","SG,SF"],["Mikel Brown Jr.","BKN","UTIL","PG"],["Max Christie","DAL","UTIL","SG"],["Koa Peat","PHX","UTIL","PF"],["Scotty Pippen Jr.","MEM","UTIL","PG,SG"],["Jaren Jackson Jr.","UTAH","BE","C,PF"],["Johnny Furphy","IND","IR","SG"],["Jusuf Nurkic","UTAH","IR","C"]],
  CHA:[["Cade Cunningham","DET","PG","PG"],["Grayson Allen","CHA","SG","SG,PG"],["Lauri Markkanen","UTAH","SF","PF,SF"],["De'Andre Hunter","SAC","PF","SF,PF"],["Nikola Jokic","DEN","C","C"],["Keyonte George","UTAH","G","PG,SG"],["Ajay Mitchell","OKC","G","PG,SG"],["Miles Bridges","PHX","F","SF,PF"],["Aaron Nesmith","IND","F","SF,SG"],["De'Anthony Melton","GS","G/F","PG,SG"],["Rudy Gobert","MIN","UTIL","C"],["GG Jackson","MEM","UTIL","PF"],["Brook Lopez","LAC","UTIL","C"],["CJ McCollum","ATL","UTIL","SG,PG"],["Brandon Ingram","LAC","BE","SF,PF"],["Jaylin Williams","OKC","BE","C,PF"],["Danny Wolf","BKN","BE","PF,C"]],
- NYP:[["Jamal Shead","TOR","PG","PG"],["Desmond Bane","ORL","SG","SG,SF"],["Devin Vassell","SA","SF","SG,SF"],["Jalen Johnson","ATL","PF","PF"],["Wendell Carter Jr.","ORL","C","C"],["Jalen Brunson","NY","G","PG"],["Ryan Rollins","MIL","G","SG,PG"],["DeMar DeRozan","DEN","F","SF,PF"],["Oso Ighodaro","PHX","F","PF"],["Trevon Brazile","DEN","G/F","SF,PF"],["Isaiah Hartenstein","OKC","UTIL","C"],["Naji Marshall","DAL","UTIL","SF,PF"],["Karl-Anthony Towns","NY","UTIL","C"],["Aaron Wiggins","ATL","UTIL","SG,SF"],["Tarris Reed Jr.","SA","BE","C"],["Dylan Cardwell","SAC","IR","C"],["Jalen Williams","OKC","IR","PF,SF"/* da confermare: J. Williams OKC PF,SF (Jalen o Kenrich) */]]
+ NYP:[["Jamal Shead","TOR","PG","PG"],["Desmond Bane","ORL","SG","SG,SF"],["Devin Vassell","SA","SF","SG,SF"],["Jalen Johnson","ATL","PF","PF"],["Wendell Carter Jr.","ORL","C","C"],["Jalen Brunson","NY","G","PG"],["Ryan Rollins","MIL","G","SG,PG"],["DeMar DeRozan","DEN","F","SF,PF"],["Oso Ighodaro","PHX","F","PF"],["Trevon Brazile","DEN","G/F","SF,PF"],["Isaiah Hartenstein","OKC","UTIL","C"],["Naji Marshall","DAL","UTIL","SF,PF"],["Karl-Anthony Towns","NY","UTIL","C"],["Aaron Wiggins","ATL","UTIL","SG,SF"],["Tarris Reed Jr.","SA","BE","C"],["Dylan Cardwell","SAC","IR","C"],["Jalen Williams","OKC","IR","PF,SF"/* da confermare: J. Williams OKC PF,SF (Jalen o Kenrich) */]],
+ CAN:[["Josh Giddey","CHI","PG","PG,SG"],["Tyrese Proctor","CLE","SG","SG"],["Jaylen Wells","MEM","SF","SF,SG"],["Isaiah Jackson","LAC","PF","PF,C"],["Dereck Lively II","DAL","C","C"],["Jared McCain","OKC","G","SG,PG"],["Ja'Kobe Walter","TOR","G","SG"],["Baba Miller","LAC","F","PF"],["Keegan Murray","SAC","F","PF,SF"],["Cason Wallace","OKC","G/F","SG,PG"],["Dominick Barlow","PHI","UTIL","PF,C"],["Noah Clowney","BKN","UTIL","PF"],["Bennett Stirtz","OKC","UTIL","PG"],["Dailyn Swain","CHI","UTIL","SF"],["Paolo Banchero","ORL","IR","PF,SF"],["Shaedon Sharpe","POR","IR","SG,SF"],["Mark Williams","PHX","IR","C"]]
 };
 
 /* ===== PUNTI FANTASY (FFPS), regola della lega. Riga del tabellino (vedi tools/espn.mjs):
