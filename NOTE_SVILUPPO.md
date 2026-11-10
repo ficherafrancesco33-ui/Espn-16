@@ -8,3 +8,5 @@
 - Lega: classifica per conference, scontri diretti (in attesa del calendario ESPN), playoff provvisori con regole Dreamers per conference.
 - Statistiche: tutti i giocatori NBA, FFPS per partita e totali, filtri stagione/7 notti/ultima notte, squadra NBA, minuti.
 - sw.js: prima la rete, cache solo offline; cambiare V a ogni pubblicazione.
+
+(2) 10/11/2026 – Rose delle 16 squadre e record (V-P) inseriti dagli screenshot ESPN (ROSE, REC in index.html). Scheda squadra con titolari/panchina/IR, media FFPS, partite, minuti, ultima partita. Da confermare: J. Williams OKC dei New York pandas (messo Jalen), J. Quaintance dei Santa Rosa.
