@@ -149,3 +149,4 @@
 (84) McGee Cup: quarti corretti con gli accoppiamenti veri (Boston–Alaska, Las Vegas–Cleveland, Houston–Honolulu, Pandas–Pythons).
 (85) Fallon Mavericks: nuovo logo ritagliato (loghi/fal.png, ?v=85 per aggiornare la cache).
 (86) Albuquerque Bluesky: nuovo logo ritagliato (loghi/alb.png, ?v=86).
+(88) Ducks: maglie ufficiali GIORNO = Casa viola, NOTTE = Notte bianca; il tasto maglia vale solo finché resti in quella modalità. Cambio giorno/notte più fluido: un tocco alla volta, niente transizioni CSS durante il cambio, stessa altezza della pagina, dissolvenza più corta.
