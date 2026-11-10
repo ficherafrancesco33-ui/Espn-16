@@ -107,3 +107,5 @@
 (50) 10/11/2026 – Regole contratti spiegate dalla lega: free agent aggiornano la richiesta ogni domenica alle 18 a partire dalla 3ª settimana (stipendi.mjs: prima conta solo il passato); rookie +10% l anno (già nei contratti); giocatori in rosa: contratto fisso, rinnovo con la formula. Scelte del Draft: contratto da rookie previsto (foglio Draft: 10 cr alla 1ª, −0,22 a scelta, arrotondato a 0,5, minimo 4).
 
 (51) 10/11/2026 – Durata dei contratti secondo lo stipendio (regola della lega): 4–9,9 cr solo 1 anno, 10–14,9 cr 1 o 2 anni, da 15 cr da 1 a 3 anni. Mostrata nel profilo (svincolati: «Firma possibile»; in rosa: durata del rinnovo previsto), nelle Scadenze del salary cap e nella nota della pagina Free agent (contratti.js durMax/durTxt, window.e16DurMax).
+
+(52) 10/11/2026 – Rookie (primo anno NBA, presi al Draft o in free agency): contratto da 1 a 5 anni con +10% ogni anno (con gli importi anno per anno) nel profilo degli svincolati rookie, nelle scelte del Draft e nella nota Free agent. Rookie 26/27 = nessuna partita NBA nelle stagioni prima e al massimo 24 anni (il segno rookie del listino è della stagione scorsa).
