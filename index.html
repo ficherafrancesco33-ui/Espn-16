@@ -373,6 +373,37 @@ html.notte .e16mv{background:rgba(20,12,48,.85);color:#fff}
 </style>
 <style>/* (45) maglia FREE AGENT nei risultati della ricerca */.hrfaj svg{width:100%;height:100%;display:block}</style>
 <style>/* (46) live stanotte nel campo: titolare ESPN, settimana */.clwrap .cltit{display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;margin-right:5px;vertical-align:middle}.clwrap .clnone{text-align:center;padding:14px;opacity:.8}.clwk button[data-clw]{min-width:34px}.clwrap .cltgw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}</style>
+<style>/* (47) formazione consigliata */
+.fcbtn{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;width:100%;margin:14px 0 6px;padding:12px 14px;border-radius:16px;border:2px solid #f5b400;background:linear-gradient(135deg,#1e1b4b,#3b0764);color:#fff;text-align:left;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.3)}
+.fcbtn .fci{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:28px;background:rgba(255,255,255,.12)}
+.fcbtn b{display:block;font-family:var(--display);font-style:italic;font-weight:900;font-size:20px;text-transform:uppercase;letter-spacing:.04em;color:#ffd75e}
+.fcbtn small{display:block;font-size:12px;opacity:.85;margin-top:2px}.fcbtn>i{font-style:normal;font-size:28px;color:#ffd75e}
+html:not(.notte) .fcbtn{background:linear-gradient(135deg,#f2701a,#c2410c);border-color:#7c2d12}html:not(.notte) .fcbtn b,html:not(.notte) .fcbtn>i{color:#fff}
+.fchd{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center;margin:6px 0 10px;padding:12px 14px;border-radius:16px;background:linear-gradient(115deg,var(--tc),color-mix(in srgb,var(--tc) 50%,#000));color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+.fchd .badge{width:64px;height:64px;display:block}.fchd small{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;opacity:.85}
+.fchd b{display:block;font-family:var(--display);font-style:italic;font-weight:900;font-size:24px;text-transform:uppercase;line-height:1.05}.fchd em{font-style:normal;font-size:13px;font-weight:700;opacity:.9}
+.fcnav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 10px}.fcnav span{font-family:var(--display);font-style:italic;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.fcnav button{width:42px;height:38px;border-radius:12px;border:1px solid var(--line,#ccc);background:var(--panel,#fff);color:inherit;font-size:20px;font-weight:900}.fcnav button:disabled{opacity:.35}
+.fcteams{flex-wrap:nowrap;overflow-x:auto;margin-bottom:10px}
+.fctot{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 12px}.fctot>div{padding:10px;border-radius:14px;background:var(--panel,#fff6e4);border:1px solid var(--line,#d9b27a);text-align:center}
+.fctot small{display:block;font-size:10.5px;font-weight:700;opacity:.8;line-height:1.2}.fctot b{display:block;font-family:var(--display);font-style:italic;font-weight:900;font-size:26px;margin-top:4px}.fctot b.dim{opacity:.7}.fctot b.su{color:#16a34a}.fctot b.giu{color:#dc2626}
+.fclist{display:grid;gap:8px;margin-bottom:12px}
+.fccard{display:grid;grid-template-columns:38px 44px minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 10px;border-radius:14px;background:var(--panel,#fff6e4);border:1px solid var(--line,#d9b27a);cursor:pointer}
+.fccard.inj{border-color:#ef4444;box-shadow:inset 3px 0 0 #ef4444}
+.fcslot{display:grid;place-items:center;height:30px;border-radius:9px;background:#1e293b;color:#facc15;font-family:var(--display);font-style:italic;font-weight:900;font-size:12px}
+.fcj{width:44px;height:52px;display:block}.fcj svg{width:100%;height:100%;display:block}
+.fcmid{min-width:0}.fcmid b{display:block;font-family:var(--display);font-style:italic;font-weight:800;font-size:16px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fcmid small{display:block;font-size:11.5px;opacity:.8}.fcu{font-style:normal;font-weight:900;color:#16a34a}
+.fcgs{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}.fcg{display:inline-flex;align-items:center;gap:2px;padding:2px 5px;border-radius:7px;font-size:10.5px;font-weight:800;background:rgba(127,127,127,.15)}
+.fcg i{font-style:normal;opacity:.7;margin-right:2px}.fcg.no{text-decoration:line-through;opacity:.5}.fcg b.su{color:#16a34a}.fcg b.giu{color:#dc2626}
+.fcinj{display:inline-block;margin-top:4px;padding:2px 7px;border-radius:7px;font-size:10.5px;font-weight:900;color:#fff;background:#ef4444}.fcinj.q{background:#f59e0b;color:#1f1300}
+.fcpr{text-align:right}.fcp{display:inline-block;min-width:52px;padding:4px 8px;border-radius:10px;font-family:var(--display);font-style:italic;font-weight:900;font-size:19px;color:#fff;text-align:center}
+.fcp.v{background:#8b5cf6}.fcp.g{background:#22c55e}.fcp.y{background:#f5b400;color:#1f1300}.fcp.r{background:#ef4444}.fcpr small{display:block;font-size:10.5px;opacity:.8;font-weight:700}
+.fclist.trib .fccard{opacity:.92}.fcwhy{margin:0 0 12px;padding-left:18px;display:grid;gap:6px;font-size:13.5px;line-height:1.35}
+.fctab{width:100%;border-collapse:collapse;font-size:12.5px}.fctab th,.fctab td{padding:6px 5px;text-align:center;border-bottom:1px solid rgba(127,127,127,.25);white-space:nowrap}.fctab td:first-child,.fctab th:first-child{text-align:left}
+.fctab td small{display:block;font-size:10.5px;opacity:.75}.fctab tr.ex td{opacity:.6}
+html.notte .fccard,html.notte .fctot>div{background:#16123a;border-color:rgba(167,139,250,.3);color:#fff}html.notte .fcnav button{background:#16123a;color:#fff;border-color:rgba(167,139,250,.35)}
+html.notte .fcwhy,html.notte .fctab{color:#e9e5ff}</style>
 </head>
 <body>
 <div id="sbar" aria-hidden="true"></div>
@@ -682,6 +713,7 @@ render();
 <script src="allena.js"></script>
 <script src="campo-assets.js"></script>
 <script src="campo.js"></script>
+<script src="fcons.js"></script>
 <script src="livetick.js"></script>
 <script src="valbanner.js"></script>
 <script src="dax.js"></script>
