@@ -88,5 +88,37 @@ window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P
  <div class="bench dptrib e16tit">${rest.map(g=>{const p=P[g[0]],v=p?p.ff/p.gp:null,w=W[g[0]];return `<button class="bpl" data-pl="${e(g[0])}">${jersey(id,numOf(g[0]),name)}<span class="bnm"><i class="rtr ${RL(g[3])}"></i>${e(g[0])}<small>${({G:"Guardia",F:"Ala",C:"Centro"})[RL(g[3])]} · ${g[1]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${w?` · sett. ${f1(w.f)} (${w.n}P)`:""}</small></span><span class="trlk"></span><span class="bev"><span class="cev ${v!=null?pcls(v):"wait"}">${v!=null?f1(v):"–"}</span></span></button>`}).join("")}</div>
  <h2><span class="t"><span>Tribuna</span></span><em>panchina e IR della formazione ESPN · non contano</em></h2>
  <div class="bench dptrib">${trib.map(g=>{const p=P[g[0]],v=p?p.ff/p.gp:null;return `<button class="bpl" data-pl="${e(g[0])}">${jersey(id,numOf(g[0]),name)}<span class="bnm"><i class="rtr ${RL(g[3])}"></i>${e(g[0])}<small>${g[2]==="IR"?"Infortunato · ":""}${g[1]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${g[2]==="IR"?"":u25(g[0])?" · under 25 ✓":etaOf(g[0])!=null?" · ⚠️ non under 25":""}</small></span><span class="trlk"></span><span class="bev"><span class="cev ${v!=null?pcls(v):"wait"}">${v!=null?f1(v):"–"}</span></span></button>`}).join("")}</div>
+ ${liveBox(id)}
  <p class="note">Sotto ogni maglia: AVG medio della stagione; barra = AVG fatti questa settimana e partite giocate. I numeri di maglia sono indicativi.</p></div>`};
+/* (46) «LIVE STANOTTE» sotto la tribuna, come Dreamers: tabellino di tutti i giocatori della squadra.
+   Notte = la notte scelta (giorni della settimana in corso, data USA), con stato della partita.
+   Turno = la SETTIMANA intera: per ogni giocatore la somma di tutte le sue partite (AVG e statistiche cumulative), con ‹ › per le altre settimane.
+   Titolari della formazione ESPN segnati con il pallino; tocca una riga per il profilo. */
+const CL={m:"notte",d:null,w:null};
+const snm=n=>{const p=String(n).split(" ");return p.length>1?p[0][0]+". "+last(n):n};
+function liveBox(id){const own=new Set((ROSE[id]||[]).map(g=>__ownKey(g[0]))),wCur=weekOf(nyToday()<W1?W1:nyToday());
+ const days=k=>{const[a,b]=weekRange(k);return Object.keys(ESPN.days).filter(d=>d>=a&&d<=b&&(ESPN.days[d]||[]).length).sort()};
+ const rowsDay=d=>{const out=[];for(const gid of ESPN.days[d]||[]){const g=ESPN.games[gid],B=ESPN.box[gid];if(!g||!B)continue;for(const r of B)if(own.has(__ownKey(r[0])))out.push({r,g,gid})}return out};
+ const st=(g)=>g[4]==="F"?"Finale":g[4]==="L"?`<span class="hmlv">LIVE</span> ${e(g[6]||"")}`:"";
+ const mmss=m=>{const x=Math.round(m*60);return Math.floor(x/60)+":"+String(x%60).padStart(2,"0")};
+ const sh=(a,b)=>`${a}-${b}`,pm=v=>`<td class="${v>0?"pos":v<0?"neg":""}">${v>0?"+":""}${v}</td>`;
+ const sCls=v=>v>=50?"v":v>=35?"g":v>=20?"y":"r";
+ const head=`<thead><tr><th>Giocatore</th><th class="pdkl">AVG</th><th>Min</th><th>Pt</th><th>RIM</th><th>AST</th><th>STL</th><th>BLK</th><th>TOV</th><th>Tiri</th><th>Da 3</th><th>Liberi</th><th>Off</th><th>Dif</th><th>Falli</th><th>+/−</th></tr></thead>`;
+ let h="",tit="",nav="";
+ const w=CL.w&&CL.w<=wCur?CL.w:wCur,lineup=(()=>{try{return new Set(((LEGA.line||{})[w]||{})[id].map(n=>__ownKey(n)))}catch(_){return null}})();
+ const dot=n=>lineup&&lineup.has(__ownKey(n))?'<i class="cltit" title="Titolare della formazione ESPN"></i>':"";
+ if(CL.m==="notte"){const D=days(wCur),t=nyToday(),dflt=[...D].reverse().find(d=>d<=t&&(ESPN.days[d]||[]).some(id=>ESPN.box[id]))||D[0],d=CL.d&&D.includes(CL.d)?CL.d:dflt;
+  nav=`<span class="clnt" role="group" aria-label="Scegli la notte">${D.map((k,i)=>`<button data-cln="${k}" aria-pressed="${k===d}">${(ESPN.days[k]||[]).some(x=>ESPN.games[x]&&ESPN.games[x][4]==="L")?'<i class="clnd"></i>':""}N${i+1}<small>${dIt(k)}</small></button>`).join("")}</span>`;
+  const R=d?rowsDay(d).sort((a,b)=>ffps(b.r)-ffps(a.r)):[];tit=d?dIt(d):"";
+  h=R.length?R.map(({r,g})=>{const f=ffps(r),opp=r[1]===g[0]?"@"+g[1]:"vs "+g[0];return `<tr class="clgo" data-pl="${e(r[0])}" role="link" tabindex="0"><td>${dot(r[0])}<span class="plk">${e(snm(r[0]))}</span><small>${r[1]} ${opp} · ${st(g)}</small></td><td class="pdkl"><span class="pdkx ${sCls(f)}">${f1(f)}</span></td><td>${r[3]}</td><td class="pts">${r[4]}</td><td>${r[11]+r[12]}</td><td>${r[13]}</td><td>${r[14]}</td><td>${r[15]}</td><td>${r[16]}</td><td>${sh(r[5],r[6])}</td><td>${sh(r[7],r[8])}</td><td>${sh(r[9],r[10])}</td><td>${r[11]}</td><td>${r[12]}</td><td>${r[17]}</td>${pm(r[21]||0)}</tr>`}).join(""):`<tr><td colspan="16" class="clnone">Nessun giocatore ha giocato in questa notte.</td></tr>`}
+ else{const D=days(w),A={};for(const d of D)for(const {r} of rowsDay(d)){const k=__ownKey(r[0]),o=A[k]||(A[k]={n:r[0],t:r[1],g:0,f:0,s:new Array(22).fill(0)});o.g++;o.f+=ffps(r);for(let j=3;j<22;j++)if(typeof r[j]==="number")o.s[j]+=r[j]}
+  tit=`Settimana ${w}`;const[wa,wb]=weekRange(w);
+  nav=`<span class="clnt clwk" role="group" aria-label="Scegli la settimana"><button data-clw="${w-1}" ${w>1?"":"disabled"} aria-label="Settimana precedente">‹</button><button aria-pressed="true">Sett. ${w}<small>${dIt(wa)}–${dIt(wb)}</small></button><button data-clw="${w+1}" ${w<wCur?"":"disabled"} aria-label="Settimana successiva">›</button></span>`;
+  const L=Object.values(A).sort((a,b)=>b.f-a.f);
+  h=L.length?L.map(o=>{const x=o.s;return `<tr class="clgo" data-pl="${e(o.n)}" role="link" tabindex="0"><td>${dot(o.n)}<span class="plk">${e(snm(o.n))}</span><small>${o.t} · ${o.g}P · media ${f1(o.f/o.g)}</small></td><td class="pdkl"><span class="pdkx ${sCls(o.f/o.g)}">${f1(o.f)}</span></td><td>${x[3]}</td><td class="pts">${x[4]}</td><td>${x[11]+x[12]}</td><td>${x[13]}</td><td>${x[14]}</td><td>${x[15]}</td><td>${x[16]}</td><td>${sh(x[5],x[6])}</td><td>${sh(x[7],x[8])}</td><td>${sh(x[9],x[10])}</td><td>${x[11]}</td><td>${x[12]}</td><td>${x[17]}</td>${pm(x[21])}</tr>`}).join(""):`<tr><td colspan="16" class="clnone">Nessuna partita in questa settimana.</td></tr>`}
+ return `<div class="clwrap"><h2><span class="t"><span>Live stanotte</span></span><em>${tit}</em></h2><div class="cltgw"><span class="cltg" role="group" aria-label="Cosa mostrare"><button data-clm="notte" aria-pressed="${CL.m==="notte"}">Notte</button><button data-clm="turno" aria-pressed="${CL.m==="turno"}">Turno</button></span>${nav}</div>
+ <div class="tbl-wrap"><table class="ptbl tvbox drbox clbox clall">${head}<tbody>${h}</tbody></table></div>
+ <p class="note">${CL.m==="notte"?"Tutte le partite della notte dei giocatori della squadra (data USA).":"Turno = tutta la settimana: AVG e statistiche sommate di tutte le partite del giocatore."} Pallino = titolare della formazione ESPN del lunedì. Tocca un giocatore per il profilo.</p></div>`}
+document.addEventListener("click",ev=>{if(cur!=="campo")return;const b=ev.target.closest("[data-clm],[data-cln],[data-clw]");if(!b||b.disabled)return;const d=b.dataset;
+ if(d.clm){CL.m=d.clm;if(d.clm==="turno")CL.w=null}if(d.cln)CL.d=d.cln;if(d.clw)CL.w=+d.clw;const y=scrollY;render();scrollTo(0,y)});
 })();
