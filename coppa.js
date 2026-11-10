@@ -42,6 +42,21 @@ function card(r,m){if(m[0].startsWith("?")||m[1].startsWith("?")){const row=t=>t
  const s=score(r,m),st=stato(r),fin=st==="fin",wa=fin&&s.a>s.b,wb=fin&&s.b>s.a;
  const row=(t,v,w,l)=>`<div class="cpr${w?" win":""}${l?" lo":""}">${lg(t)}<b>${e(nick(t))}</b><small>${TM[t]&&TM[t].conf==="E"?"Est":"Ovest"}</small><span class="cps">${f1(v)}</span>${w?'<i class="cpok">✓</i>':""}</div>`;
  return `<button class="cpm ${st}" data-cpm="${m[0]},${m[1]},${r.w}" aria-label="${e(nick(m[0]))} contro ${e(nick(m[1]))}">${row(m[0],s.a,wa,fin&&!wa)}${row(m[1],s.b,wb,fin&&!wb)}<span class="cpst">${fin?"Finale":st==="live"?'<span class="hmlv">LIVE</span> In corso':"Da giocare"}${s.off?" · ufficiale":""}</span></button>`}
+/* (83) TABELLONE stile playoff, a specchio come la locandina: quarti ai lati, semifinali, al centro la finale con sopra il trofeo.
+   Ogni casella = logo + punteggio; vincente in oro, perdente spenta; «?» finché la squadra non è decisa. Le semifinali sono sorteggiate:
+   i quarti si dispongono ai lati in base al sorteggio (così le linee portano davvero alla semifinale giusta). */
+function bracket(alive){const qf=COPPA[1],sf=COPPA[2],fi=COPPA[3];
+ const win=(r,m)=>{if(stato(r)!=="fin"||!m||m[0].startsWith("?")||m[1].startsWith("?"))return null;const s=score(r,m);return s.a==null||s.b==null?null:s.a>=s.b?m[0]:m[1]};
+ const slot=(r,m,i)=>{const t=m&&m[i];if(!t||t.startsWith("?"))return`<div class="mcb-s tbd"><i>?</i></div>`;const s=score(r,m),v=i?s.b:s.a,w=win(r,m),st=stato(r);
+  return`<div class="mcb-s${w===t?" w":w?" l":""}${st==="live"?" lv":""}">${lg(t)}<b>${st==="next"?"":f1(v)}</b></div>`};
+ const mt=(r,m,cls)=>`<div class="mcb-m ${cls||""}"${m&&!m[0].startsWith("?")&&!m[1].startsWith("?")?` data-cpm="${m[0]},${m[1]},${r.w}" role="button" tabindex="0"`:""}>${slot(r,m,0)}${slot(r,m,1)}</div>`;
+ let Q=qf.m.slice();if(sf.draw&&sf.m.length===2){const side=m=>{const w=win(qf,m);return sf.m[0].includes(w)?0:1};Q=[...qf.m.filter(m=>side(m)===0),...qf.m.filter(m=>side(m)===1)]}
+ const S=[sf.m[0]||["?","?"],sf.m[1]||["?","?"]],F=fi.m[0]||["?","?"],champ=alive.length===1?alive[0]:win(fi,fi.m[0]);
+ return`<div class="mcb"><div class="mcb-h"><span>Quarti</span><span>Semi</span><span>Finale</span><span>Semi</span><span>Quarti</span></div>
+ <div class="mcb-g"><div class="mcb-c q l">${mt(qf,Q[0])}${mt(qf,Q[1])}</div><div class="mcb-c s l">${mt(sf,S[0])}</div>
+ <div class="mcb-c f"><div class="mcb-tro">${window.mcgeeTrofeo?mcgeeTrofeo("bkt"):""}</div>${champ?`<div class="mcb-ch">${lg(champ)}<b>${e(nick(champ))}</b><small>Campione</small></div>`:""}${mt(fi,F,"fin")}</div>
+ <div class="mcb-c s r">${mt(sf,S[1])}</div><div class="mcb-c q r">${mt(qf,Q[2])}${mt(qf,Q[3])}</div></div>
+ <p class="mcb-n">${sf.draw?"Semifinali sorteggiate a fine quarti.":"Semifinali sorteggiate a fine quarti: per ora i lati sono quelli della locandina."}</p></div>`}
 function vCoppa(){const n=wNow();try{fill()}catch(_){}
  const cur_=COPPA.find(r=>r.w>=n)||COPPA[COPPA.length-1];
  const alive=(()=>{let L=TEAMS.map(t=>t.id);for(const r of COPPA){if(stato(r)!=="fin")break;const W=winners(r);if(W.length)L=W}return L})();
@@ -51,7 +66,7 @@ function vCoppa(){const n=wNow();try{fill()}catch(_){}
   return `<section class="cpsec ${st}"><h3><span>${r.n}</span><em>${r.draw?"sorteggiate · ":""}settimana ${r.w}${st==="live"?" · in corso":st==="fin"?" · chiuso":""}</em></h3>${body}</section>`};
  return `<button class="gback" data-go="home">‹ Home</button>
  <div class="cphero"><img src="img/mcgee.png" alt="McGee Cup"><div><small>Fanta Due Palle · stagione 26/27</small><b>McGEE CUP</b><em>${alive.length===1?"Vincitrice: "+e(TM[alive[0]].nome):cur_.n+" · settimana "+cur_.w}</em></div></div>
- <div class="cptro">${window.mcgeeTrofeo?mcgeeTrofeo("cpt"):""}<div class="cptw">${alive.length===1?`<small>Campione</small>${lg(alive[0])}<b>${e(TM[alive[0]].nome)}</b>`:`<small>In palio</small><b>JaVale McGee Cup</b><em>${alive.length} squadre ancora in corsa</em>`}</div></div>
+ ${bracket(alive)}
  <div class="cpbar">${COPPA.map(r=>`<span class="${stato(r)}"><b>${r.k==="r16"?"8°":r.k==="qf"?"4°":r.k==="sf"?"SF":"F"}</b><small>sett. ${r.w}</small></span>`).join("")}</div>
  ${COPPA.slice().reverse().filter(r=>r.m.length||stato(r)!=="fin").sort((a,b)=>{const o={live:0,next:1,fin:2};return o[stato(a)]-o[stato(b)]||a.w-b.w}).map(sec).join("")}
  <details class="cpreg"><summary>Regolamento della coppa</summary><ul>

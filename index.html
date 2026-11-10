@@ -512,6 +512,26 @@ html.notte .cpwait{background:#140c28;border-color:rgba(167,139,250,.35);color:#
 </style>
 <style>/* (80) trofeo della McGee Cup nella pagina Coppa */.cptro{display:grid;grid-template-columns:130px minmax(0,1fr);align-items:center;gap:12px;margin:0 0 12px;padding:10px 12px;border-radius:16px;background:radial-gradient(120% 120% at 20% 30%,#3b2a0a,#0f0b14 70%);color:#fde68a;box-shadow:0 6px 18px rgba(0,0,0,.3)}.cptro svg{width:130px;height:auto;display:block}.cptw small{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.85}.cptw b{display:block;font:italic 900 24px/1.05 "Barlow Condensed",system-ui,sans-serif;color:#fff3c4;margin:2px 0}.cptw em{font-style:normal;font-size:12.5px;opacity:.9}.cptw .cplg{width:44px;height:44px;margin:4px 0}</style>
 <style>/* (81) McGee Cup: sfide con squadre ancora da definire */.cpr.tbd b{font-style:italic;opacity:.7;text-transform:none;font-weight:700}.cpr.tbd .cplg i{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1px dashed currentColor;font-style:normal;font-weight:900;opacity:.6}div.cpm{cursor:default}</style>
+<style>/* (83) McGee Cup: tabellone a specchio stile playoff con il trofeo sopra la finale */
+.mcb{margin:0 0 14px;padding:12px 6px 10px;border-radius:18px;background:radial-gradient(90% 70% at 50% 30%,#3a2a08 0%,#120c1c 70%);box-shadow:0 8px 22px rgba(0,0,0,.35);color:#fde68a}
+.mcb-h{display:grid;grid-template-columns:1fr 1fr 1.25fr 1fr 1fr;text-align:center;font:italic 800 11px "Barlow Condensed",system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#d6b25a;margin-bottom:6px}
+.mcb-g{display:grid;grid-template-columns:1fr 1fr 1.25fr 1fr 1fr;gap:0 7px;align-items:stretch;min-height:250px}
+.mcb-c{display:flex;flex-direction:column;justify-content:space-around;position:relative}
+.mcb-m{position:relative;display:flex;flex-direction:column;gap:3px;padding:3px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(214,178,90,.35)}
+.mcb-m[data-cpm]{cursor:pointer}
+.mcb-s{display:flex;align-items:center;gap:3px;min-width:0;height:26px;padding:0 3px;border-radius:7px;background:#1b1426}
+.mcb-s .cplg{width:22px;height:22px;flex:none}.mcb-s b{flex:1;min-width:0;text-align:right;font:italic 900 12.5px "Barlow Condensed",system-ui,sans-serif;color:#f3e3b5;white-space:nowrap;overflow:hidden}
+.mcb-s.w{background:linear-gradient(90deg,#8a6312,#e9b949);box-shadow:0 0 8px rgba(245,197,66,.45)}.mcb-s.w b{color:#1a1205}.mcb-s.l{opacity:.42}.mcb-s.lv{box-shadow:inset 0 0 0 1px #f59e0b}
+.mcb-s.tbd{justify-content:center}.mcb-s.tbd i{font-style:normal;font-weight:900;color:#8b7a52}
+/* linee: dai quarti alla semifinale e dalla semifinale alla finale */
+.mcb-c.q.l .mcb-m::after,.mcb-c.q.r .mcb-m::after,.mcb-c.s .mcb-m::after{content:"";position:absolute;top:50%;width:7px;border-top:1.5px solid rgba(214,178,90,.6)}
+.mcb-c.l .mcb-m::after{right:-8px}.mcb-c.r .mcb-m::after{left:-8px}
+.mcb-c.q::before{content:"";position:absolute;top:25%;bottom:25%;border-left:1.5px solid rgba(214,178,90,.6)}.mcb-c.q.l::before{right:-8px}.mcb-c.q.r::before{left:-8px}
+.mcb-c.f{justify-content:center;gap:6px}.mcb-tro{display:flex;justify-content:center}.mcb-tro svg{width:100%;max-width:92px;height:auto;filter:drop-shadow(0 4px 10px rgba(245,197,66,.35))}
+.mcb-m.fin{border:1.5px solid #e9b949;background:rgba(233,185,73,.12);box-shadow:0 0 14px rgba(233,185,73,.25)}
+.mcb-ch{text-align:center;line-height:1}.mcb-ch .cplg{width:30px;height:30px;margin:0 auto}.mcb-ch b{display:block;font:italic 900 14px "Barlow Condensed",system-ui,sans-serif;color:#fff3c4}.mcb-ch small{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#d6b25a}
+.mcb-n{margin:8px 4px 0;text-align:center;font-size:11px;color:#bfa66a}
+html:not(.notte) .mcb{background:radial-gradient(90% 70% at 50% 30%,#4a330a 0%,#1d140a 75%)}</style>
 </head>
 <body>
 <div id="sbar" aria-hidden="true"></div>
