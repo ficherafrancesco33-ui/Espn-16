@@ -64,8 +64,9 @@ const ids = new Set([...Object.keys(CUR), ...Object.keys(PAST["2526"] || {}), ..
 const OLD = existsSync(U("stipendi-data.js")) ? (() => { try { return load("stipendi-data.js", "STIP") } catch (e) { return null } })() : null;
 const p = {}, z = x => x || 0;
 for (const id of ids) {
-  const c = CUR[id], s2 = (PAST["2526"] || {})[id], s3 = (PAST["2425"] || {})[id], s4 = (PAST["2324"] || {})[id];
-  const name = (c || s2 || s3 || s4)[2], J = c ? Math.round(c[0] / c[1] * 100) / 100 : 0, N = c ? Math.max(4, Math.min(82, c[1] / (0.035 * wk))) : 0;
+  /* (50) i free agent aggiornano la richiesta solo dalla 3ª settimana (campione di partite più grande): prima conta solo il passato */
+  const c = wk >= 3 ? CUR[id] : null, s2 = (PAST["2526"] || {})[id], s3 = (PAST["2425"] || {})[id], s4 = (PAST["2324"] || {})[id];
+  const name = (c || CUR[id] || s2 || s3 || s4)[2], J = c ? Math.round(c[0] / c[1] * 100) / 100 : 0, N = c ? Math.max(4, Math.min(82, c[1] / (0.035 * wk))) : 0;
   let age = ageOf(name); if (age == null) continue; /* senza età la formula non si può fare: si salta (eta.mjs le aggiunge) */
   const r = stip(age, z(s4 && s4[0]), z(s3 && s3[0]), z(s2 && s2[0]), J, z(s4 && s4[1]), z(s3 && s3[1]), z(s2 && s2[1]), N);
   const prev = OLD && OLD.p && OLD.p[name] ? (OLD.wk === wk ? OLD.p[name][6] : OLD.p[name][0]) : null;
