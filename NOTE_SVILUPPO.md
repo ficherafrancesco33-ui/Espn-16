@@ -111,3 +111,5 @@
 (52) 10/11/2026 – Rookie (primo anno NBA, presi al Draft o in free agency): contratto da 1 a 5 anni con +10% ogni anno (con gli importi anno per anno) nel profilo degli svincolati rookie, nelle scelte del Draft e nella nota Free agent. Rookie 26/27 = nessuna partita NBA nelle stagioni prima e al massimo 24 anni (il segno rookie del listino è della stagione scorsa).
 
 (53) 10/11/2026 – Statistiche: tasto grande «Free agent» (verde acqua, stessa forma di Giocatori e Squadre) sotto Squadre, apre la pagina Free agent.
+
+(54) 10/11/2026 – Ordinamento toccando le intestazioni (primo tocco decrescente ▼, ritocco crescente ▲): Statistiche › Giocatori (ST.dir), Free agent (Età/AVG/Prezzo, FA.dir; «Più giovani» = età crescente), Valori giocatori (Età/AVG/Valore, T.vs/T.vd) e, in generale, le tabelle complete (Live stanotte del campo, Osservatorio, partite del profilo, tabella della formazione consigliata) con un ordinatore comune in index.html.

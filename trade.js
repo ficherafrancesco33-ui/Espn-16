@@ -89,15 +89,16 @@ const verdict=(va,vb)=>{const d=va-vb,m=Math.max(va,vb)||1,pc=Math.abs(d)/m*100;
 const chips=(sel,attr)=>`<div class="chips">${TEAMS.map(x=>`<button class="chip" ${attr}="${x.id}" aria-pressed="${sel===x.id}"><span class="badge logo lg-${x.id}"></span>${e(nick(x))}</button>`).join("")}</div>`;
 const xc=v=>v>=2000?"v":v>=1200?"g":v>=600?"y":"r";
 /* ---------- VALORI GIOCATORI ---------- */
+document.addEventListener("click",ev=>{const b=ev.target.closest("[data-vls]");if(!b)return;const k=b.dataset.vls;T.vd=(T.vs||"val")===k&&T.vd!=="a"?"a":"d";T.vs=k;render()});
 function vVal(){if(typeof VAL==="undefined")return`<p class="note">Valori non disponibili.</p>`;const q=nk(T.q);
  const own=n=>{try{return OWNH[__ownKey(n)]||""}catch(_){return""}};
  let L=Object.entries(VAL.p).map(([n,r])=>({n,r,o:own(n)}));if(T.vt)L=L.filter(x=>x.o===T.vt);if(q)L=L.filter(x=>nk(x.n).includes(q)||nk(x.r[3])===q);
- L.sort((a,b)=>b.r[0]-a.r[0]);const h=VAL.h||{};
+ /* (54) colonne Età / AVG / Valore toccabili: decrescente ▼, ritocco crescente ▲ */const VK={age:x=>etaOf(x.n)!=null?etaOf(x.n):x.r[2]!=null?x.r[2]:-1,avg:x=>x.r[1],val:x=>x.r[0]}[T.vs||"val"],sg=T.vd==="a"?-1:1;L.sort((a,b)=>sg*(VK(b)-VK(a))||b.r[0]-a.r[0]);const h=VAL.h||{};
  const tr=n=>{const H=h[n]||[];if(H.length<2)return"";const d=H[H.length-1]-H[H.length-2];return d?`<small style="color:${d>0?"#16a34a":"#dc2626"}">${d>0?"▲":"▼"} ${fmt(Math.abs(d))}</small>`:""};
  return `<button class="gback" data-go="home">‹ Home</button><h2><span class="t"><span>Valori giocatori</span></span><em>agg. ${e(VAL.upd)}</em></h2>
  <input id="tvq" class="vtq" type="search" placeholder="🔍 Cerca giocatore o squadra NBA" autocomplete="off" value="${e(T.q)}">
  <div class="chips"><button class="chip" data-vt="" aria-pressed="${!T.vt}">Tutti</button>${TEAMS.map(x=>`<button class="chip" data-vt="${x.id}" aria-pressed="${T.vt===x.id}"><span class="badge logo lg-${x.id}"></span>${e(nick(x))}</button>`).join("")}</div>
- <div class="tbl-wrap"><table class="fatbl"><thead><tr><th>#</th><th>Giocatore</th><th>Età</th><th>AVG</th><th>Valore</th></tr></thead><tbody>
+ <div class="tbl-wrap"><table class="fatbl"><thead><tr><th>#</th><th>Giocatore</th>${[["age","Età"],["avg","AVG"],["val","Valore"]].map(([k,l])=>`<th class="fasrt${(T.vs||"val")===k?" on":""}" data-vls="${k}">${l}${(T.vs||"val")===k?(T.vd==="a"?" ▲":" ▼"):""}</th>`).join("")}</tr></thead><tbody>
  ${L.slice(0,250).map((x,i)=>`<tr class="farow" data-pl="${e(x.n)}"><td class="fark">${i+1}</td><td class="fanm"><b>${e(x.n)}</b><small>${x.o?`<span class="fagl"><span class="faglb logo lg-${x.o}"></span></span>${e(nick(TM[x.o]))} · `:"Svincolato · "}${x.r[3]||""}</small></td><td>${etaOf(x.n)!=null?etaOf(x.n):x.r[2]!=null?Math.floor(x.r[2]):"–"}</td><td>${f1(x.r[1])}</td><td class="fapdk"><span class="pdkx ${xc(x.r[0])}">${fmt(x.r[0])}</span>${tr(x.n)}</td></tr>`).join("")}</tbody></table></div>
  <p class="note">Valore = AVG degli ultimi 2 anni (più peso alla stagione in corso), presenze ed età (i giovani valgono di più). Si aggiorna ogni domenica alle 18; la freccia è la differenza con la settimana prima.</p>`}
 /* ===== CALCOLATORE SCAMBI e IA TRADE: stessa struttura e funzionamento di Dreamers (classi vt*, ia*), valori di questa lega =====

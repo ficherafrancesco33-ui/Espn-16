@@ -79,8 +79,8 @@ let AVGR=false;
 /* ===== GIOCATORI (tabella come Dreamers) ===== */
 function vGioc(){const ok=needOld();
  let L=Object.values(agg(all()));const q=nrm(ST.q);if(q)L=L.filter(p=>nrm(p.n).includes(q)||nrm(p.t)===q||(ownOf(p.n)&&nrm(TM[ownOf(p.n).t].nome).includes(q)));
- const key={ff:p=>p.f/p.gp,gp:p=>p.gp,min:p=>p.m/p.gp,eff:p=>p.m?p.f/p.m:0}[ST.sort]||(p=>p.f/p.gp);L.sort((a,b)=>key(b)-key(a));
- const th=(k,l)=>`<th class="fasrt${ST.sort===k?" on":""}" data-ss="${k}">${l}${ST.sort===k?" ▼":""}</th>`;
+ const key={ff:p=>p.f/p.gp,gp:p=>p.gp,min:p=>p.m/p.gp,eff:p=>p.m?p.f/p.m:0}[ST.sort]||(p=>p.f/p.gp);const sg=ST.dir==="a"?-1:1;L.sort((a,b)=>sg*(key(b)-key(a)));/* (54) tocco sulla colonna: decrescente, ritocco: crescente */
+ const th=(k,l)=>`<th class="fasrt${ST.sort===k?" on":""}" data-ss="${k}">${l}${ST.sort===k?(ST.dir==="a"?" ▲":" ▼"):""}</th>`;
  const row=(p,i)=>{const o=ownOf(p.n),t=o&&TM[o.t],ff=p.f/p.gp,ef=p.m?p.f/p.m:0,rl=o?ROLE(o.ruolo):"";
   return `<tr class="farow${o?" faoth":""}" data-pl="${e(p.n)}"><td class="fark">${i+1}</td><td class="fanm"><b><i class="rtr ${rl?rl[0].replace("A","F"):"F"}"></i>${e(shortN(p.n).replace(". ","."))}</b><small>${t?`<span class="fagl"><span class="faglb logo lg-${t.id}"></span></span>${e(t.nome.split(" ").slice(-1)[0])} · ${rl} · `:"Svincolato · "}${p.t}</small>${ST.box?boxMini(p):""}</td><td>${p.gp}</td><td>${f1(p.m/p.gp)}</td><td class="fapdk"><span class="pdkx ${gvC(ff)}">${f1(ff)}</span></td><td><span class="ev ${evC(ef)}"><i></i>${f2(ef)}</span></td></tr>`};
  return `<button class="gback" data-sv="stat">‹ Statistiche</button><h2><span class="t"><span>Giocatori</span></span><em>${L.length} giocatori</em></h2>
@@ -340,16 +340,16 @@ function vFa(){const ok=needOld(),dax=DAXS(),SZ=dax?[["2627","26/27"],["2526","2
  let L=L0.filter(x=>!ownOf(x[0])).map(x=>{const G=gamesOf(x[0]).filter(y=>y.s===FA.sz),gp=G.length,f=G.reduce((a,y)=>a+y.f,0),m=G.reduce((a,y)=>a+y.m,0);const a=typeof etaOf==="function"?etaOf(x[0]):null;return{n:x[0],t:x[1],pos:x[2],own:x[3],inj:x[4],gp,avg:gp?f/gp:0,min:gp?m/gp:0,pr:LI[nrm(x[0])],age:a,u:a!=null&&a<25}});
  if(FA.u25)L=L.filter(x=>x.u);
  const q=nrm(FA.q);if(q)L=L.filter(x=>nrm(x.n).includes(q)||nrm(x.t)===q);
- const K={avg:x=>x.avg,own:x=>x.own,pr:x=>x.pr==null?-1:x.pr,age:x=>x.age==null?-99:-x.age}[FA.sort];L.sort((a,b)=>K(b)-K(a)||b.avg-a.avg);
+ /* (54) ordinamento: colonne Età / AVG / Prezzo toccabili (decrescente ▼, ritocco crescente ▲); «Più giovani» = età crescente */const K={avg:x=>x.avg,own:x=>x.own,pr:x=>x.pr==null?-1:x.pr,age:x=>x.age==null?-99:x.age}[FA.sort];const sg=FA.dir==="a"?-1:1,nul=x=>FA.sort==="pr"&&x.pr==null||FA.sort==="age"&&x.age==null;L.sort((a,b)=>(nul(a)-nul(b))||sg*(K(b)-K(a))||b.avg-a.avg);
  const inj=v=>/OUT/i.test(v)?`<span class="fainj o">OUT</span>`:/DAY|QUESTION|DOUBT|GTD/i.test(v)?`<span class="fainj q">DTD</span>`:"";
  const row=(x,i)=>`<tr class="farow" data-pl="${e(x.n)}"><td class="fark">${i+1}</td><td class="fanm"><b>${e(shortN(x.n).replace(". ","."))}</b>${inj(x.inj)}<small><img class="fanba" src="loghi/nba/${String(x.t).toLowerCase()}.svg" alt="">${x.t} · ${e(x.pos)} · ${String(x.own).replace(".",",")}% · ${x.gp?x.gp+" part. · "+f1(x.min)+"′":"0 partite"}${x.age!=null?" · "+(etaMesi(x.n)||x.age+" anni"):""}</small></td><td class="faage">${x.age!=null?x.age:"–"}${x.u?`<i class="fau25">U25</i>`:""}</td><td class="fapdk">${x.gp?`<span class="pdkx ${gvC(x.avg)}">${f1(x.avg)}</span>`:"–"}</td><td class="fapr">${x.pr!=null?`${f1(x.pr)}<i class="${lib!=null&&x.pr<=lib?"ok":"no"}">${lib!=null&&x.pr<=lib?"✓":"✕"}</i>`:"–"}</td></tr>`;
  return `<button class="gback" data-go="home">‹ Home</button><h2><span class="t"><span>Free agent</span></span><em>${L.length} liberi · ESPN ${typeof LEGA!=="undefined"?e(LEGA.upd):""}</em></h2>
  <input id="faq" class="vtq" type="search" placeholder="🔍 Cerca un free agent o una squadra NBA" autocomplete="off" value="${e(FA.q)}">
- <div class="chips esqm">${[["avg","AVG"],["own","% posseduto"],["pr","Prezzo"],["age","Più giovani"]].map(([k,l])=>`<button class="chip" data-fas="${k}" aria-pressed="${FA.sort===k}">${l}</button>`).join("")}<button class="chip" data-fau="1" aria-pressed="${FA.u25}">Solo under 25</button>${dax?`<label class="szchip" aria-pressed="true"><select data-fasz="1">${SZ.map(([k,l])=>`<option value="${k}"${k===FA.sz?" selected":""}>Stagione ${l}</option>`).join("")}</select></label>`:""}</div>
+ <div class="chips esqm">${[["avg","AVG"],["own","% posseduto"],["pr","Prezzo"],["age","Più giovani"]].map(([k,l])=>`<button class="chip" data-fas="${k}" aria-pressed="${FA.sort===k&&(k!=="age"||FA.dir==="a")}">${l}</button>`).join("")}<button class="chip" data-fau="1" aria-pressed="${FA.u25}">Solo under 25</button>${dax?`<label class="szchip" aria-pressed="true"><select data-fasz="1">${SZ.map(([k,l])=>`<option value="${k}"${k===FA.sz?" selected":""}>Stagione ${l}</option>`).join("")}</select></label>`:""}</div>
  ${ok?"":`<p class="note">Carico le stagioni passate…</p>`}
- <div class="tbl-wrap"><table class="fatbl e16fa"><thead><tr><th>#</th><th>Giocatore</th><th>Età</th><th>AVG</th><th>Prezzo</th></tr></thead><tbody>${L.slice(0,200).map(row).join("")||`<tr><td colspan="5">Nessun free agent.</td></tr>`}</tbody></table></div>
+ <div class="tbl-wrap"><table class="fatbl e16fa"><thead><tr><th>#</th><th>Giocatore</th>${[["age","Età"],["avg","AVG"],["pr","Prezzo"]].map(([k,l])=>`<th class="fasrt${FA.sort===k?" on":""}" data-fah="${k}">${l}${FA.sort===k?(FA.dir==="a"?" ▲":" ▼"):""}</th>`).join("")}</tr></thead><tbody>${L.slice(0,200).map(row).join("")||`<tr><td colspan="5">Nessun free agent.</td></tr>`}</tbody></table></div>
  <p class="note">Free agent della lega ESPN (aggiornati in automatico). AVG, partite e minuti della stagione ${SZ.find(x=>x[0]===FA.sz)[1]}. Prezzo = stipendio di mercato con la formula della lega, aggiornato ogni domenica. Durata: 4–9,9 cr solo 1 anno, 10–14,9 cr 1 o 2 anni, da 15 cr da 1 a 3 anni; rookie (primo anno, dal Draft o free agency) da 1 a 5 anni con +10% ogni anno (se manca: listino; costo all anno per firmarlo); ✓ = entra nel cap libero dei Ducks (${lib!=null?f1(lib):"–"} cr). U25 = sotto i 25 anni oggi (la lega chiede almeno 3 under 25 per squadra). Tocca un nome per il profilo.</p>`}
-document.addEventListener("click",ev=>{if(cur!=="fag")return;const u=ev.target.closest("[data-fau]");if(u){FA.u25=!FA.u25;render();return}const b=ev.target.closest("[data-fas]");if(!b)return;FA.sort=b.dataset.fas;render()});
+document.addEventListener("click",ev=>{if(cur!=="fag")return;const u=ev.target.closest("[data-fau]");if(u){FA.u25=!FA.u25;render();return}const h=ev.target.closest("[data-fah]");if(h){const k=h.dataset.fah;FA.dir=FA.sort===k&&FA.dir!=="a"?"a":"d";FA.sort=k;render();return}const b=ev.target.closest("[data-fas]");if(!b)return;FA.sort=b.dataset.fas;FA.dir=FA.sort==="age"?"a":"d";render()});
 document.addEventListener("change",ev=>{if(ev.target.dataset&&ev.target.dataset.fasz&&cur==="fag"){FA.sz=ev.target.value;render()}});
 document.addEventListener("input",ev=>{if(ev.target.id!=="faq")return;FA.q=ev.target.value;const p=ev.target.selectionStart;render();const i=document.getElementById("faq");if(i){i.focus();try{i.setSelectionRange(p,p)}catch(_){}}});
 window.STATV={fag:vFa,stat:vHub,sgioc:vGioc,ssq:vSq,ssql:vSqList,gioc:vPl,grafico:vGraf,comp:vComp};
@@ -362,7 +362,7 @@ document.addEventListener("click",ev=>{/* (35) profilo: «Condividi» apre il fo
  if(d.avgr){AVGR=!AVGR;render();return}
  if(d.sv){cur=d.sv;PEROPEN=false;render();scrollTo(0,0);return}
  if(d.pr){[ST.a,ST.b]=d.pr.split("|");save();render();return}
- if(d.ss){ST.sort=d.ss;save();render();return}
+ if(d.ss){ST.dir=ST.sort===d.ss&&ST.dir!=="a"?"a":"d";ST.sort=d.ss;save();render();return}
  if(d.box){ST.box=+d.box;save();render();return}
  if(d.sq){ST.sq=d.sq;save();render();return}
  if(d.per){ST.per=d.per;save();render();return}

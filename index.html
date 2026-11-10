@@ -726,5 +726,15 @@ render();
 <script>render();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
+<script>/* (54) ORDINA LE TABELLE: toccando l intestazione di una colonna (tabelle complete: Live stanotte del campo, Osservatorio, partite del profilo, tabella della formazione consigliata)
+   la lista va in ordine decrescente ▼, ritoccando crescente ▲. Numeri all italiana (30,5), "8-13" = primo numero, "–" in fondo. */
+(function(){const SEL="table.clbox,table.osbox,table.e16log,table.fctab,table.gtab";
+ const num=t=>{t=String(t).trim();if(!t||/^[–—-]$/.test(t))return null;const m=t.replace(/\./g,"").replace(",",".").match(/[-+]?\d+(\.\d+)?/);return m?parseFloat(m[0]):null};
+ document.addEventListener("click",ev=>{const th=ev.target.closest("th");if(!th)return;const tb=th.closest(SEL);if(!tb||!tb.tBodies[0])return;
+  const i=[...th.parentNode.children].indexOf(th);if(i<0)return;const dir=th.dataset.sd==="d"?"a":"d";th.parentNode.querySelectorAll("th").forEach(x=>{delete x.dataset.sd;x.textContent=x.textContent.replace(/ [▲▼]$/,"")});th.dataset.sd=dir;th.textContent+=dir==="d"?" ▼":" ▲";
+  const R=[...tb.tBodies[0].rows].filter(r=>r.cells.length>i);const v=r=>{const c=r.cells[i],n=num(c.innerText);return n==null?c.innerText.trim().toLowerCase():n};
+  R.sort((a,b)=>{const x=v(a),y=v(b);if(typeof x==="string"||typeof y==="string"){if(typeof x!==typeof y)return typeof x==="string"?1:-1;return dir==="d"?y.localeCompare(x):x.localeCompare(y)}return dir==="d"?y-x:x-y});
+  R.forEach(r=>tb.tBodies[0].appendChild(r))},true);
+ const st=document.createElement("style");st.textContent=SEL.split(",").map(s=>s+" th").join(",")+"{cursor:pointer;-webkit-user-select:none;user-select:none}";document.head.appendChild(st)})();</script>
 </body>
 </html>
