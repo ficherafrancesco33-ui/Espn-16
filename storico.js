@@ -4,7 +4,10 @@
    (44) In più, in automatico dalla lega ESPN (lega-data.js): LEGA.trades = giocatori arrivati con uno scambio e ancora in rosa, raggruppati per ora
    (ESPN non mostra in pubblico le scelte scambiate né chi è stato poi ceduto di nuovo); se c è una riga a mano per la stessa data e le stesse squadre vale quella.
    LEGA.mov = firme e tagli di free agent («Movimenti»). Banner in Home per 24 ore dopo ogni scambio, come Dreamers (tocca → Storico trade). */
-const TRADES=[];
+const TRADES=[
+ /* (44) primo scambio da quando è entrato Francesco (foto «ESPN Trade», 09/11/2026; ora dalla lega ESPN) */
+ {data:"09/11/2026",ora:"21:15",titolo:"Scambio",lati:[["HON",["Rui Hachimura"]],["QUE",["Koa Peat","Scelta 2° giro 2027 (via Honolulu)","Scelta 3° giro 2029 (via Mavericks)"]]]}
+];
 (function(){
 const e=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const sur=n=>{const p=String(n).replace(/\s+(Jr\.?|II|III|IV)$/i,"").split(" ");return p.length>1?p.slice(1).join(" "):p[0]};
@@ -20,7 +23,7 @@ const tsOf=x=>{if(x.ts)return x.ts;if(!x.data||!x.ora)return 0;const[d,m,y]=x.da
  const guess=Date.UTC(y,m-1,d,hh,mm),off=(()=>{const f=fromTs(guess);const[d2,m2]=f.data.split("/").map(Number),[h2,mi2]=f.ora.split(":").map(Number);return Date.UTC(y,m2-1,d2,h2,mi2)-guess})();return guess-off};
 /* scambi: righe a mano + automatici da ESPN (stesso giorno e stesse squadre = vale la riga a mano) */
 function allTrades(){const L=TRADES.map(x=>({...x,ts:tsOf(x),auto:0}));
- try{for(const T of (LEGA.trades||[])){const by={};for(const[t,p]of T.l)(by[t]=by[t]||[]).push(p);const f=fromTs(T.d),tms=Object.keys(by).sort().join();
+ try{/* (44) lo storico parte dal primo scambio di Francesco (09/11/2026): quelli prima non si mostrano */for(const T of (LEGA.trades||[]).filter(x=>x.d>=Date.parse("2026-11-09T00:00:00Z"))){const by={};for(const[t,p]of T.l)(by[t]=by[t]||[]).push(p);const f=fromTs(T.d),tms=Object.keys(by).sort().join();
   if(L.some(x=>x.data===f.data&&x.lati.map(l=>l[0]).sort().join().includes(tms)))continue;
   L.push({data:f.data,ora:f.ora,titolo:"Scambio",lati:Object.keys(by).map(t=>[t,by[t]]),ts:T.d,auto:1})}}catch(_){}
  return L.sort((a,b)=>b.ts-a.ts)}
