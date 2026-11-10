@@ -40,3 +40,5 @@
 (16) 10/11/2026 – Campo: in campo i 5 titolari con l AVG medio più alto (centri in alto, ali in mezzo, guardie in basso); gli altri 9 nella lista Titolari.
 
 (17) 10/11/2026 – Binari dei loghi in Home con lo sfondo colore squadra (TCOL) come Dreamers, giorno e notte.
+
+(18) 10/11/2026 – Banner squadra (teamhead): logo grande per tutte le squadre come quello dei Ducks in Dreamers (80px, margini negativi).
