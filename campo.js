@@ -55,7 +55,10 @@ window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P
  /* punteggio della settimana in corso di ogni giocatore (somma AVG e partite) */
  const wNow=weekOf(nyToday()<W1?W1:nyToday()),[wa,wb]=weekRange(wNow),W={};
  for(const d of Object.keys(ESPN.days)){if(d<wa||d>wb)continue;for(const x of rowsOf(d)){const k=x.r[0];(W[k]=W[k]||{f:0,n:0}).f+=x.f;W[k].n++}}
- const five=R0.filter(g=>SLOT5[g[2]]),rest=R0.filter(g=>!SLOT5[g[2]]&&g[2]!=="BE"&&g[2]!=="IR"),trib=R0.filter(g=>g[2]==="BE"||g[2]==="IR");
+ /* (16) in campo i 5 titolari con l AVG medio più alto; posizioni: centri in alto, ali in mezzo, guardie in basso */
+ const avgOf=g=>{const p=P[g[0]];return p?p.ff/p.gp:-1},tit=R0.filter(g=>g[2]!=="BE"&&g[2]!=="IR").sort((a,b)=>avgOf(b)-avgOf(a));
+ const RK={C:0,F:1,G:2},POS=["C","SF","PF","PG","SG"];
+ const five=tit.slice(0,5).sort((a,b)=>RK[RL(a[3])]-RK[RL(b[3])]).map((g,i)=>[g[0],g[1],POS[i],g[3]]),rest=tit.slice(5),trib=R0.filter(g=>g[2]==="BE"||g[2]==="IR");
  const tot=[...five,...rest].reduce((a,g)=>a+(W[g[0]]?W[g[0]].f:0),0),r=REC[id];
  const name=t.nome.split(" ").slice(-1)[0];
  return `<div class="e16campo">
