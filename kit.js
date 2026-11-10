@@ -141,8 +141,10 @@ function nbaDi(t,pl){if(!pl)return null;const R=typeof ROSE!=="undefined"&&ROSE[
    Per aggiungerne una (es. la terza disegnata con l utente) basta un {nome,svg,ico} in fondo a QUE_KITS. */
 /* colore del bordo dell icona del tasto, dal nome della maglia */
 const queTrim=nm=>/^rossa/i.test(nm)?(/viola/i.test(nm)?"#6d28d9":"#ffffff"):/^viola/i.test(nm)?(/rosse/i.test(nm)?"#e11d2e":"#111111"):/viola fuori/i.test(nm)?"#8b3dff":/rosso/i.test(nm)?"#e11d2e":"#ffffff";
-const QUE_KITS=[{nome:"Casa",svg:()=>CAMPO_ART.jersey0,ico:{bg:"#6d28d9",fg:"#ffffff",trim:"#111111"}},{nome:"Notte",svg:()=>CAMPO_ART.jersey1,ico:{bg:"#f8fafc",fg:"#6d28d9",trim:"#111111"}}]
- .concat((window.QUE_ROSSE||[]).map(x=>({nome:x.nome,svg:()=>x.svg,ico:{bg:((x.svg.match(/stop-color="(#[0-9a-fA-F]{6})"/)||[])[1])||"#6d28d9",fg:"#ffffff",trim:queTrim(x.nome)}})));
+/* (61) tolta la vecchia Casa viola col gessato nero (CAMPO_ART.jersey0): la Casa ora è la «Viola · lettere nere» col gessato bianco (tolta dalle maglie in più) */
+const QUE_CASA=(window.QUE_ROSSE||[]).find(x=>x.nome==="Viola · lettere nere");
+const QUE_KITS=[{nome:"Casa",svg:()=>QUE_CASA?QUE_CASA.svg:CAMPO_ART.jersey0,ico:{bg:"#7c3aed",fg:"#ffffff",trim:"#111111"}},{nome:"Notte",svg:()=>CAMPO_ART.jersey1,ico:{bg:"#f8fafc",fg:"#6d28d9",trim:"#111111"}}]
+ .concat((window.QUE_ROSSE||[]).filter(x=>x!==QUE_CASA).map(x=>({nome:x.nome,svg:()=>x.svg,ico:{bg:((x.svg.match(/stop-color="(#[0-9a-fA-F]{6})"/)||[])[1])||"#6d28d9",fg:"#ffffff",trim:queTrim(x.nome)}})));
 window.QUE_KITS=QUE_KITS;
 const queCod=i=>i<2?i:i+8,queIdx=k=>k<2?k:k>=10?k-8:-1;
 const kitLista=t=>t==="FA"?[0]:t==="QUE"?QUE_KITS.map((_,i)=>queCod(i)).concat([3,4]):[0,1,2,3,4];

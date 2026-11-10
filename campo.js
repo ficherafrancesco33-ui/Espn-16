@@ -27,7 +27,7 @@ const COL={DET:{bg:"#1d3fa0",fg:"#ffffff",trim:"#dc2626",fr:"#0b1a45",w1:"#ae592
 window.E16COL=COL;/* (57) colori delle maglie anche per kit.js */
 let JID=0;
 /* maglia (stessa sagoma e luci delle maglie Dreamers). (57) con kit.js caricato disegna la maglia scelta col tasto maglia (Casa/Notte/Alternativa/NBA 2026/Anni 90); pl = giocatore, serve per le maglie NBA */
-function jersey(t,num,nick,pl){if(window.E16KIT)return E16KIT.jersey(t,num,nick,pl);if(t==="QUE")return CAMPO_ART["jersey"+(E16N?1:0)].replace(/__NUM__/g,num==null?"":String(num));
+function jersey(t,num,nick,pl){if(window.E16KIT)return E16KIT.jersey(t,num,nick,pl);if(t==="QUE")/* (61) senza kit.js: vecchia maglia di riserva */return CAMPO_ART["jersey"+(E16N?1:0)].replace(/__NUM__/g,num==null?"":String(num));
  const c=COL[t]||COL.FAL,k="e"+(JID++),n=num==null?"":String(num),fs=n.length>1?38:44;
  const lum=h=>{const x=parseInt(h.slice(1),16);return(0.299*(x>>16)+0.587*((x>>8)&255)+0.114*(x&255))/255};const ol=lum(c.fg)<0.45?"#ffffff":"#0a0f1f";
  const word=String(nick).toUpperCase(),L=word.length,wfs=L<=6?17:L<=9?15:L<=12?13:11,wlen=Math.min(74,Math.round(L*wfs*.62));

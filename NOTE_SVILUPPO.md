@@ -124,3 +124,4 @@
 (58) La scelta dei Mavericks avuta dai Ducks (scambio con Honolulu) è la 3ª 2028, non la 2029: tolta ai Mavericks, la loro 3ª 2029 torna a loro.
 (59) L app parte sempre in modalità notte; il giorno si accende con l interruttore e resta finché l app è aperta (sessionStorage e16_tema, non più localStorage e16_notte).
 (60) Ducks: tolte 4 maglie (Rossa tricolore viola, Viola lettere rosse, Nera viola fuori/rosso dentro, Nera rosso fuori/viola dentro). Tasto maglia più staccato dal bordo e nel colore della squadra (schiarito se scuro; Ducks viola acceso), anche di giorno.
+(61) Ducks: tolta la vecchia Casa viola col gessato nero; la Casa ora è la Viola lettere nere col gessato bianco.
