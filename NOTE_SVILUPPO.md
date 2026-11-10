@@ -148,3 +148,4 @@
 (83) McGee Cup: tabellone a specchio stile playoff (quarti ai lati, semifinali, finale al centro con sopra il trofeo); vincente in oro, perdente spenta, «?» finché non è decisa; tocca una sfida per il tabellino. Classi .mcb* (non .bk, che è il tasto indietro di nav.js).
 (84) McGee Cup: quarti corretti con gli accoppiamenti veri (Boston–Alaska, Las Vegas–Cleveland, Houston–Honolulu, Pandas–Pythons).
 (85) Fallon Mavericks: nuovo logo ritagliato (loghi/fal.png, ?v=85 per aggiornare la cache).
+(86) Albuquerque Bluesky: nuovo logo ritagliato (loghi/alb.png, ?v=86).
