@@ -56,3 +56,5 @@
 (24) 10/11/2026 – Lega come Dreamers: toccando una sfida si apre il duello (dutop, striscia altre sfide, punteggi, proiezione, % vittoria, giocatori affiancati 1-17 con caselle partita). Regola ESPN 16: ogni giocatore porta la SOMMA dell AVG di tutte le sue partite della settimana; formazione automatica = migliori 14 dei 17 (wkTeam in index.html); niente panchina a metà, niente capitano, niente cap. weekScores (dalla settimana 4) = somma dei migliori 14. Settimane 1-3: in alto il punteggio ufficiale ESPN. Navigazione indietro sul duello (nav.js), live ridisegna anche la Lega.
 
 (25) 10/11/2026 – Home notte: i loghi dei binari tornano senza sfondo colore squadra (sfondo del pannello come Dreamers); di giorno resta lo sfondo colore squadra.
+
+(26) 10/11/2026 – Sfide → duello stile Sleeper ovunque: Home (pagina Settimana sfide e banner) e Lega aprono il duello (data-du/data-duw, gestito in gest.js). Campo: tabellone come Dreamers (h2.lbmh) sopra il campo con loghi, punteggi migliori 14, partite giocate/totali (sotto senza IR); toccandolo si apre il duello, le frecce cambiano settimana (CW in campo.js).

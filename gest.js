@@ -119,7 +119,8 @@ window.GESTV={lega:vLega,roster:vRoster,inf:vInf,reg:vReg};
 window.e16Roster=t=>{G.rt=t;save()};window.e16RT=()=>G.rt;
 (window.NAVX=window.NAVX||[]).push({k:"g",get:()=>({tab:G.tab,rt:G.rt,it:G.it,wk:G.wk,du:G.du}),set:o=>Object.assign(G,o)});
 document.addEventListener("click",ev=>{const c=ev.target.closest("[data-lg2],[data-lgw],[data-rt],[data-it],[data-du],[data-duk]");if(!c)return;const d=c.dataset;
- if(d.du){ev.stopPropagation();if(d.du==="close")G.du=null;else{G.du=d.du.split(",");G.tab="turno"}render();scrollTo(0,0);setTimeout(()=>{const o=document.querySelector(".dumini.on"),st=o&&o.parentElement;if(st)st.scrollLeft=o.offsetLeft-(st.clientWidth-o.offsetWidth)/2},30);return}
+ /* (26) sfida toccata da qualunque pagina (Lega, Home, banner, tabellone del campo) → duello stile Sleeper */
+ if(d.du){ev.stopPropagation();if(d.du==="close")G.du=null;else{G.du=d.du.split(",");G.tab="turno";if(d.duw)G.wk=+d.duw;cur="lega";curTeam=null}render();scrollTo(0,0);setTimeout(()=>{const o=document.querySelector(".dumini.on"),st=o&&o.parentElement;if(st)st.scrollLeft=o.offsetLeft-(st.clientWidth-o.offsetWidth)/2},30);return}
  if(d.duk){const wNow=weekOf(nyToday()<W1?W1:nyToday()),w=(G.wk||wNow)+ +d.duk,m=(MATCHUPS[w]||[]).find(x=>x.includes(G.du[0]));if(!m)return;G.wk=w;G.du=m[0]===G.du[0]?m:[m[1],m[0]];render();return}
  if(d.lgw){G.wk=+d.lgw;G.du=null;if(d.lg2)G.tab=d.lg2;save();render();return}
  if(d.lg2){G.tab=d.lg2;G.du=null;save();render();return}

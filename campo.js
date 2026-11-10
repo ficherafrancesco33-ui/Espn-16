@@ -52,9 +52,20 @@ function card(t,g,P,W){const p=P[g[0]],avg=p?p.ff/p.gp:null,w=W[g[0]];
 window.e16Jersey=(t,n,nk)=>jersey(t,n,nk);window.e16Num=n=>numOf(n);
 let NUMS=null;function numOf(n){if(!NUMS){NUMS={};/* numero di maglia NBA: dalle rose ESPN non lo abbiamo; si usa un numero stabile dal nome */}
  if(NUMS[n]!=null)return NUMS[n];let h=0;for(const ch of n)h=(h*31+ch.charCodeAt(0))%97;return NUMS[n]=h%55}
+/* (26) TABELLONE sopra il campo, come Dreamers (h2.lbmh): sfida della settimana con loghi, punteggi (migliori 14) e partite giocate/totali.
+   Toccandolo si apre il duello stile Sleeper della Lega; le frecce cambiano settimana (campo e tabellone). */
+let CW=null;
+function lbm(id,w,wCur){const m=(MATCHUPS[w]||[]).find(x=>x.includes(id));if(!m)return"";const o=m[0]===id?m[1]:m[0],WS=weekScores(w);
+ /* sopra: partite giocate / totali dei migliori 14; sotto: senza gli infortunati (slot IR), come Dreamers */
+ const gp=t=>{const T=wkTeam(t,w),L=T.L.slice(0,14),c=A=>A.reduce((s,x)=>s+x.G.filter(y=>!y.up).length,0)+"/"+A.reduce((s,x)=>s+x.G.length,0);return[c(L),c(L.filter(x=>x.g[2]!=="IR"))]};
+ const[a1,a2]=gp(id),[b1,b2]=gp(o),sa=WS.S[id],sb=WS.S[o],live=w===wCur;
+ const svgL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',svgR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+ const has=k=>(MATCHUPS[k]||[]).some(x=>x.includes(id));
+ return `<h2 class="lbmh"><span></span><span class="lbmw"><button class="lbma" type="button" data-cwk="${w-1}" aria-label="Settimana precedente" ${has(w-1)?"":"disabled"}>${svgL}</button><span class="lbm${live?" run":""} pqw" style="--sc:color-mix(in srgb,${TCOL[id]} 62%,#fff)" data-du="${m[0]},${m[1]}" data-duw="${w}" role="button" tabindex="0" aria-label="${e(TM[id].nome)} ${f1(sa)} contro ${e(TM[o].nome)} ${f1(sb)}"><span class="lbml"><span class="badge logo lg-${id}"></span></span><span class="lbmg" title="Sopra: partite giocate sul totale (migliori 14). Sotto: senza gli infortunati"><i>${a1}</i><b>${a2}</b></span><span class="lbmn${sa>=sb?"":" dim"}">${f1(sa)}</span><span class="lbmx"></span><span class="lbmn${sb>sa?"":" dim"}">${f1(sb)}</span><span class="lbmg"><i>${b1}</i><b>${b2}</b></span><span class="lbml"><span class="badge logo lg-${o}"></span></span></span><button class="lbma" type="button" data-cwk="${w+1}" aria-label="Settimana successiva" ${w<wCur&&has(w+1)?"":"disabled"}>${svgR}</button></span><span></span></h2>`}
+document.addEventListener("click",ev=>{const b=ev.target.closest("[data-cwk]");if(!b||b.disabled)return;ev.stopPropagation();CW=+b.dataset.cwk;render()},true);
 window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P=pstats();
  /* punteggio della settimana in corso di ogni giocatore (somma AVG e partite) */
- const wNow=weekOf(nyToday()<W1?W1:nyToday()),[wa,wb]=weekRange(wNow),W={};
+ const wCur=weekOf(nyToday()<W1?W1:nyToday()),wNow=CW&&CW<=wCur?CW:wCur,[wa,wb]=weekRange(wNow),W={};
  for(const d of Object.keys(ESPN.days)){if(d<wa||d>wb)continue;for(const x of rowsOf(d)){const k=x.r[0];(W[k]=W[k]||{f:0,n:0}).f+=x.f;W[k].n++}}
  /* (16) in campo i 5 titolari con l AVG medio più alto; posizioni: centri in alto, ali in mezzo, guardie in basso */
  const avgOf=g=>{const p=P[g[0]];return p?p.ff/p.gp:-1},tit=R0.filter(g=>g[2]!=="BE"&&g[2]!=="IR").sort((a,b)=>avgOf(b)-avgOf(a));
@@ -68,6 +79,7 @@ window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P
   return `<div class="cassa clink" data-team="${id}" data-tab="cap"><div class="csal"><small>Salary cap</small><b>${f1(lib)}<i>liberi</i></b><em>Cap ${CAP_TOT}</em></div>
   <div class="ctab"><span></span><span>26/27</span><span>27/28</span><span class="rl p">Occupato</span><b>${f1(occ[0]||0)}</b><b>${f1(occ[1]||0)}</b><span class="rl n">Tagli</span><b class="${C.tagli?"n":"z"}">${C.tagli?f1(C.tagli):"—"}</b><b class="z">—</b></div>
   <div class="cgo">Contratti e scelte ›</div></div>`})()}
+  ${lbm(id,wNow,wCur)}
   <div class="court" style="--tc:${TCOL[id]};border-left:0;border-right:0;border-top:4px solid ${id==="QUE"?(E16N?"#5b21b6":"#ffffff"):(COL[id]||COL.FAL).fr}!important;margin-top:10px">${court(t)}
  ${five.map(g=>{const[x,y]=SLOT5[g[2]];return `<button class="cpl dr" data-ist="${g[2]==="IR"?"out":"ok"}" data-pl="${e(g[0])}" style="left:${x}%;top:${y}%;--k:1">${card(t,g,P,W)}</button>`}).join("")}</div>
  <h2><span class="t"><span>Titolari</span></span><em>altri ${rest.length} · 100% AVG</em></h2>
