@@ -40,7 +40,7 @@ function vLega(){
   const tm=(t,i)=>t?`<div class="bkt tint" style="--tc:${TCOL[t.id]}"><i>${i}</i><span class="bklg" style="--tc:${TCOL[t.id]}"><span class="badge logo lg-${t.id}"></span></span><b>${e(nick(t))}</b><em>${t.w}-${t.l}</em></div>`:tbd("—");
   const box=(lab,x,y)=>`<div class="bkm"><span class="bklab">${lab}</span>${x}${y}</div>`;
   const rnd=(t,d,h)=>`<section class="pob a"><div class="pobh"><span><b>${t}</b><small>${d}</small></span></div><div class="e16po">${h}</div></section>`;
-  const D={pi:"8 – 14 febbraio · periodo 17, una settimana",sf:"15 febbraio – 7 marzo · periodi 18–19, punti sommati",cf:"8 – 21 marzo · periodi 20–21, punti sommati",fi:"dal 22 marzo · periodi 22–23, punti sommati"};
+  const D={pi:"8 – 14 febbraio · periodo 17, una settimana",sf:"15 febbraio – 7 marzo · periodi 18–19, punti sommati",cf:"8 – 21 marzo · periodi 20–21, punti sommati",fi:"22 marzo – 4 aprile · periodi 22–23, punti sommati"/* (58) date dalle foto ESPN e da mSettings: finale = 4º turno, 2 settimane */};
   const conf=c=>{const L=standings(c),nm=c==="E"?"East":"West";
    return `<h4 class="drplh drplsh">${c==="E"?"Eastern":"Western"} Conference<span></span></h4>
    <div class="po56seed">${L.slice(0,5).map((t,i)=>`<span class="${i<3?"q":"pi"}"><i>${i+1}</i>${e(nick(t))} <em>${t.w}-${t.l}</em></span>`).join("")}</div>
