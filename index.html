@@ -608,10 +608,22 @@ html.notte .st-tm{background:#18102e;color:#fff;border-color:rgba(167,139,250,.2
 .st-tab .p1{background:rgba(233,185,73,.16)}
 @media (max-width:370px){.st-champ{grid-template-columns:84px minmax(0,1fr);gap:9px}.st-ctro svg{width:84px}.st-yr{font-size:32px}.st-cy{grid-template-columns:66px minmax(0,1fr)}.st-cyh b{font-size:18px}.st-tab li{grid-template-columns:26px 28px minmax(0,1fr) auto 34px;gap:6px}.st-hero{grid-template-columns:74px minmax(0,1fr)}.st-htro svg{width:74px}.st-ht b{font-size:30px}.st-cw{grid-template-columns:40px 20px 28px minmax(0,1fr);gap:5px}}
 </style>
+<style>/* (94) fondo pagina: resoconto dei dati salvati da GitHub */.foot .ftrep{all:unset;cursor:pointer;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit}.foot .ftbox{margin:10px auto 0;max-width:520px;text-align:left;font:500 12.5px/1.45 system-ui,sans-serif;letter-spacing:0;text-transform:none;font-style:normal;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.25)}.foot .ftbox p{margin:3px 0}.foot .ftbox .ok{color:#4ade80}.foot .ftbox .ko{color:#fbbf24}.foot .ftbox .ftn{opacity:.75;font-size:11.5px;margin-top:6px}</style>
 </head>
 <body>
 <div id="sbar" aria-hidden="true"></div>
 <script>/* (6) tema come Dreamers: giorno = html.dlt-parquet, notte = html.notte + body.notte; variabili colore sull html come in Dreamers */
+/* (94) resoconto dei dati salvati nell app da GitHub (come il report del fondo pagina di Dreamers) */
+function ftReport(){const r=[],ok=t=>`<b class="ok">✓</b> ${t}`,ko=t=>`<b class="ko">⚠</b> ${t}`;try{
+ const nB=Object.keys(ESPN.box||{}).length,nG=Object.keys(ESPN.games||{}).length;r.push(ok(`Tabellini NBA: ${nB} partite salvate su ${nG} in calendario · ${ESPN.upd}`));
+ if(typeof LEGA!=="undefined"){const nT=Object.keys(LEGA.rose||{}).length;r.push((nT===TEAMS.length?ok:ko)(`Lega ESPN: rose di ${nT} squadre su ${TEAMS.length} · ${LEGA.upd}`));
+  const wN=weekOf(nyToday()<W1?W1:nyToday()),L=LEGA.line&&LEGA.line[wN];const nL=L?Object.keys(L).length:0;r.push((nL===TEAMS.length?ok:ko)(`Formazioni del lunedì, settimana ${wN}: ${nL} su ${TEAMS.length}`));
+  const lv=LEGA.live&&LEGA.live[wN];r.push(lv?ok(`Punteggi ESPN della settimana ${wN} salvati alle ${new Date(LEGA.liveTs).toLocaleTimeString("it-IT",{timeZone:"Europe/Rome",hour:"2-digit",minute:"2-digit"})}`):ko(`Punteggi ESPN della settimana ${wN} non ancora salvati`));
+  const ch=Object.keys(LEGA.score||{}).length;r.push(ok(`Settimane chiuse con risultato ufficiale ESPN: ${ch}`))}
+ if(typeof INFLIVE!=="undefined")r.push(ok(`Infortuni: ${INFLIVE.l.length} giocatori · salvati il ${INFLIVE.upd} (GitHub ogni 5 minuti; il telefono rilegge ESPN ogni 4)`));else r.push(ko("Infortuni: file dell app non trovato"));
+ }catch(_){r.push(ko("Resoconto non disponibile"))}
+ return`<div class="ftbox">${r.map(x=>`<p>${x}</p>`).join("")}<p class="ftn">Questi dati sono salvati nell app da GitHub (non sul telefono): tutti vedono gli stessi. Durante le partite il telefono aggiunge il live.</p></div>`}
+document.addEventListener("click",e=>{if(e.target.closest("[data-ftrep]")){window.__ftOpen=!window.__ftOpen;const y=scrollY;render();scrollTo(0,y)}});
 function e16Tema(nt){const H=document.documentElement,B=document.body;
  const C="--duchrl:#7c3aed;--sepw:1px;--sepc:#0b0b12;--bxc:#e8631a;--bxbc:#e8631a;--bxg:#22a34a;--bxr:#e02424;--bxn:#ffffff;--sj:1;--sn:1;--st:1;--sp:1;--sov:-10;--hh:112px;";
  const D="--fg:#2b1608;--bg:#c88a4c;--panel:#fff6e4;--panel2:#f6e2bd;--line:#d9b27a;--muted:#7a5632;--glow:#e9b878;--hd1:#e85a0c;--hd2:#c2410c;--red:#e85a0c;--red2:#c2410c;--gold:#b45309;--onred:#ffffff;--pn1:#fff6e4;--pn2:#f6e2bd;";
@@ -717,7 +729,8 @@ function render(){
  document.body.dataset.ct=cur==="campo"&&window.e16RT&&e16RT()==="QUE"?"DUC":(window.e16RT?e16RT():"");
  document.body.dataset.v=curTeam?"squadra":({stat:"efficienza",sgioc:"fa",gioc:"grafico",comp:"compar",ssq:"effsquadra",lega:"dreamers",inf:"infortuni",reg:"regolamento"})[cur]||cur;
  e16Tema(E16N);
- document.getElementById("foot").textContent=typeof ESPN!=="undefined"?"ULTIMO AGGIORNAMENTO ESPN: "+ESPN.upd:"";
+ /* (94) in fondo: quando GitHub ha salvato nell app i dati ufficiali ESPN; toccando si apre il resoconto (tabellini, lega, punteggi, infortuni) */
+ {const f=document.getElementById("foot");if(f){f.innerHTML=typeof ESPN!=="undefined"?`<button type="button" class="ftrep" data-ftrep="1">Dati ufficiali ESPN · salvati da GitHub il ${ESPN.upd} ›</button>${window.__ftOpen?ftReport():""}`:""}}
  const m=document.getElementById("main");
  /* (6) le pagine proprie di ESPN 16 (squadra, lega, cap) stanno dentro .e16: le loro regole non toccano le classi Dreamers */
  m.innerHTML='<div class="view">'+(curTeam?'<div class="e16">'+vTeam(curTeam)+'</div>':window.STATV&&STATV[cur]?STATV[cur]():cur==="campo"&&window.vCampo?`<div class="chips">${TEAMS.map(x=>`<button class="chip" data-team="${x.id}" aria-pressed="${x.id===e16RT()}"><span class="badge logo lg-${x.id}"></span>${esc(x.nome.split(" ").slice(-1)[0])}</button>`).join("")}</div>`+vCampo(e16RT()):window.GESTV&&GESTV[cur]?GESTV[cur]():window.SCAMBIV&&SCAMBIV[cur]?SCAMBIV[cur]():window.TRADEV&&TRADEV[cur]?TRADEV[cur]():cur==="tv"?vTv():cur==="cap"?'<div class="e16">'+vCapAll()+'</div>':vHome())+'</div>';
