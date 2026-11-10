@@ -2755,3 +2755,18 @@ b,.drroom[data-th="3"] .drr.w em,.drroom[data-th="3"] .drms .drr.slead em,.drroo
 .drroom[data-th="3"] .drlogo{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;color:#fff!important;-webkit-text-stroke:0;text-shadow:0 3px 0 #b8470a,0 0 14px rgba(217,86,11,.6)!important;filter:none!important}
 .drroom[data-th="3"] .drexit{background:#fff!important;color:#d9560b!important;border:2px solid #d9560b!important;box-shadow:0 3px 10px rgba(120,60,10,.25)!important}
 html.dreamfs:has(.drroom[data-th="3"]),html.dreamfs:has(.drroom[data-th="3"]) body{background:repeating-linear-gradient(90deg,#c88a4c 0 26px,#be8043 26px 52px)!important;background-color:#c88a4c!important}
+
+/* (40) elenco squadre di Statistiche (Dreamers .sqpk) */
+.sqpklist{display:flex;flex-direction:column;gap:8px}
+.sqpk{display:flex;align-items:center;height:70px;border-radius:14px;overflow:hidden;background:#101a30;box-shadow:0 4px 12px rgba(0,0,0,.35);cursor:pointer;transition:transform .12s;-webkit-tap-highlight-color:transparent}
+.sqpk:active{transform:scale(.985)}
+.sqpkw{width:96px;align-self:stretch;flex:none;background:linear-gradient(135deg,var(--tc),color-mix(in srgb,var(--tc) 55%,#000));display:flex;align-items:center;justify-content:center;clip-path:polygon(0 0,100% 0,82% 100%,0 100%)}
+.sqpkw .badge{width:56px;height:56px}
+.sqpkn{padding-left:6px;flex:1}
+.sqpkn b{display:block;font:800 italic 22px var(--display);letter-spacing:.06em;text-transform:uppercase;color:#fff}
+.sqpkn small{display:block;color:#8fa3c8;letter-spacing:.14em;text-transform:uppercase;font-size:11px}
+.sqpk i{margin-right:16px;color:var(--muted);font-style:normal;font-size:26px;font-weight:900}
+html.dlt-parquet main .sqpk{background:rgba(255,255,255,.88);box-shadow:0 3px 10px rgba(120,60,10,.25)}
+html.dlt-parquet main .sqpkn b,html.dlt-parquet main .sqpk i{color:var(--pq-ac,#d9560b)!important}
+html.dlt-parquet main .sqpkn small{color:var(--pq-ac,#d9560b)!important;opacity:.8}
+html.dlt-parquet:not(.notte) body .sqpk:not(#z){background:#fdf3e1!important;border:1px solid rgba(217,86,11,.25)!important}

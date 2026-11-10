@@ -83,3 +83,5 @@
 (38) 10/11/2026 – Dynasty TV: sotto le partite NBA le nostre sfide della settimana del giorno scelto (e16Sfide in tv.js, card drtvg come «Dreamers» nella TV di Dreamers): punteggio migliori 14 (sett. 1-3 ufficiale), quanti dei 14 hanno giocato, giorni giocati, migliori di ogni squadra; tocca → duello.
 
 (39) 10/11/2026 – Lega di giorno con il parquet: regole .drroom[data-th="3"] di Dreamers (stile Parquet della stanza, che in Dreamers si attiva a schermo intero) aggiunte a skin-giorno.css; di notte resta il viola.
+
+(40) 10/11/2026 – Statistiche › Squadre: prima l elenco delle 16 squadre con logo e colori (vSqList, STATV.ssql, classi sqpk di Dreamers), poi la pagina della squadra scelta (ssq) dove si cambia squadra con i chip; indietro torna all elenco.

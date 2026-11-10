@@ -2502,3 +2502,14 @@ select.atnote { appearance: auto; }
 /* (35) correzioni a mano: la scelta della stagione e la pagella come in Dreamers (regole riprese dal sorgente: l estrazione perdeva le scorciatoie di background) */
 .gszn select{flex:1;max-width:260px;appearance:none;-webkit-appearance:none;background:linear-gradient(180deg,var(--panel2),var(--panel)) padding-box;color:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);font-family:var(--display);font-style:italic;font-weight:800;font-size:17px;letter-spacing:.06em;text-transform:uppercase;padding:8px 34px 8px 12px;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 12px) 55%;background-size:6px 6px,6px 6px;background-repeat:no-repeat}
 .pgbox{--muted:#94a3b8;background:#141c33!important;color:#e2e8f0}
+
+/* (40) elenco squadre di Statistiche (Dreamers .sqpk) */
+.sqpklist{display:flex;flex-direction:column;gap:8px}
+.sqpk{display:flex;align-items:center;height:70px;border-radius:14px;overflow:hidden;background:#101a30;box-shadow:0 4px 12px rgba(0,0,0,.35);cursor:pointer;transition:transform .12s;-webkit-tap-highlight-color:transparent}
+.sqpk:active{transform:scale(.985)}
+.sqpkw{width:96px;align-self:stretch;flex:none;background:linear-gradient(135deg,var(--tc),color-mix(in srgb,var(--tc) 55%,#000));display:flex;align-items:center;justify-content:center;clip-path:polygon(0 0,100% 0,82% 100%,0 100%)}
+.sqpkw .badge{width:56px;height:56px}
+.sqpkn{padding-left:6px;flex:1}
+.sqpkn b{display:block;font:800 italic 22px var(--display);letter-spacing:.06em;text-transform:uppercase;color:#fff}
+.sqpkn small{display:block;color:#8fa3c8;letter-spacing:.14em;text-transform:uppercase;font-size:11px}
+.sqpk i{margin-right:16px;color:var(--muted);font-style:normal;font-size:26px;font-weight:900}

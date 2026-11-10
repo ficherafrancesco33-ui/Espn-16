@@ -63,7 +63,7 @@ function vHub(){needOld();
  const avg=rows.length?rows.reduce((a,x)=>a+x.f,0)/rows.length:0;
  const[y,m,g]=(d||"--").split("-");const dl=d?`Notte del ${+g} ${["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"][+m-1]}`:"—";
  const row=(x,k)=>{const o=ownOf(x.r[0]);return `<div class="snrow bxm" data-pl="${e(x.r[0])}"><span class="wedge" style="--tc:${o?TCOL[o.t]:"#334155"}">${o?`<span class="badge logo lg-${o.t}"></span>`:""}</span><div class="sninfo"><b><i>${k+1}</i><i class="rtr ${o?ROLE(o.ruolo)[0].replace("A","F"):"F"}"></i>${e(x.r[0])}</b><small>vs ${x.opp} · <span class="mnb">${x.r[3]} min</span></small>${bxsHtml(x.r)}<em class="bxt">${x.r[5]}/${x.r[6]} tiri · ${x.r[7]}/${x.r[8]} da 3 · ${x.r[9]}/${x.r[10]} tl${x.r[18]||x.r[19]?` · ${x.r[18]} tec. ${x.r[19]} flagr.`:""}</em></div><span class="snp p${gvC(x.f)}">${f1(x.f)}</span></div>`};
- return `<button class="gback" data-go="home">‹ Home</button><button class="effbig pl" data-sv="sgioc">${SV.pl}<span>Giocatori</span><i>›</i></button> <button class="effbig sq" data-sv="ssq">${SV.sq}<span>Squadre</span><i>›</i></button>
+ return `<button class="gback" data-go="home">‹ Home</button><button class="effbig pl" data-sv="sgioc">${SV.pl}<span>Giocatori</span><i>›</i></button> <button class="effbig sq" data-sv="ssql">${SV.sq}<span>Squadre</span><i>›</i></button>
  <div class="effpair2"><button class="cupbtn" data-sv="comp">${SV.cup}<span>Comparatore</span><i>›</i></button><button class="trbtn" data-avgr="1">${SV.tr}<span>Regole AVG</span><i>›</i></button></div>
  ${AVGR?`<div class="snemb"><p class="rules" style="margin:0;padding:10px 4px">Ogni partita: <b>PT +1 · canestro +2 · tiro tentato −1 · tripla +1 · libero +1 · libero tentato −1 · rimb. off. +2,5 · rimb. dif. +2 · assist +2 · recupero +4 · stoppata +4 · persa −2 · fallo −1 · tecnico −1 · flagrante −3</b>. Efficienza = AVG al minuto. Dati ESPN: stagioni 24/25, 25/26 e stagione in corso.</p></div>`:""}
  <div class="snemb"><h2><span class="t"><span>Statistiche notte</span></span><em>${rows.length} giocatori</em></h2>
@@ -84,6 +84,10 @@ function vGioc(){const ok=needOld();
  <div class="tbl-wrap"><table class="fatbl"><thead><tr><th>#</th><th>Giocatore</th>${th("gp","PG")}${th("min","Min")}${th("ff","AVG")}${th("eff","Eff.")}</tr></thead><tbody>${L.slice(0,200).map(row).join("")}</tbody></table></div>`}
 function boxMini(p){const s=p.s,g=p.gp,a=v=>f1(v/g);return `<div class="bxs" style="margin-top:4px"><span><b>${a(s[4])}</b><small>PT</small></span><span><b>${a(s[11]+s[12])}</b><small>RB</small></span><span><b>${a(s[13])}</b><small>AS</small></span><span><b>${a(s[14])}</b><small>ST</small></span><span><b>${a(s[15])}</b><small>BL</small></span><span><b>${a(s[16])}</b><small>TO</small></span></div>`}
 /* ===== SQUADRE (come la pagina squadra delle Statistiche Dreamers) ===== */
+/* (40) SQUADRE: prima l elenco delle 16 squadre con logo e colori (come «Squadre · scegli una squadra» di Dreamers), poi la pagina della squadra scelta */
+function vSqList(){return `<button class="gback esqback" data-sv="stat">‹ Statistiche</button><h2><span class="t"><span>Squadre</span></span><em>scegli una squadra</em></h2>
+ <div class="sqpklist">${TEAMS.map(t=>`<div class="sqpk" data-sqpick="${t.id}" role="button" tabindex="0" aria-label="Statistiche ${e(t.nome)}"><span class="sqpkw" style="--tc:${TCOL[t.id]}"><span class="badge logo lg-${t.id}" role="img" aria-label="${e(t.nome)}"></span></span><span class="sqpkn"><b>${e(t.nome.split(" ").slice(-1)[0])}</b><small>${e(t.nome.split(" ").slice(0,-1).join(" "))}</small></span><i>›</i></div>`).join("")}</div>`}
+document.addEventListener("click",ev=>{const c=ev.target.closest("[data-sqpick]");if(!c||cur!=="ssql")return;ST.sq=c.dataset.sqpick;save();cur="ssq";render();scrollTo(0,0)});
 function vSq(){const ok=needOld();const t=TM[ST.sq]||TEAMS[0];
  const P=agg(all());const rows=(ROSE[t.id]||[]).map(g=>{const k=nrm(g[0]),p=P[k],G=gamesOf(g[0]).filter(inP);return{g,p,G}}).sort((a,b)=>(b.p?b.p.f/b.p.gp:-1)-(a.p?a.p.f/a.p.gp:-1));
  const tit=rows.filter(x=>x.g[2]!=="BE"&&x.g[2]!=="IR");const tot=tit.reduce((s,x)=>s+(x.p?x.p.f/x.p.gp:0),0);
@@ -319,7 +323,7 @@ function vComp(){const ok=needOld();const names=[...new Set(all().map(x=>x.n))].
 /* ===== collegamento con l app ===== */
 window.e16ResetStats=()=>{ALL=null;SPZ=null};
 (window.NAVX=window.NAVX||[]).push({k:"st",get:()=>({pl:ST.pl,back:ST.back,pa:ST.pa,pb:ST.pb,psz:ST.psz}),set:o=>Object.assign(ST,o)});
-window.STATV={stat:vHub,sgioc:vGioc,ssq:vSq,gioc:vPl,grafico:vGraf,comp:vComp};
+window.STATV={stat:vHub,sgioc:vGioc,ssq:vSq,ssql:vSqList,gioc:vPl,grafico:vGraf,comp:vComp};
 document.addEventListener("click",ev=>{/* (35) profilo: «Condividi» apre il foglio di scelta, «📈 Grafico» apre la pagina del grafico */const sh=ev.target.closest("[data-plsh]");if(sh&&cur==="gioc"){ev.preventDefault();ev.stopPropagation();plShAsk();return}
  const gr=ev.target.closest("[data-plgr]");if(gr&&cur==="gioc"){ev.preventDefault();ev.stopPropagation();cur="grafico";PEROPEN=false;render();scrollTo(0,0);return}
  const c=ev.target.closest("[data-sv],[data-pr],[data-ss],[data-box],[data-sq],[data-pl],[data-per],[data-met],[data-cmp],[data-peropen],[data-snd],[data-avgr]");if(!c||!window.STATV[cur]&&!c.dataset.pl)return;
