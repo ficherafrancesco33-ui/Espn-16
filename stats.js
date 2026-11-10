@@ -153,16 +153,23 @@ const STAR_P="M6 .6l1.6 3.5 3.8.4-2.9 2.6.8 3.8L6 9 2.7 10.9l.8-3.8L.6 4.5l3.8-.
 const pgI=(x,P)=>{if(x<=P[0][0])return P[0][1];for(let i=1;i<P.length;i++)if(x<=P[i][0]){const[a,b]=P[i-1],[c,d]=P[i];return b+(d-b)*(x-a)/(c-a)}return P[P.length-1][1]};
 function pgStars(v,col){if(v==null)return`<span class="pgnd">n.d.</span>`;const id="e16pg"+(PGID++),w=64;const row=Array.from({length:5},(_,k)=>`<path d="${STAR_P}" transform="translate(${k*13} 0)"/>`).join("");
  return`<span class="pgsw"><svg viewBox="0 0 ${w} 12" width="${Math.round(w*1.2)}" height="14" aria-label="${String(Math.round(v*10)/10).replace(".",",")} stelle"><defs><clipPath id="${id}"><rect width="${v*13}" height="12"/></clipPath></defs><g fill="rgba(255,255,255,.14)">${row}</g><g fill="${col}" clip-path="url(#${id})">${row}</g></svg><b>${(Math.round(v*10)/10).toLocaleString("it-IT",{minimumFractionDigits:1})}</b></span>`}
-const PG_COL={pdk:"#facc15",gio:"#22c55e",min:"#f97316",effe:"#818cf8"};
-/* pagella: valore e AVG pesato del Calcolatore (VAL), stelline per AVG, giovinezza, minutaggio, efficienza.
-   Infortuni e Spazio in squadra di Dreamers non ci sono: in ESPN 16 mancano i dati da cui nascono. */
+const PG_COL={pdk:"#facc15",gio:"#22c55e",inj:"#ef4444",min:"#f97316",effe:"#818cf8",spa:"#ec4899"};
+/* pagella: valore e AVG pesato del Calcolatore (VAL), stelline per AVG, giovinezza, infortuni, minutaggio, efficienza, spazio in squadra (come Dreamers).
+   (36) INFORTUNI: inf-data.js (INF_STELLE: come Dreamers per gli stessi giocatori, gli altri stimati dalle partite saltate; più stelle = più sano).
+   SPAZIO IN SQUADRA (criteri di Dreamers): gerarchia nella sua squadra NBA ordinata per AVG medio + 0,3 × minuti medi (stagione in corso, tutti i
+   giocatori della squadra dai tabellini ESPN): 1° = 5 · 2° = 4 · 3° = 3 · poi ≥24 minuti = 2 · in rotazione (≥12 minuti) = 1 · fondo = ½. */
+const nnP=x=>String(x).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/ş/g,"s").replace(/[.'’]/g,"").replace(/\s+(jr|sr|ii|iii|iv)$/,"").replace(/\s+/g," ").trim();
+let INFN=null;const infOf=n=>{if(typeof INF_STELLE==="undefined")return null;if(!INFN){INFN={};for(const k in INF_STELLE)INFN[nnP(k)]=[INF_STELLE[k],(typeof INF_SRC!=="undefined"?INF_SRC:{})[k]]}return INFN[nnP(n)]||null};
+let SPZ=null;function spazio(n){if(!SPZ){const P={};for(const d of nights())for(const x of rowsOf(d)){const k=x.r[0];const o=P[k]||(P[k]={n:k,t:x.r[1],f:0,m:0,g:0,last:""});o.f+=x.f;o.m+=x.r[3];o.g++;if(d>=o.last){o.last=d;o.t=x.r[1]}}
+  SPZ={};for(const k in P){const o=P[k];o.s=o.f/o.g+.3*o.m/o.g;o.mn=o.m/o.g;(SPZ[o.t]=SPZ[o.t]||[]).push(o)}for(const t in SPZ)SPZ[t].sort((a,b)=>b.s-a.s)}
+ for(const t in SPZ){const i=SPZ[t].findIndex(o=>nnP(o.n)===nnP(n));if(i>=0){const mn=SPZ[t][i].mn;return{v:i===0?5:i===1?4:i===2?3:mn>=24?2:mn>=12?1:.5,pos:i+1,t}}}return null}
 function pagellaHTML(n,A){const V=(typeof VAL!=="undefined"&&VAL.p&&VAL.p[n])||null,age=etaOf(n);
  const s={avg:A?pgI(A.avg,[[5,0],[10,.5],[20,1.5],[30,2.5],[40,3.5],[50,4.5],[60,5]]):null,gio:age==null?null:pgI(age,[[20,5],[22,4.5],[24,4],[26,3.5],[28,3],[30,2.5],[32,2],[34,1.5],[36,1],[38,.5],[40,0]]),
   min:A?pgI(A.min,[[0,0],[4,1],[7,1.5],[15,2],[20,2.5],[25,3],[29,3.5],[31,4],[34,4.5],[36,5]]):null,eff:A&&A.eff!=null?pgI(A.eff,[[.5,.5],[.7,1],[.85,1.5],[1,2],[1.1,2.5],[1.2,3],[1.3,3.5],[1.4,4],[1.55,4.5],[1.7,5]]):null};
  const c=(lab,sub,val,col)=>`<div class="pgc"><small>${lab}${sub?` <em>${sub}</em>`:""}</small>${pgStars(val,col)}</div>`;
  return`<div class="pgbox"><div class="pgvp"><div><small>Valore</small><b>${V?V[0]:"n.d."}</b></div><div><small>AVG pesato</small><b class="pr">${V?n1(V[1]):"—"}</b></div><div class="pgag"><small>Agg.</small><span>${typeof VAL!=="undefined"&&VAL.upd?e(VAL.upd.split(",")[0])+" (automatico)":"—"}</span></div></div>
- <div class="pgg">${c("AVG",A?n1(A.avg):"",s.avg,PG_COL.pdk)}${c("Giovinezza",age!=null?age+" anni":"",s.gio,PG_COL.gio)}${c("Minutaggio",A?n1(A.min)+"'":"",s.min,PG_COL.min)}${c("Efficienza",A&&A.eff!=null?f2(A.eff):"",s.eff,PG_COL.effe)}</div>
- <p class="pgnote">Più stelle = meglio. Valore e AVG pesato del Calcolatore scambi (aggiornati ogni domenica).</p></div>`}
+ <div class="pgg">${c("AVG",A?n1(A.avg):"",s.avg,PG_COL.pdk)}${c("Giovinezza",age!=null?age+" anni":"",s.gio,PG_COL.gio)}${(()=>{const I=infOf(n);return c("Infortuni",I&&I[1]==="S"?"stima":"",I?I[0]:null,PG_COL.inj)})()}${c("Minutaggio",A?n1(A.min)+"'":"",s.min,PG_COL.min)}${c("Efficienza",A&&A.eff!=null?f2(A.eff):"",s.eff,PG_COL.effe)}${(()=>{const S=spazio(n);return c("Spazio in squadra",S?S.pos+"° in "+S.t:"",S?S.v:null,PG_COL.spa)})()}</div>
+ <p class="pgnote">Più stelle = meglio (Infortuni: più stelle = più sano; «stima» = calcolata dalle partite saltate nelle ultime due stagioni). Spazio in squadra = posto nella gerarchia della sua squadra NBA (AVG e minuti). Valore e AVG pesato del Calcolatore scambi (aggiornati ogni domenica).</p></div>`}
 let SHR_PL=null;
 function vPl(){const ok=needOld();const n=ST.pl;const o=ownOf(n),t=o&&TM[o.t]?o.t:null,T=t?TM[t]:null;
  const sz=SZP.some(x=>x[0]===ST.psz)?ST.psz:"2627",GLall=gamesOf(n),GL=GLall.filter(x=>x.s===sz),A=aggG(GL),last=GLall.slice(-1)[0];
@@ -310,7 +317,7 @@ function vComp(){const ok=needOld();const names=[...new Set(all().map(x=>x.n))].
  <div class="grtgs">${Object.keys(MET).map(k=>`<button class="grtg ${MET[k][2]}" data-met="${k}" aria-pressed="${ST.met===k}"><i></i>${MET[k][0]}</button>`).join("")}</div>${body}
  ${ok?"":`<div class="grfoot">Carico le stagioni passate…</div>`}</div>`}
 /* ===== collegamento con l app ===== */
-window.e16ResetStats=()=>{ALL=null};
+window.e16ResetStats=()=>{ALL=null;SPZ=null};
 (window.NAVX=window.NAVX||[]).push({k:"st",get:()=>({pl:ST.pl,back:ST.back,pa:ST.pa,pb:ST.pb,psz:ST.psz}),set:o=>Object.assign(ST,o)});
 window.STATV={stat:vHub,sgioc:vGioc,ssq:vSq,gioc:vPl,grafico:vGraf,comp:vComp};
 document.addEventListener("click",ev=>{/* (35) profilo: «Condividi» apre il foglio di scelta, «📈 Grafico» apre la pagina del grafico */const sh=ev.target.closest("[data-plsh]");if(sh&&cur==="gioc"){ev.preventDefault();ev.stopPropagation();plShAsk();return}
