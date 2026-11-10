@@ -204,6 +204,7 @@ function vPl(){const ok=needOld();const n=ST.pl;const o=ownOf(n),t=o&&TM[o.t]?o.
   <div class="gjer">${jer}</div>
   <div class="gtit"><small>${T?e(T.nome):"Svincolato"}</small><h3>${e(n)}</h3><div class="segrow">${SEG}${SH}</div><p>${[ruolo,nba,num!==""?"#"+num:""].filter(Boolean).join(" · ")}${etaMesi(n)?`<span style="display:block">${etaMesi(n)}</span>`:""}</p>${inj?`<div class="injtag ${inj.k}">${e(inj.lab)} · ${e(inj.txt)}</div>`:""}</div>
  </div>
+ ${window.e16ContrBox?e16ContrBox(n):""}
  <button class="advbtn ggrbtn ggy" data-plgr="1">📈 Grafico</button>
  <button class="advbtn ggrbtn ggy" data-cmp="${e(n)}">⚖ Confronta con un altro giocatore</button>
  <div class="gszn"><label for="gseason">Stagione</label><select id="gseason" data-psz="1">${SZPf().map(([k,l])=>`<option value="${k}"${k===sz?" selected":""}>${l}</option>`).join("")}</select></div>

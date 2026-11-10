@@ -15,6 +15,9 @@ const f1=v=>(Math.round(v*10)/10).toLocaleString("it-IT",{minimumFractionDigits:
 /* stipendio 26/27 dal file della lega (per il controllo del cap) */
 const SAL={};try{for(const t in CAP)for(const p of CAP[t].pl)SAL[t+"|"+nk(p[0])]=p[1][0]||0}catch(_){}
 const sal=(t,n)=>SAL[t+"|"+nk(n)]||0;
+/* (43) stipendi di tutte le stagioni (26/27 … 30/31) per il controllo del cap anche negli anni dopo */
+const SALY={};try{for(const t in CAP)for(const p of CAP[t].pl)SALY[t+"|"+nk(p[0])]=p[1]||[]}catch(_){}
+const salY=(t,n,i)=>(SALY[t+"|"+nk(n)]||[])[i]||0;const CYL=["26/27","27/28","28/29","29/30","30/31"];
 /* ---------- forza squadre e scelte ---------- */
 function strength(){const S={};let mx=0;for(const t of TEAMS){const v=(ROSE[t.id]||[]).map(g=>val(g[0])).sort((a,b)=>b-a).slice(0,14).reduce((a,b)=>a+b,0);S[t.id]=v;mx=Math.max(mx,v)}
  const R={};for(const t of TEAMS){const r=REC[t.id]||{w:0,l:0},g=r.w+r.l,wp=g?r.w/g:.5;R[t.id]=.7*(S[t.id]/mx)+.3*wp}
@@ -123,13 +126,19 @@ function colHTML(t,rec,pc,you){const c=pc>=5?"g":pc<=-5?"r":"y",w=pc>=5?"vantagg
  <div class="iacb">${rec.map(x=>`<div class="iapc"><div class="iapn"><i class="rc ${x.ty==="pl"?roleOf(x.n):"x"}"></i><span>${e(x.ty==="pl"?sh(x.n):itLab(x))}</span></div><div class="iapm"><b>${fmt(itVal(x))}</b></div><small class="iafrm">da ${e(nick(TM[x.from]))}</small></div>`).join("")||`<em class="iaem">niente</em>`}</div></div>`}
 /* saldo di ogni squadra: punti ricevuti − punti dati, in % sul più grande dei due */
 function bal(items,t){const r=items.filter(x=>x.to===t).reduce((a,x)=>a+itPts(x),0),g=items.filter(x=>x.from===t).reduce((a,x)=>a+itPts(x),0);return{r,g,pc:(r-g)/(Math.max(r,g)||1)*100}}
-function capOK(items,t){const C=CAP[t];if(!C)return true;const base=(C.occ[0]||0)+(C.tagli||0);const v=base-items.filter(x=>x.from===t).reduce((a,x)=>a+itSal(x),0)+items.filter(x=>x.to===t).reduce((a,x)=>a+itSal(x),0);return v<=CAP_TOT+1e-9?true:v}
+/* (43) cap controllato in ogni stagione: occupato di quell anno (nel 26/27 anche i tagli) meno chi esce più chi entra con i suoi stipendi di quell anno.
+   capFail → {i: stagione che sfora, v: occupato} oppure null; capOK resta true / numero (occupato della prima stagione che sfora) */
+function capFail(items,t){const C=CAP[t];if(!C)return null;for(let i=0;i<5;i++){const base=(C.occ[i]||0)+(i?0:(C.tagli||0));const sY=x=>x.ty==="pl"?salY(x.from,x.n,i):0;
+ const v=base-items.filter(x=>x.from===t).reduce((a,x)=>a+sY(x),0)+items.filter(x=>x.to===t).reduce((a,x)=>a+sY(x),0);if(v>CAP_TOT+1e-9)return{i,v}}return null}
+function capOK(items,t){const f=capFail(items,t);return f?f.v:true}
+window.e16CapFail=capFail;
+const capMsg=(items,t)=>{const f=capFail(items,t);return f?`sforerebbe il cap ${CYL[f.i]} (${f1(f.v)} su ${CAP_TOT})`:""};
 /* interesse delle altre squadre (come «Interesse alto/medio/basso» di Dreamers): saldo di valore, età e ruoli */
 function intHTML(items,teams,me){return `<div class="iaint">${teams.filter(t=>t!==me).map(t=>{const B=bal(items,t),inn=items.filter(x=>x.to===t&&x.ty==="pl"),out=items.filter(x=>x.from===t&&x.ty==="pl");
   const ea=inn.length?inn.reduce((a,x)=>a+(ageOf(x.n)||27),0)/inn.length:null,eo=out.length?out.reduce((a,x)=>a+(ageOf(x.n)||27),0)/out.length:null;
   const S=str().rank[t],reb=S>8,lv=B.pc>=5?"alto":B.pc>=-5?"medio":"basso";const why=[`${B.pc>=0?"ci guadagna":"ci rimette"} circa il ${Math.abs(Math.round(B.pc))}% di valore`];
   if(ea!=null&&eo!=null)why.push(`età media: riceve ${f1(ea)} anni, cede ${f1(eo)}${reb&&ea<eo?" (squadra che ricostruisce: le piacciono i giovani)":!reb&&ea>eo?" (squadra forte: le servono giocatori pronti)":""}`);
-  why.push(`forza prevista ${S}ª su 16`);const cap=capOK(items,t);if(cap!==true)why.push(`sforerebbe il cap (${f1(cap)} su ${CAP_TOT})`);
+  why.push(`forza prevista ${S}ª su 16`);const cap=capOK(items,t);if(cap!==true)why.push(capMsg(items,t));
   return `<div class="iaint1 ${cap!==true?"basso":lv}"><span><b>Interesse ${cap!==true?"basso":lv}</b></span><small>${e(nick(TM[t]))}: ${why.join(" · ")}</small></div>`}).join("")}</div>`}
 /* ---------- CALCOLATORE ---------- */
 const VT={tab:"calc",t:["QUE","HOU"],it:[],t3:["QUE","HOU","LVA","DET"]};
@@ -146,7 +155,7 @@ function resHTML(){const T2=tms(),I=VT.it.filter(x=>T2.includes(x.from)&&T2.incl
   <div class="vtbar"><i style="width:${100-pa}%;background:${TCOL[a]};color:#fff">${Math.round(100-pa)}%</i><i style="width:${pa}%;background:${TCOL[b]};color:#fff">${Math.round(pa)}%</i><em style="left:50%"></em></div>
   <div class="vtver"><b>${lab}</b><span>${d<.10?"Differenza":"Ci guadagnano i "+e(nick(TM[fav]))+" del"} ${Math.round(d*100)}%</span></div>
   ${d>=.10?`<p class="vtsug">Per pareggiare: i <b>${e(nick(TM[fav]))}</b> dovrebbero aggiungere un giocatore o una scelta da circa <b>${fmt(vneed)}</b> di valore (o i ${e(nick(TM[give]))} togliere qualcosa).</p>`:""}
-  ${caps.length?`<p class="vtsug">⚠️ ${caps.map(([t,v])=>`<b>${e(nick(TM[t]))}</b> sforerebbe il cap: ${f1(v)} su ${CAP_TOT}`).join(" · ")}</p>`:""}
+  ${caps.length?`<p class="vtsug">⚠️ ${caps.map(([t,v])=>`<b>${e(nick(TM[t]))}</b> ${capMsg(I,t)}`).join(" · ")}</p>`:""}
   ${intHTML(I,[a,b],null)}</div>`}
  const B=T2.map(t=>bal(I,t)),mx=Math.max(...B.map(x=>Math.abs(x.pc)));const[lab,cls]=mx<10?["Trade equilibrata","ok"]:mx<30?["Qualcuno ci guadagna","mid"]:["Trade sbilanciata","bad"];
  return `<div class="vtres ${cls}"><div class="iacols${T2.length===3?3:2}">${T2.map((t,i)=>colHTML(t,I.filter(x=>x.to===t),B[i].pc)).join("")}</div><div class="vtver"><b>${lab}</b><span>saldo massimo ${Math.round(mx)}%</span></div>${intHTML(I,T2,null)}</div>`}

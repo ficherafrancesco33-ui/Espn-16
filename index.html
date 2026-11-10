@@ -288,6 +288,64 @@ html body .tki.su i:not(#a):not(#b){color:#16a34a!important;-webkit-text-fill-co
 #sbar{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);z-index:1000;pointer-events:none;background-color:#e7590c}
 html.notte #sbar{background-color:#3e2577;background-image:linear-gradient(90deg,#502783,#3e2577 50%,#212569)}</style>
 <style>/* (34) spiegazione protezioni e swap delle scelte */.pk .pkrule{display:block;margin-top:3px;line-height:1.3;font-size:12px}.pk .pkrule b{font-weight:800}.pk .pkrule em{font-style:normal;font-weight:700}</style>
+<style>/* (43) CONTRATTI: riquadro nel profilo, pagina salary cap della squadra, liste della lega (giorno parquet / notte viola) */
+.ctrbox{margin:10px 0 12px;padding:12px 12px 10px;border-radius:14px;background:#fff8ec;border:1.5px solid rgba(217,86,11,.35);box-shadow:0 3px 10px rgba(120,60,10,.15);color:#4a2f14}
+.ctrh{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.ctrh>b{font:800 italic 20px var(--display,'Barlow Condensed');text-transform:uppercase;letter-spacing:.06em;color:#d9560b;margin-right:auto}
+.ctrrk{display:inline-block;font:800 11px/1 'Barlow Condensed';letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:6px;background:#7c3aed;color:#fff}
+.ctrv{display:inline-block;font:800 12px/1 'Barlow Condensed';letter-spacing:.04em;text-transform:uppercase;padding:5px 8px;border-radius:999px;color:#fff;background:#64748b;white-space:nowrap}
+.ctrv.affare{background:#16a34a}.ctrv.giusto{background:#d97706}.ctrv.caro{background:#dc2626}.ctrv.nd{background:#64748b}.ctrv.sm{font-size:11px;padding:4px 6px}
+.ctry{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.cy{border-radius:9px;padding:5px 2px;text-align:center;border:1.5px dashed rgba(217,86,11,.3);opacity:.6}
+.cy small{display:block;font:700 10px 'Barlow Condensed';letter-spacing:.05em;opacity:.85}
+.cy b{display:block;font:800 italic 16px/1.1 'Barlow Condensed'}
+.cy.on{opacity:1;border:1.5px solid rgba(217,86,11,.45);background:rgba(249,115,22,.12)}
+.cy.on.now{background:linear-gradient(180deg,#f2701a,#c2410c);color:#fff;border-color:#c2410c}
+.ctry.sm .cy b{font-size:14px}
+.ctrs{margin:8px 0 0;font-size:12.5px;line-height:1.4}
+html.notte .ctrbox{background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));border-color:rgba(196,181,253,.3);color:#e9ddff;box-shadow:0 0 18px rgba(168,85,247,.15)}
+html.notte .ctrh>b{color:#e9d5ff}html.notte .cy{border-color:rgba(196,181,253,.3)}html.notte .cy.on{background:rgba(168,85,247,.16);border-color:rgba(196,181,253,.45)}
+html.notte .cy.on.now{background:linear-gradient(180deg,#a855f7,#6d28d9);border-color:#6d28d9}
+.ccg{margin:0 12px 10px;padding:12px;border-radius:14px;background:var(--c3);border:2px solid var(--line)}
+.ccgn{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.ccgl small{display:block;font:800 11px 'Barlow Condensed';letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.ccgl b{font:800 italic 44px/1 'Barlow Condensed';color:var(--win)}.ccgl em{font:700 12px Barlow;color:var(--mut);margin-left:4px;font-style:normal}
+.ccgs{display:grid;gap:3px;margin-left:auto;font:600 12px Barlow;color:var(--mut)}.ccgs b{color:inherit}
+.ccgs i,.ccgbar i{display:inline-block}.ccgs i{width:9px;height:9px;border-radius:3px;margin-right:5px}
+.ccgbar{display:flex;height:16px;border-radius:9px;overflow:hidden;margin:10px 0 2px;background:rgba(0,0,0,.08)}
+i.o{background:var(--acc)}i.t{background:#9ca3af}i.l{background:var(--win)}i.x{background:#facc15}
+.ccsim{margin-top:8px;font:600 12px Barlow;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.ccsim button{margin-left:auto;border:0;border-radius:8px;padding:6px 10px;font:800 12px 'Barlow Condensed';background:var(--loss);color:#fff;cursor:pointer}
+.ccseas{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:0 12px 6px}
+.ccs{text-align:center;padding:8px 2px;border-radius:12px;background:var(--c3);border:1.5px solid var(--line)}
+.ccsb{height:56px;width:16px;margin:0 auto 6px;border-radius:6px;background:rgba(22,163,74,.25);display:flex;align-items:flex-end;overflow:hidden}.ccsb i{display:block;width:100%;background:var(--acc)}
+.ccs b{display:block;font:800 13px 'Barlow Condensed'}.ccs small{display:block;font:700 9.5px 'Barlow Condensed';color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+.ccs em{display:block;font:800 italic 16px/1.1 'Barlow Condensed';color:var(--win);font-style:italic}.ccs em.neg{color:var(--loss)}
+.ccsec{margin:14px 12px 8px;font:800 italic 18px 'Barlow Condensed';letter-spacing:.05em;text-transform:uppercase;color:var(--acc)}.ccsec small{font:700 11px Barlow;color:var(--mut);text-transform:none;letter-spacing:0;margin-left:6px;font-style:normal}
+.cclist{display:grid;gap:8px;margin:0 12px}
+.ccard{padding:10px;border-radius:14px;background:var(--c3);border:1.5px solid var(--line)}
+.ccard.exp{border-color:#f59e0b;box-shadow:inset 4px 0 0 #f59e0b}.ccard.cutd{opacity:.7;border-style:dashed}
+.ccr{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px}.ccn{flex:1;min-width:0;cursor:pointer}
+.ccn b{display:block;font:800 italic 17px/1.1 'Barlow Condensed';text-transform:uppercase;letter-spacing:.03em}.ccn small{display:block;font:600 11.5px Barlow;color:var(--mut);margin-top:2px}
+.ccb{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;max-width:55%}
+.ccx{display:inline-block;font:800 11px/1 'Barlow Condensed';text-transform:uppercase;padding:5px 7px;border-radius:999px;background:#f59e0b;color:#111}
+.cccut{display:flex;justify-content:flex-end;margin-top:7px}.cccut button{border:1.5px solid var(--line);background:transparent;color:var(--mut);border-radius:9px;padding:5px 10px;font:800 12px 'Barlow Condensed';letter-spacing:.04em;cursor:pointer}
+.ccpan{margin-top:8px;padding:9px;border-radius:10px;background:rgba(0,0,0,.05);font:500 12.5px Barlow}.ccpan p{margin:0 0 7px}
+.ccopt{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px}.ccopt button{text-align:left;border:1.5px solid var(--line);border-radius:10px;padding:7px 9px;background:var(--c2);color:inherit;cursor:pointer}
+.ccopt button[aria-pressed="true"]{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc) inset}.ccopt b{display:block;font:800 13px 'Barlow Condensed';text-transform:uppercase}.ccopt small{display:block;font:600 11.5px Barlow;color:var(--mut)}
+.ccund{margin-top:6px;border:0;background:transparent;color:var(--loss);font:700 12px Barlow;cursor:pointer;padding:0}
+.ccfa{display:grid;gap:6px;margin:0 12px}
+.ccfr{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:var(--c3);border:1.5px solid var(--line);cursor:pointer}
+.ccfr>img{width:30px;height:30px;object-fit:contain}.ccfr>div{flex:1;min-width:0}.ccfr>div b{display:block;font:800 italic 15px/1.1 'Barlow Condensed';text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ccfr>div small{font:600 11px Barlow;color:var(--mut)}
+.ccfv{text-align:center;min-width:34px}.ccfv b{display:block;font:800 italic 15px/1 'Barlow Condensed'}.ccfv small{font:700 9.5px 'Barlow Condensed';color:var(--mut);text-transform:uppercase}
+.ccexp{display:flex;flex-wrap:wrap;gap:6px;margin:0 12px}.ccexp span{padding:6px 9px;border-radius:999px;background:rgba(245,158,11,.18);border:1px solid #f59e0b;font:700 12.5px Barlow;cursor:pointer}
+.ccl{margin-bottom:12px;padding-bottom:6px}.ccl .ccfa{margin:0 10px}
+.ccrank{display:grid;gap:4px;padding:0 10px 8px}.ccrr{display:grid;grid-template-columns:18px 26px 70px minmax(0,1fr) 40px;align-items:center;gap:6px;cursor:pointer;font:700 12.5px Barlow}
+.ccrr i{font:800 italic 13px 'Barlow Condensed';color:var(--mut);font-style:italic}.ccrr img{width:26px;height:26px;object-fit:contain}.ccrr span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ccrb{height:9px;border-radius:5px;background:rgba(0,0,0,.08);overflow:hidden}.ccrb em{display:block;height:100%}.ccrr b{text-align:right;font:800 italic 15px 'Barlow Condensed';color:var(--win)}
+html.notte .ccg,html.notte .ccs,html.notte .ccard,html.notte .ccfr{background:rgba(255,255,255,.05);border-color:rgba(196,181,253,.28)}
+html.notte .ccgbar,html.notte .ccrb{background:rgba(255,255,255,.08)}html.notte .ccpan{background:rgba(255,255,255,.05)}html.notte .ccopt button{background:rgba(255,255,255,.06);border-color:rgba(196,181,253,.3)}
+html.notte .ccsec{color:#e9d5ff}
+</style>
 </head>
 <body>
 <div id="sbar" aria-hidden="true"></div>
@@ -313,6 +371,8 @@ e16Tema(E16N);</script>
 <div class="foot" id="foot"></div>
 <script src="espn-data.js"></script>
 <script src="cap-data.js"></script>
+<script src="listino-data.js"></script>
+<script src="contratti.js"></script>
 <script src="eta-data.js"></script>
 <script src="valori-data.js"></script>
 <script>
@@ -522,7 +582,7 @@ function vTeam(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P=pstats(
 /* ===== SALARY CAP e SCELTE (dati in cap-data.js, dal file della lega) ===== */
 const YL=["26/27","27/28","28/29","29/30","30/31"];
 const c1=v=>v==null?"":(Math.round(v*10)/10).toLocaleString("it-IT",{maximumFractionDigits:1});
-function capHtml(id){const C=CAP[id];if(!C)return`<div class="note">Contratti non disponibili.</div>`;
+function capHtml(id){/* (43) nuova pagina contratti (contratti.js) */if(window.e16CapPage)return e16CapPage(id);const C=CAP[id];if(!C)return`<div class="note">Contratti non disponibili.</div>`;
  const occ=C.occ[0]||0,tg=C.tagli||0,lib=C.libero!=null?C.libero:CAP_TOT-occ-tg,pc=x=>Math.max(0,Math.min(100,x/CAP_TOT*100));
  const L=C.pl.slice().sort((a,b)=>(b[1][0]||0)-(a[1][0]||0));
  const scad=p=>p[1].length;/* anni di contratto rimasti */
@@ -546,7 +606,7 @@ function vCapAll(){
  return ["E","W"].map(c=>{const L=TEAMS.filter(t=>t.conf===c).slice().sort((a,b)=>(CAP[b.id]?.libero||0)-(CAP[a.id]?.libero||0));
   return `<div class="card" style="margin-bottom:12px"><div class="ttl"><span class="dot" style="background:${c==="E"?"var(--east)":"var(--west)"}"></span>${c==="E"?"EAST":"WEST"} · SALARY CAP</div>
   <div class="tw"><table class="ct"><tr><th>SQUADRA</th><th>LIBERO</th><th>OCC. 26/27</th><th>OCC. 27/28</th><th>1° GIRO / SCELTE</th></tr>${L.map(row).join("")}</table></div></div>`}).join("")+
-  `<div class="note" style="color:#fff">Cap ${CAP_TOT} per squadra. Tocca una squadra per vedere contratti e scelte.</div>`}
+  `<div class="note" style="color:#fff">Cap ${CAP_TOT} per squadra. Tocca una squadra per vedere contratti e scelte.</div>`+(window.e16CapLeague?e16CapLeague():"")}
 
 /* ===== LEGA: classifica, scontri diretti, playoff ===== */
 function standings(conf){return TEAMS.filter(t=>t.conf===conf).map((t,i)=>{const r=REC[t.id]||{w:0,l:0,pf:0,pa:0};return{...t,...r,ord:i}}).sort((a,b)=>(b.w-a.w)||(a.l-b.l)||(b.pf-a.pf)||(a.ord-b.ord))}
