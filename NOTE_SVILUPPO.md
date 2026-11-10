@@ -79,3 +79,5 @@
 (36) 10/11/2026 – Pagella completa come Dreamers: INFORTUNI da inf-data.js (tools/inf_stelle.mjs: 114 giocatori con le stelle di Dreamers, gli altri stimati dalle partite saltate in 24/25 e 25/26, scala Dreamers ≤11 saltate = 5 … ≥70 = 0, −1 se fuori per Achille/crociato o rientro ≥60 giorni, rookie = 3; segnati «stima»). SPAZIO IN SQUADRA: gerarchia nella squadra NBA per AVG + 0,3 × minuti (tabellini della stagione), 1°=5, 2°=4, 3°=3, ≥24 min=2, ≥12 min=1, altrimenti ½.
 
 (37) 10/11/2026 – Loghi NBA dentro l app (loghi/nba/<sigla ESPN>.svg, copiati da Dreamers loghi/nba/<id NBA>.svg): nbaLogo (index.html), nbaLg (tv.js), profilo e immagine da condividere (stats.js) non scaricano più da espncdn; si caricano subito e funzionano anche nelle foto (niente blocchi CORS).
+
+(38) 10/11/2026 – Dynasty TV: sotto le partite NBA le nostre sfide della settimana del giorno scelto (e16Sfide in tv.js, card drtvg come «Dreamers» nella TV di Dreamers): punteggio migliori 14 (sett. 1-3 ufficiale), quanti dei 14 hanno giocato, giorni giocati, migliori di ogni squadra; tocca → duello.

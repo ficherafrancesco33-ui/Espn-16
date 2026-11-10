@@ -19,6 +19,19 @@ const own=n=>{try{return window.__ownKey&&OWNH[__ownKey(n)]||""}catch(_){return"
 function stOf(g){return g[4]==="F"?"Finale"+(g[6]==="OT"?" · OT":""):g[4]==="L"?(g[6]||"Live"):new Date(g[5]).toLocaleTimeString("it-IT",{timeZone:"Europe/Rome",hour:"2-digit",minute:"2-digit"})}
 function defDay(){const D=Object.keys(ESPN.days).sort(),t=nyDay();if(D.includes(t)&&(ESPN.days[t]||[]).some(id=>ESPN.games[id]&&ESPN.games[id][4]!=="S"))return t;
  const done=D.filter(d=>d<=t&&(ESPN.days[d]||[]).some(id=>ESPN.box[id]));return done[done.length-1]||t}
+/* (38) SCONTRI DIRETTI della lega sotto le partite NBA, come «Dreamers» nella Dynasty TV di Dreamers: le sfide della settimana del giorno scelto,
+   punteggio = migliori 14 (settimane 1-3 ufficiale ESPN), quanti dei 14 hanno già giocato, giorni giocati della settimana e i migliori di ogni squadra.
+   Tocca una sfida → duello stile Sleeper della Lega (data-du, gestito in gest.js). */
+function e16Sfide(d){try{const w=weekOf(d<W1?W1:d),M=MATCHUPS[w]||[];if(!M.length)return"";const[a,b]=weekRange(w),WS=weekScores(w),wNow=weekOf(nyToday()<W1?W1:nyToday());
+ const days=Object.keys(ESPN.days).filter(k=>k>=a&&k<=b&&(ESPN.days[k]||[]).length).sort(),done=days.filter(k=>(ESPN.days[k]||[]).every(id=>ESPN.games[id]&&ESPN.games[id][4]==="F")).length;
+ const fin=w<wNow||(days.length&&done===days.length),st=fin?"Finale":w>wNow?"Da giocare":"In corso";
+ const card=([A,B])=>{const TA=wkTeam(A,w),TB=wkTeam(B,w),sa=WS.S[A],sb=WS.S[B];
+  const pl=T=>T.L.slice(0,14).filter(x=>x.n>0).length,best=T=>T.L[0]&&T.L[0].n?T.L[0]:null;
+  const side=(id,sc,T,win)=>`<div class="tvt${win?" win":""}"><span class="drtvl" style="--tc:${TCOL[id]}"><span class="badge logo lg-${id}" role="img" aria-label="${e(TM[id].nome)}"></span></span><span class="tvnm"><b>${e(TM[id].nome.split(" ").slice(-1)[0])}</b><small>${WS.off?"punteggio ufficiale ESPN":pl(T)+"/14 hanno giocato"}</small></span><span class="tvsc">${f1(sc)}</span></div>`;
+  const ba=best(TA),bb=best(TB);
+  return `<button class="tvg drtvg" data-du="${A},${B}" data-duw="${w}" aria-label="${e(TM[A].nome)} contro ${e(TM[B].nome)}"><div class="tvteams">${side(A,sa,TA,fin&&sa>sb)}${side(B,sb,TB,fin&&sb>sa)}</div>
+  <div class="tvst"><b class="pre">${st}</b><small>${done}/${days.length} giorni · sfida ›</small></div>${ba||bb?`<div class="tvtop"><span>Migliori: ${ba?`<b>${e(last(ba.g[0]))}</b> (${A}) <span class="pdkx ${xc(ba.tot/ba.n)}">${f1(ba.tot)}</span>`:""}${ba&&bb?" · ":""}${bb?`<b>${e(last(bb.g[0]))}</b> (${B}) <span class="pdkx ${xc(bb.tot/bb.n)}">${f1(bb.tot)}</span>`:""}</span></div>`:""}</button>`};
+ return `<div class="drtvh"><h2><span class="t"><span>ESPN 16</span></span><em>Settimana ${w} · ${done} su ${days.length} giorni</em></h2></div><div class="tvlist">${M.map(card).join("")}</div>`}catch(_){return""}}
 function vList(){const D=Object.keys(ESPN.days).sort();const d=TVS.d&&ESPN.days[TVS.d]?TVS.d:defDay();TVS.d=d;const i=D.indexOf(d);
  const G=(ESPN.days[d]||[]).map(id=>[id,ESPN.games[id]]).filter(x=>x[1]).sort((a,b)=>a[1][5]<b[1][5]?-1:1);
  const nF=G.filter(x=>x[1][4]==="F").length,nL=G.filter(x=>x[1][4]==="L").length;
@@ -30,7 +43,7 @@ function vList(){const D=Object.keys(ESPN.days).sort();const d=TVS.d&&ESPN.days[
  return `<button class="gback" data-go="home">‹ Home</button><div class="tvpnl"><div class="tvhero"><b>Dynasty TV <i>NBA</i></b><small>Calendario, risultati e tabellini · AVG della lega</small></div>
  <div class="tvdate"><button ${i>0?`data-tvd="${D[i-1]}"`:"disabled"}>‹</button><div class="tvdl"><b>${dl}</b><small>${G.length} partite · ${nL?nL+" live · ":""}${nF===G.length&&G.length?"tutte finite":nF+" finite"} · data USA</small></div><button ${i<D.length-1?`data-tvd="${D[i+1]}"`:"disabled"}>›</button></div>
  <div class="tvweek" id="tvweek">${D.map(k=>{const y=dd(k),n=(ESPN.days[k]||[]).length;return`<button class="tvday${n?"":" off"}" data-tvd="${k}" aria-pressed="${k===d}"${n?"":" disabled"}><span>${GS[y.getUTCDay()]}</span><b>${y.getUTCDate()}</b><small>${n?n+" part.":"—"}</small></button>`}).join("")}</div>
- <div class="tvlist">${G.map(card).join("")||`<p class="note">Nessuna partita.</p>`}</div></div>
+ <div class="tvlist">${G.map(card).join("")||`<p class="note">Nessuna partita.</p>`}</div>${e16Sfide(d)}</div>
  <p class="note">Dati ESPN · durante le partite si aggiorna da solo ogni 30 secondi.</p>`}
 function vGame(){const id=TVS.g,g=ESPN.games[id];if(!g){TVS.g=null;return vList()}const B=ESPN.box[id]||[];const ab=TVS.side==="h"?g[1]:g[0];const R=B.filter(r=>r[1]===ab);
  const x=dd(TVS.d||nyDay()),dl=`${x.getUTCDate()} ${MM[x.getUTCMonth()]}`;const oc=new Set(B.oc||[]);
