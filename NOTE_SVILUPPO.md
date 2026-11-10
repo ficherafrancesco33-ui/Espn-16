@@ -54,3 +54,5 @@
 (23) 10/11/2026 – Playoff come ESPN: 10 squadre su 16; seed 1-2 = prime di ogni conference, poi per V-P e punti fatti (verificato uguale al tabellone ESPN). Turno 1 (8-14 feb) 8-9 e 7-10, 1-6 riposano; quarti (15 feb-7 mar) 1-v89, 4-5, 3-6, 2-v710; semifinali (8-21 mar); finale. REC calcolato da SCORES (W, L, punti fatti/subiti). seeds() in index.html.
 
 (24) 10/11/2026 – Lega come Dreamers: toccando una sfida si apre il duello (dutop, striscia altre sfide, punteggi, proiezione, % vittoria, giocatori affiancati 1-17 con caselle partita). Regola ESPN 16: ogni giocatore porta la SOMMA dell AVG di tutte le sue partite della settimana; formazione automatica = migliori 14 dei 17 (wkTeam in index.html); niente panchina a metà, niente capitano, niente cap. weekScores (dalla settimana 4) = somma dei migliori 14. Settimane 1-3: in alto il punteggio ufficiale ESPN. Navigazione indietro sul duello (nav.js), live ridisegna anche la Lega.
+
+(25) 10/11/2026 – Home notte: i loghi dei binari tornano senza sfondo colore squadra (sfondo del pannello come Dreamers); di giorno resta lo sfondo colore squadra.
