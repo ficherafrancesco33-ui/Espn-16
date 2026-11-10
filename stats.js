@@ -148,6 +148,7 @@ function vComp(){const ok=needOld();const names=[...new Set(all().map(x=>x.n))].
  ${ok?"":`<div class="grfoot">Carico le stagioni passate…</div>`}</div>`}
 /* ===== collegamento con l app ===== */
 window.e16ResetStats=()=>{ALL=null};
+(window.NAVX=window.NAVX||[]).push({k:"st",get:()=>({pl:ST.pl,back:ST.back,pa:ST.pa,pb:ST.pb}),set:o=>Object.assign(ST,o)});
 window.STATV={stat:vHub,sgioc:vGioc,ssq:vSq,gioc:vPl,comp:vComp};
 document.addEventListener("click",ev=>{const c=ev.target.closest("[data-sv],[data-pr],[data-ss],[data-box],[data-sq],[data-pl],[data-per],[data-met],[data-cmp],[data-peropen],[data-snd],[data-avgr]");if(!c||!window.STATV[cur]&&!c.dataset.pl)return;
  const d=c.dataset;

@@ -48,6 +48,7 @@ function vGame(){const id=TVS.g,g=ESPN.games[id];if(!g){TVS.g=null;return vList(
  <p class="note">Tabellino ESPN. AVG = punti della lega (vedi Statistiche). SQ = squadra del fanta. Pt punti, RIM rimbalzi, AST assist, STL palle rubate, BLK stoppate, TOV palle perse, Off/Dif rimbalzi offensivi/difensivi, T tecnico, F flagrante${g[4]==="L"?", ● in campo adesso":""}.</p>`}
 window.vTv=()=>TVS.g?vGame():vList();
 window.TVS=TVS;
+(window.NAVX=window.NAVX||[]).push({k:"tv",get:()=>({d:TVS.d,g:TVS.g,side:TVS.side}),set:o=>Object.assign(TVS,o)});
 document.addEventListener("click",ev=>{if(cur!=="tv")return;const c=ev.target.closest("[data-tvd],[data-tvg],[data-tvback],[data-tvside]");if(!c)return;const d=c.dataset;
  if(d.tvd){TVS.d=d.tvd;TVS.g=null;render();const w=document.getElementById("tvweek"),b=w&&w.querySelector('[aria-pressed="true"]');if(b)w.scrollLeft=b.offsetLeft-w.clientWidth/2+b.clientWidth/2;return}
  if(d.tvg){TVS.g=d.tvg;TVS.side="a";render();scrollTo(0,0);return}

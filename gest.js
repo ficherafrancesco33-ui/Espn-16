@@ -73,6 +73,7 @@ function vReg(){const art=(n,t,b)=>`<details class="rart"${n===1?" open":""}><su
  ${art(6,"Playoff",`<p>Provvisorio: regole Dreamers per ogni conference (1ª–4ª tabellone titolo, 5ª–8ª l'altro), in attesa delle regole della lega.</p>`)}`}
 window.GESTV={lega:vLega,roster:vRoster,inf:vInf,reg:vReg};
 window.e16Roster=t=>{G.rt=t;save()};window.e16RT=()=>G.rt;
+(window.NAVX=window.NAVX||[]).push({k:"g",get:()=>({tab:G.tab,rt:G.rt,it:G.it,wk:G.wk}),set:o=>Object.assign(G,o)});
 document.addEventListener("click",ev=>{const c=ev.target.closest("[data-lg2],[data-lgw],[data-rt],[data-it]");if(!c)return;const d=c.dataset;
  if(d.lgw){G.wk=+d.lgw;if(d.lg2)G.tab=d.lg2;save();render();return}
  if(d.lg2){G.tab=d.lg2;save();render();return}

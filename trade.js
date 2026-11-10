@@ -185,6 +185,7 @@ function vIaNew(){const me=IA.me,H=`<button class="gback" data-go="calc">‹ Cal
  else{body=`<div class="iabox"><h4>Quante squadre coinvolgo?</h4>${nSel}<h4>Che guadagno cerchi?</h4>${lvSel}<div class="iabtn2"><button class="iabk" data-ia="go" data-s="2">‹ Indietro</button><button class="iago" data-ia="find">Trova scambi ›</button></div></div>${st===4?iaResHTML():""}`}
  return H+modeBar+bar+body}
 window.TRADEV={val:vVal,calc:vCalc,ia:vIaNew};
+(window.NAVX=window.NAVX||[]).push({k:"ia",get:()=>({mode:IA.mode,st:IA.st,vt:VT.tab}),set:o=>{IA.mode=o.mode;IA.st=o.st;VT.tab=o.vt}});
 document.addEventListener("click",ev=>{const c=ev.target.closest("[data-vt],[data-ia]");if(!c||!(cur==="calc"||cur==="ia"))return;const d=c.dataset;ev.preventDefault();
  if(d.vt){const T2=tms();
   if(d.vt==="tab"){VT.tab=d.k}
