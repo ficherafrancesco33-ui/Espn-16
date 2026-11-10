@@ -30,8 +30,8 @@ if (existsSync(OUT)) { try { OLD = new Function(readFileSync(OUT, "utf8") + ";re
 /* oggi a New York */
 const nyToday = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
 const days = [];
-/* anche i prossimi 7 giorni (solo calendario, per la Dynasty TV) */
-const lastDay = (() => { const x = new Date(nyToday + "T12:00:00Z"); x.setUTCDate(x.getUTCDate() + 7); return x.toISOString().slice(0, 10) })();
+/* anche i prossimi 21 giorni (solo calendario: Dynasty TV e (47) formazione consigliata della settimana dopo) */
+const lastDay = (() => { const x = new Date(nyToday + "T12:00:00Z"); x.setUTCDate(x.getUTCDate() + 21); return x.toISOString().slice(0, 10) })();
 for (let d = new Date(START + "T12:00:00Z"); ; d.setUTCDate(d.getUTCDate() + 1)) {
   const s = d.toISOString().slice(0, 10); if (s > lastDay) break; days.push(s);
 }
@@ -72,7 +72,7 @@ function boxOf(sum) {
 const ESPN = { upd: "", days: {}, box: {}, games: {}, teams: OLD.teams || {} };   // teams: sigla -> [nome breve, colore, record V-P]
 for (const d of days) {
   const old = OLD.days[d];
-  const closed = old && old.length && old.every(id => OLD.games[id] && OLD.games[id][5] === "F" && OLD.box[id]);
+  const closed = old && old.length && old.every(id => OLD.games[id] && OLD.games[id][4] === "F" && OLD.box[id]);
   if (closed) { ESPN.days[d] = old; for (const id of old) { ESPN.games[id] = OLD.games[id]; ESPN.box[id] = OLD.box[id] } continue }
   const sb = await get(SB(d)); const ids = [];
   for (const e of sb.events || []) {
