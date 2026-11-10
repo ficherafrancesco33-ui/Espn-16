@@ -49,6 +49,7 @@ const last=n=>{const p=String(n).replace(/\s+(Jr\.?|Sr\.?|II|III|IV)$/i,"").spli
 function card(t,g,P,W){const p=P[g[0]],avg=p?p.ff/p.gp:null,w=W[g[0]];
  return `<span class="pj">${jersey(t.id,numOf(g[0]),t.nome.split(" ").slice(-1)[0])}</span><span class="pnm ${RL(g[3])}"><i>${RLi[RL(g[3])]}</i><b class="pn">${e(last(g[0]))}</b></span>
  <span class="gw"><span class="pcs"><span class="pcd ${avg!=null?pcls(avg):""}"><b>${avg!=null?f1(avg):"–"}</b></span></span><span class="gd gbar">${w?`<i class="ok" style="--gc:${gcol(w.f/w.n)}">${f1(w.f)}</i><i>${w.n}P</i>`:`<i>SETT. 0</i>`}</span></span>`}
+window.e16Jersey=(t,n,nk)=>jersey(t,n,nk);window.e16Num=n=>numOf(n);
 let NUMS=null;function numOf(n){if(!NUMS){NUMS={};/* numero di maglia NBA: dalle rose ESPN non lo abbiamo; si usa un numero stabile dal nome */}
  if(NUMS[n]!=null)return NUMS[n];let h=0;for(const ch of n)h=(h*31+ch.charCodeAt(0))%97;return NUMS[n]=h%55}
 window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P=pstats();

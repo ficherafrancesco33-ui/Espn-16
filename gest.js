@@ -9,7 +9,7 @@ const city=t=>t.nome.split(" ").slice(0,-1).join(" ");
 const tint=id=>`--tc:${TCOL[id]};--tf:#fff`;
 const xc=v=>v>=50?"v":v>=35?"g":v>=20?"y":"r";
 const own=n=>{try{return OWNH[__ownKey(n)]||""}catch(_){return""}};
-const G={tab:"turno",wk:null,rt:"QUE",it:null};
+const G={tab:"turno",wk:null,rt:"QUE",it:null,du:null};
 try{Object.assign(G,JSON.parse(localStorage.getItem("e16_gest")||"{}"))}catch(_){}
 const save=()=>{try{localStorage.setItem("e16_gest",JSON.stringify({tab:G.tab,rt:G.rt}))}catch(_){}};
 /* ---------- LEGA ---------- */
@@ -18,11 +18,12 @@ function vLega(){
  const tabs=`<div class="drtabs">${[["turno","Settimana"],["cal","Calendario"],["cla","Classifica"],["po","Playoff"]].map(([k,l])=>`<button data-lg2="${k}" aria-pressed="${G.tab===k}">${l}</button>`).join("")}</div>`;
  const head=`<div class="drroom" data-th="3"><button class="drexit" data-go="home">‹ Torna all'app</button><div class="drhd"><span class="drlogo">ESPN 16</span><small>FantaBasket USA · AVG · stagione 26/27</small></div>${tabs}`;
  let body="";
- if(G.tab==="turno"){const WS=weekScores(w),M=MATCHUPS[w]||[],fin=w<wNow,live=w===wNow;
+ if(G.tab==="turno"&&G.du)body=vDuel(w,wNow);
+ else if(G.tab==="turno"){const WS=weekScores(w),M=MATCHUPS[w]||[],fin=w<wNow,live=w===wNow;
   body=`<div class="drnav"><button data-lgw="${w-1}" ${w>1?"":"disabled"}>‹</button><div><b>Settimana ${w}</b><small>${dIt(wa)} → ${dIt(wb)}${fin?" · finita":live?" · in corso":""}</small></div><button data-lgw="${w+1}" ${w<wNow?"":"disabled"}>›</button></div>`;
-  if(M.length)body+=`<div class="drms">${M.map(([A,B])=>{const a=WS.S[A],b=WS.S[B],la=a>=b;const r=(id,v,l)=>`<div class="drr tint ${l?"slead":"strail"}" style="${tint(id)}"><span class="drlg" style="--tc:${TCOL[id]}"><span class="badge logo lg-${id}"></span></span><span class="drn"><b>${e(TM[id].nome)}</b><small>${WS.off?"punteggio ufficiale ESPN":WS.G[id]+" partite dei titolari"}</small></span><em>${f1(v)}</em></div>`;
-   return `<button class="drm" data-team="${A}">${r(A,a,la)}${r(B,b,!la)}<span class="drst ${fin?"":"live"}">${fin?"Finale":"In corso"}</span></button>`}).join("")}</div>`;
-  else body+=`<p class="note">Calendario delle sfide non ancora inserito: ecco il punteggio della settimana di ogni squadra (14 titolari, punteggio pieno).</p><div class="drcla">${TEAMS.slice().sort((a,b)=>WS.S[b.id]-WS.S[a.id]).map((t,k)=>`<div class="drcr tint ${k===0?"lead":""}" data-team="${t.id}" style="${tint(t.id)}"><span class="drpos">${k+1}</span><span class="drlg l" style="--tc:${TCOL[t.id]}"><span class="badge logo lg-${t.id}"></span></span><div class="drci"><b>${e(t.nome)}</b><small>${WS.G[t.id]} partite dei titolari · ${t.conf==="E"?"East":"West"}</small></div><div class="drcwl"><b class="avg">${f1(WS.S[t.id])}<small>AVG</small></b></div></div>`).join("")}</div>`}
+  if(M.length)body+=`<div class="drms">${M.map(([A,B])=>{const a=WS.S[A],b=WS.S[B],la=a>=b;const r=(id,v,l)=>`<div class="drr tint ${l?"slead":"strail"}" style="${tint(id)}"><span class="drlg" style="--tc:${TCOL[id]}"><span class="badge logo lg-${id}"></span></span><span class="drn"><b>${e(TM[id].nome)}</b><small>${WS.off?"punteggio ufficiale ESPN":WS.G[id]+" partite · migliori 14"}</small></span><em>${f1(v)}</em></div>`;
+   return `<button class="drm" data-du="${A},${B}">${r(A,a,la)}${r(B,b,!la)}<span class="drst ${fin?"":"live"}">${fin?"Finale":"In corso"}</span></button>`}).join("")}</div>`;
+  else body+=`<p class="note">Calendario delle sfide non ancora inserito: ecco il punteggio della settimana di ogni squadra (14 titolari, punteggio pieno).</p><div class="drcla">${TEAMS.slice().sort((a,b)=>WS.S[b.id]-WS.S[a.id]).map((t,k)=>`<div class="drcr tint ${k===0?"lead":""}" data-team="${t.id}" style="${tint(t.id)}"><span class="drpos">${k+1}</span><span class="drlg l" style="--tc:${TCOL[t.id]}"><span class="badge logo lg-${t.id}"></span></span><div class="drci"><b>${e(t.nome)}</b><small>${WS.G[t.id]} partite · migliori 14 · ${t.conf==="E"?"East":"West"}</small></div><div class="drcwl"><b class="avg">${f1(WS.S[t.id])}<small>AVG</small></b></div></div>`).join("")}</div>`}
  if(G.tab==="cal"){const last=Math.max(wNow+2,...Object.keys(MATCHUPS).map(Number));let h="";
   for(let k=1;k<=last;k++){const[a,b]=weekRange(k),M=MATCHUPS[k]||[];h+=`<h4 class="drplh">Settimana ${k}<span>${dIt(a)} → ${dIt(b)}${k===wNow?" · in corso":k<wNow?" · finita":""}</span></h4>${M.length?`<div class="drms">${M.map(([A,B])=>`<button class="drm" data-lgw="${k}" data-lg2="turno"><div class="drr tint" style="${tint(A)}"><span class="drlg"><span class="badge logo lg-${A}"></span></span><span class="drn"><b>${e(TM[A].nome)}</b></span></div><div class="drr tint" style="${tint(B)}"><span class="drlg"><span class="badge logo lg-${B}"></span></span><span class="drn"><b>${e(TM[B].nome)}</b></span></div></button>`).join("")}</div>`:`<p class="note">Sfide da inserire.</p>`}`}
   body=h}
@@ -40,6 +41,41 @@ function vLega(){
   ${rnd("Finale","dopo il 21 marzo",box("Finale",tbd("Vincente semifinale 1"),tbd("Vincente semifinale 2")))}
   ${S.length>10?`<p class="note">Fuori dai playoff: ${S.slice(10).map((t,i)=>`${i+11}ª ${e(nick(t))}`).join(" · ")}</p>`:""}`}
  return head+body+`</div>`}
+/* ---------- (24) SFIDA: duello come quello di Dreamers ----------
+   Due colonne affiancate: i 17 di ogni squadra in ordine di punteggio della settimana (somma di TUTTE le partite).
+   1–14 = "In campo · punteggio pieno" (formazione automatica, i migliori 14), 15–17 = "Tribuna · fuori dai 14".
+   Caselle: partita giocata con il suo AVG, NG = non ha giocato, tratteggiata = da giocare (@ = in trasferta).
+   Proiezione = punteggio + media stagionale × partite ancora da giocare (migliori 14 proiettati); la % di vittoria viene da lì. */
+const RLd=r=>{const a=String(r||"").split(",");return a[0]==="C"?"C":/G/.test(a[0])?"G":"F"};
+const RN={G:"Guardia",F:"Ala",C:"Centro"},RI={G:"G",F:"A",C:"C"};
+const shortN=n=>{const p=String(n).split(" ");return p.length>1?p[0][0]+".&nbsp;"+e(p.slice(1).join(" ")):e(n)};
+const Phi=z=>{const t=1/(1+.2316419*Math.abs(z)),d=.3989423*Math.exp(-z*z/2),p=d*t*(.3193815+t*(-.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));return z>0?1-p:p};
+function duCard(t,x,zone){const g=x.g,rl=RLd(g[3]),fin=x.rem===0&&!x.G.some(y=>y.lv),pl=x.n>0;
+ const cls=zone==="trib"?"trib":(!pl&&x.G.length?"wait":"full");
+ const chip=y=>{const lab=WKD[new Date(y.d+"T12:00:00Z").getUTCDay()];
+  if(y.f!=null)return `<span class="duw dug ${xc(y.f)}" title="${y.opp}${y.lv?" · in corso":""}"><i>${lab}</i><b>${f1(y.f)}</b></span>`;
+  if(y.ng)return `<span class="duw dun0" title="${y.opp} · non ha giocato"><i>${lab}</i><b>NG</b></span>`;
+  return `<span class="duw duu"><i>${lab}</i><b>${y.opp}</b></span>`};
+ const sc=pl?`<span style="color:#fff!important;-webkit-text-fill-color:#fff!important" class="pdkx ${xc(x.tot/x.n)} dubig"><b>${f1(x.tot)}</b>${zone==="trib"?"<i>tribuna</i>":""}</span>`
+  :`<span style="color:#fff!important;-webkit-text-fill-color:#fff!important" class="pdkx na dubig"><b>—</b><i>${x.G.length?(x.rem?"attesa":"NG"):"0 partite"}</i></span>`;
+ const nk=TM[t].nome.split(" ").slice(-1)[0];
+ return `<div class="du ${cls} ru-${rl}${fin?" fin":""}" data-rn="${RN[rl]}"><div class="duh"><div class="dul"><span class="duj" data-pl="${e(g[0])}" role="link" tabindex="0" style="cursor:pointer" aria-label="Apri il profilo di ${e(g[0])}">${window.e16Jersey?e16Jersey(t,e16Num(g[0]),nk):""}</span><span class="dufl"></span></div><div class="dur"><div class="dun"><b title="${e(g[0])}">${shortN(g[0])}</b><small>${RI[rl]} · ${x.team}</small></div>
+  <div class="dus">${fin&&x.G.length?`<i class="fin-b" title="Punteggio definitivo"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></i>`:""}${sc}</div></div></div>
+  <div class="duwk">${x.G.map(chip).join("")||`<span class="duw duu"><i>—</i><b>riposo</b></span>`}</div><div class="duf">${x.G.filter(y=>!y.up).length}/${x.G.length} partite giocate</div></div>`}
+function vDuel(w,wNow){const[A,B]=G.du,M=MATCHUPS[w]||[],WS=weekScores(w),TA=wkTeam(A,w),TB=wkTeam(B,w);
+ const sa=WS.off?WS.S[A]:TA.S,sb=WS.off?WS.S[B]:TB.S,pa=WS.off?sa:TA.PR,pb=WS.off?sb:TB.PR,rem=TA.rem+TB.rem;
+ const pA=WS.off||!rem?(sa===sb?.5:sa>sb?1:0):Phi((pa-pb)/(12*Math.sqrt(rem))),pct=WS.off||!rem?Math.round(pA*100):Math.min(99,Math.max(1,Math.round(pA*100))),la=sa>=sb;
+ const lg=id=>`<span class="drlg " style="--tc:${TCOL[id]}"><span class="badge logo lg-${id}" role="img" aria-label="${e(nick(TM[id]))}"></span></span>`;
+ let h=`<div style="--ca:${TCOL[A]};--cb:${TCOL[B]}"><div class="dutop"><button class="gback" data-du="close">‹ Settimana ${w}</button><button class="shbtn dunav first" data-duk="-1" aria-label="Settimana precedente" title="Settimana precedente" ${w>1?"":"disabled"}>‹</button><button class="shbtn dunav" data-duk="1" aria-label="Settimana successiva" title="Settimana successiva" ${w<Math.max(...Object.keys(MATCHUPS).map(Number))?"":"disabled"}>›</button></div>
+ <div class="dustrip" role="tablist" aria-label="Altre sfide della settimana">${M.map(([a,b])=>{const x=WS.S[a],y=WS.S[b];return `<button class="dumini${a===A&&b===B?" on":""}" data-du="${a},${b}" aria-label="${e(nick(TM[a]))} contro ${e(nick(TM[b]))}"><span class="${x>=y?"w":""}">${lg(a)}<b>${f1(x)}</b></span><span class="${y>x?"w":""}">${lg(b)}<b>${f1(y)}</b></span></button>`}).join("")}</div>
+ <div class="duhd"><div class="dut${la?" lead":""}"><span class="dulg">${lg(A)}</span><div><b>${f1(sa)}</b><small>${WS.off?"ufficiale ESPN":"proiez. "+f1(pa)}</small></div></div><span class="duvs">VS</span><div class="dut r${la?"":" lead"}"><span class="dulg">${lg(B)}</span><div><b>${f1(sb)}</b><small>${WS.off?"ufficiale ESPN":"proiez. "+f1(pb)}</small></div></div>
+  <div class="dunm"><span>${e(nick(TM[A]))}</span><span>${e(nick(TM[B]))}</span></div>
+  <div class="dubar"><i style="width:${pct}%"></i></div><div class="dupct"><span>${pct}% vittoria</span><span>${100-pct}%</span></div></div>`;
+ const rows=(i0,i1,zone,slot)=>{let r="";for(let i=i0;i<i1;i++){const a=TA.L[i],b=TB.L[i];if(!a&&!b)continue;r+=`<div class="durow">${a?duCard(A,a,zone):"<div></div>"}<span class="duslot ${zone}">${slot(i)}</span>${b?duCard(B,b,zone):"<div></div>"}</div>`}return r};
+ h+=`<section class="duz z-campo pqw"><div class="duzt"><span>In campo</span></div><div class="dusec full">Punteggio pieno · migliori 14</div>${rows(0,14,"full",i=>i+1)}</section>`;
+ h+=`<section class="duz z-trib pqw"><div class="duzt"><span>Tribuna</span></div><div class="dusec trib">Fuori dai 14</div>${rows(14,17,"trib",()=>"·")}</section>`;
+ h+=`<p class="note">${w===wNow?"Settimana in corso: la formazione si aggiorna a ogni partita (sempre i migliori 14 dei 17). ":""}${WS.off?"Punteggio in alto = risultato ufficiale ESPN; sotto, il calcolo dell app con i migliori 14. ":""}Ogni giocatore porta la somma dell AVG di tutte le sue partite della settimana. Trattino accanto al nome = ruolo: <i class="rtr G"></i>guardia, <i class="rtr F"></i>ala, <i class="rtr C"></i>centro. Caselle: colorata = partita giocata con il suo AVG, tratteggiata = da giocare (@ = in trasferta), NG = non ha giocato. Proiezione = punteggio se chi deve ancora giocare facesse la sua media; la percentuale di vittoria viene da lì.</p></div>`;
+ return h}
 /* ---------- ROSTER (come il Roster di Dreamers) ---------- */
 const RL=r=>{const a=String(r||"").split(",");return a[0]==="C"?"C":/G/.test(a[0])?"G":"F"};
 function vRoster(){const t=TM[G.rt]||TEAMS[0],R0=ROSE[t.id]||[],P=pstats(),r=REC[t.id];
@@ -81,10 +117,12 @@ function vReg(){const art=(n,t,b)=>`<details class="rart"${n===1?" open":""}><su
  ${art(6,"Playoff",`<p>10 squadre qualificate: teste di serie 1 e 2 alle prime di ogni conference, poi per vittorie e punti fatti. 1ª–6ª saltano il primo turno. Turno 1 (8–14 feb): 7ª–10ª e 8ª–9ª. Quarti (15 feb–7 mar), semifinali (8–21 mar), finale.</p>`)}`}
 window.GESTV={lega:vLega,roster:vRoster,inf:vInf,reg:vReg};
 window.e16Roster=t=>{G.rt=t;save()};window.e16RT=()=>G.rt;
-(window.NAVX=window.NAVX||[]).push({k:"g",get:()=>({tab:G.tab,rt:G.rt,it:G.it,wk:G.wk}),set:o=>Object.assign(G,o)});
-document.addEventListener("click",ev=>{const c=ev.target.closest("[data-lg2],[data-lgw],[data-rt],[data-it]");if(!c)return;const d=c.dataset;
- if(d.lgw){G.wk=+d.lgw;if(d.lg2)G.tab=d.lg2;save();render();return}
- if(d.lg2){G.tab=d.lg2;save();render();return}
+(window.NAVX=window.NAVX||[]).push({k:"g",get:()=>({tab:G.tab,rt:G.rt,it:G.it,wk:G.wk,du:G.du}),set:o=>Object.assign(G,o)});
+document.addEventListener("click",ev=>{const c=ev.target.closest("[data-lg2],[data-lgw],[data-rt],[data-it],[data-du],[data-duk]");if(!c)return;const d=c.dataset;
+ if(d.du){ev.stopPropagation();if(d.du==="close")G.du=null;else{G.du=d.du.split(",");G.tab="turno"}render();scrollTo(0,0);setTimeout(()=>{const o=document.querySelector(".dumini.on"),st=o&&o.parentElement;if(st)st.scrollLeft=o.offsetLeft-(st.clientWidth-o.offsetWidth)/2},30);return}
+ if(d.duk){const wNow=weekOf(nyToday()<W1?W1:nyToday()),w=(G.wk||wNow)+ +d.duk,m=(MATCHUPS[w]||[]).find(x=>x.includes(G.du[0]));if(!m)return;G.wk=w;G.du=m[0]===G.du[0]?m:[m[1],m[0]];render();return}
+ if(d.lgw){G.wk=+d.lgw;G.du=null;if(d.lg2)G.tab=d.lg2;save();render();return}
+ if(d.lg2){G.tab=d.lg2;G.du=null;save();render();return}
  if(d.rt){G.rt=d.rt;save();render();return}
  if(d.it){G.it=G.it===d.it?null:d.it;render();return}},true);
 })();

@@ -423,9 +423,25 @@ for(const w in SCORES)for(const[A,B]of(MATCHUPS[w]||[])){const a=SCORES[w][A],b=
    Turno 1 (8-14 feb): 7ª-10ª, 8ª-9ª · Turno 2 (15 feb-7 mar): 1ª-vinc. 8/9, 4ª-5ª, 3ª-6ª, 2ª-vinc. 7/10 · Turno 3 (8-21 mar): semifinali · poi finale. */
 function seeds(){const by=(a,b)=>(b.w-a.w)||(a.l-b.l)||(b.pf-a.pf);const all=TEAMS.map(t=>({...t,...(REC[t.id]||{w:0,l:0,pf:0,pa:0})}));
  const top=["E","W"].map(c=>all.filter(t=>t.conf===c).sort(by)[0]).sort(by);const rest=all.filter(t=>!top.includes(t)).sort(by);return[...top,...rest]}
-let WK=null;function weekScores(w){if(SCORES[w]){const G={};TEAMS.forEach(t=>G[t.id]=0);return{S:{...SCORES[w]},G,off:1}}const[a,b]=weekRange(w);const S={},G={};TEAMS.forEach(t=>{S[t.id]=0;G[t.id]=0});
- const tit={};for(const t in ROSE)for(const g of ROSE[t])if(g[2]!=="BE"&&g[2]!=="IR")tit[window.__ownKey?__ownKey(g[0]):g[0]]=t;
- for(const d of Object.keys(ESPN.days)){if(d<a||d>b)continue;for(const x of rowsOf(d)){const t=tit[window.__ownKey?__ownKey(x.r[0]):x.r[0]];if(t){S[t]+=x.f;G[t]++}}}return{S,G}}
+/* (24) PARTITE DELLA SETTIMANA (regola ESPN 16): ogni giocatore porta la SOMMA dell AVG di tutte le sue partite della settimana;
+   la formazione è automatica: contano i migliori 14 dei 17 (nessuna panchina a metà, nessun capitano, nessun cap).
+   wkTeam(t,w) → elenco dei 17 ordinati per punteggio della settimana, con le caselle partita (giocata / NG / da giocare) e la proiezione. */
+const WKD=["DO","LU","MA","ME","GI","VE","SA"];
+function wkTeam(t,w){const[a,b]=weekRange(w),P=pstats(),R0=ROSE[t]||[],own={};R0.forEach(g=>own[__ownKey(g[0])]=g);
+ const L={};R0.forEach(g=>L[g[0]]={g,tot:0,n:0,G:[],rem:0,team:g[1]});
+ const days=Object.keys(ESPN.days).filter(d=>d>=a&&d<=b).sort();
+ /* 1) partite giocate (tabellini) */
+ for(const d of days)for(const id of ESPN.days[d]){const B=ESPN.box[id],gm=ESPN.games[id];if(!B||!gm)continue;for(const r of B){const g=own[__ownKey(r[0])];if(!g)continue;const x=L[g[0]],f=ffps(r),opp=r[1]===gm[0]?gm[1]:gm[0];
+  x.tot+=f;x.n++;x.team=r[1];x.G.push({d,id,f,opp:(r[1]===gm[0]?"@":"")+opp,lv:gm[4]==="L"})}}
+ /* 2) partite della sua squadra senza tabellino (da giocare) o finite senza di lui (NG) */
+ for(const k in L){const x=L[k],seen=new Set(x.G.map(y=>y.id));
+  for(const d of days)for(const id of ESPN.days[d]){const gm=ESPN.games[id];if(!gm||seen.has(id)||(gm[0]!==x.team&&gm[1]!==x.team))continue;const opp=(gm[0]===x.team?"@":"")+(gm[0]===x.team?gm[1]:gm[0]);
+   if(ESPN.box[id]&&gm[4]!=="S")x.G.push({d,id,f:null,opp,ng:gm[4]==="F",lv:gm[4]==="L"});else{x.G.push({d,id,f:null,opp,up:1});x.rem++}}
+  x.G.sort((p,q)=>p.d<q.d?-1:p.d>q.d?1:0);const p=P[k];x.avg=p?p.ff/p.gp:0;x.proj=x.tot+x.avg*x.rem}
+ const out=Object.values(L).sort((p,q)=>q.tot-p.tot||q.proj-p.proj);out.forEach((x,i)=>x.on=i<14);
+ const S=out.slice(0,14).reduce((s,x)=>s+x.tot,0),PR=out.map(x=>x.proj).sort((p,q)=>q-p).slice(0,14).reduce((s,v)=>s+v,0);
+ return{L:out,S,PR,G:out.slice(0,14).reduce((s,x)=>s+x.n,0),rem:out.reduce((s,x)=>s+x.rem,0)}}
+let WK=null;function weekScores(w){if(SCORES[w]){const G={};TEAMS.forEach(t=>G[t.id]=0);return{S:{...SCORES[w]},G,off:1}}const S={},G={};TEAMS.forEach(t=>{const T=wkTeam(t.id,w);S[t.id]=T.S;G[t.id]=T.G});return{S,G}}
 let HSL=null,HWK=null;/* casella della Home: pagina scelta e settimana */
 try{HSL=+localStorage.getItem("e16_hsl")||0}catch(e){}
 function vHome(){

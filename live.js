@@ -39,7 +39,7 @@ async function tick(){if(busy||document.hidden)return;busy=true;let changed=fals
    if(ids.length)ESPN.days[d]=ids}
   if(changed){ESPN.upd=new Intl.DateTimeFormat("it-IT",{timeZone:"Europe/Rome",dateStyle:"short",timeStyle:"short"}).format(new Date())+" (live)";
    try{window.e16Reset&&e16Reset()}catch(e){}
-   const a=document.activeElement;if(!(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName))&&["home","tv","stat","ssq"].includes(cur)&&!curTeam){const y=scrollY;render();scrollTo(0,y)}}
+   const a=document.activeElement;if(!(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName))&&["home","tv","stat","ssq","lega"].includes(cur)&&!curTeam){const y=scrollY;render();scrollTo(0,y)}}
  }catch(e){}finally{busy=false}
  /* ritmo: 30 s se c è una partita in corso o che sta per iniziare, altrimenti 5 minuti */
  const t=nyDay(),G=[...(ESPN.days[t]||[]),...(ESPN.days[addD(t,-1)]||[])].map(id=>ESPN.games[id]).filter(Boolean);

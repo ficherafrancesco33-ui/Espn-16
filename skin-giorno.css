@@ -408,6 +408,11 @@ html[data-ducdk] body div.teamhead:has(.hlogo[data-t="DUC"]):not(#dx) { color: r
 .perbtn > span { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 .perbtn > b { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.16); font-family: var(--display); font-style: italic; font-weight: 800; font-size: 16px; letter-spacing: 0.02em; white-space: nowrap; }
 .perbtn svg { width: 17px; height: 17px; flex: 0 0 auto; color: var(--gold,#facc15); }
+.du.ru-G { --rc: var(--rG); }
+.du.ru-F { --rc: var(--rF); }
+.du.ru-C { --rc: var(--rC); }
+.du[class*="ru-"]:not(.ru-x) { position: relative; padding-top: 26px; }
+.du[class*="ru-"]:not(.ru-x)::before { content: attr(data-rn); position: absolute; left: 0px; right: 0px; top: 0px; height: 19px; display: flex; align-items: center; padding-left: 10px; border-radius: 11px 11px 0px 0px; background: var(--rc); color: rgb(11, 15, 26); font-family: var(--display); font-style: italic; font-weight: 900; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
 @keyframes dwin { 
   0% { opacity: 0; }
   100% { opacity: 1; }
@@ -480,6 +485,7 @@ header::after { content: ""; position: absolute; inset: 0px; background: repeati
 #lgring { position: absolute; pointer-events: none; border-radius: 28%; padding: 3px; opacity: 0; transition: opacity 0.35s; background: conic-gradient(from 0deg,#6d28d9 calc(var(--p,0)*1turn),rgba(109,40,217,.22) 0); mask: linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 0px) content-box exclude, linear-gradient(rgb(0, 0, 0) 0px, rgb(0, 0, 0) 0px); }
 #lgring.on { opacity: 1; }
 #lgring.on:not(.fin) { animation: 1.1s ease-in-out 0s infinite normal none running lgpulse; }
+#lgring.fin { filter: drop-shadow(rgb(109, 40, 217) 0px 0px 6px); }
 @keyframes lgpulse { 
   50% { filter: drop-shadow(rgba(109, 40, 217, 0.9) 0px 0px 7px); }
 }
@@ -645,7 +651,6 @@ nav button { font-size: 12px; letter-spacing: 0px; padding: 8px 1px; }
 .iapn { display: flex; align-items: flex-start; gap: 4px; font-weight: 700; font-size: 12.5px; line-height: 1.15; }
 .iapn .rc { margin-top: 3px; flex: 0 0 auto; width: 9px; height: 9px; border-radius: 50%; background: rgb(100, 116, 139); }
 .iapn .rc.G { background: var(--rG); }
-.iapn .rc.F { background: var(--rF); }
 .iapn .rc.C { background: var(--rC); }
 .iapm { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 2px 4px; margin-top: 3px; font-size: 12px; }
 .iapm b { font-weight: 700; }
@@ -1422,9 +1427,53 @@ input, select, textarea { font-size: 16px !important; }
 .clbox td.pts { color: rgb(255, 255, 255); font-weight: 800; }
 .clbox th, .clbox td { padding-left: 5px !important; padding-right: 5px !important; }
 .clbox td:first-child, .clbox th:first-child { min-width: 132px !important; max-width: 150px !important; }
+.duhd { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 6px; padding: 12px; margin: 8px 0px 10px; border-radius: 16px; border: 1px solid rgba(196, 181, 253, 0.25); background: linear-gradient(90deg,color-mix(in srgb,var(--ca,#6d4bd8) 30%,transparent),rgba(13,6,36,.6) 50%,color-mix(in srgb,var(--cb,#6d4bd8) 30%,transparent)); }
+.dut { display: flex; align-items: center; gap: 8px; min-width: 0px; }
+.dut.r { flex-direction: row-reverse; text-align: right; }
+.dut .dulg .drlg { width: 44px; height: 44px; }
+.dut b { display: block; font-family: var(--display); font-style: italic; font-weight: 800; font-size: 26px; line-height: 1; color: rgb(255, 255, 255); }
+.dut small { font-size: 10.5px; color: rgb(201, 195, 232); }
+.duvs { font-family: var(--display); font-style: italic; font-weight: 900; font-size: 13px; background: rgb(13, 6, 36); border-radius: 8px; padding: 6px 8px; color: rgb(255, 255, 255); }
+.dunm { grid-column: 1 / -1; display: flex; justify-content: space-between; font-family: var(--display); font-style: italic; font-weight: 800; font-size: 14px; text-transform: uppercase; color: rgb(233, 221, 255); }
+.dubar { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: rgb(239, 68, 68); overflow: hidden; }
+.dubar i { display: block; height: 100%; background: rgb(34, 197, 94); }
+.dupct { grid-column: 1 / -1; display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; color: rgb(201, 195, 232); }
+.dusec { margin: 12px 0px 6px; font-family: var(--display); font-style: italic; font-weight: 800; font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; }
+.dusec.cap { color: rgb(245, 180, 0); }
+.dusec.full { color: rgb(74, 222, 128); }
+.dusec.half { color: rgb(249, 168, 212); }
+.dusec.trib { color: rgb(148, 163, 184); }
+.durow { display: grid; grid-template-columns: minmax(0px, 1fr) 22px minmax(0px, 1fr); gap: 4px; align-items: stretch; margin-bottom: 6px; }
+.duslot { align-self: center; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; font-family: var(--display); font-style: italic; font-weight: 900; font-size: 11px; background: rgba(255, 255, 255, 0.08); color: rgb(255, 255, 255); }
+.duslot.cap { background: rgb(245, 180, 0); color: rgb(17, 17, 17); }
+.duslot.half { background: rgb(190, 24, 93); }
+.duslot.trib, .duslot.wait { background: none; color: rgb(127, 121, 168); }
+.du { min-width: 0px; display: grid; grid-template-rows: auto auto auto auto; gap: 6px; align-content: start; padding: 8px; border-radius: 12px; background: linear-gradient(rgb(34, 22, 74), rgb(22, 13, 51)); border: 1px solid rgba(196, 181, 253, 0.18); }
+.du.cap { border-color: rgb(245, 180, 0); box-shadow: rgba(245, 180, 0, 0.3) 0px 0px 0px 1px, rgba(245, 180, 0, 0.15) 0px 6px 18px; }
+.du.half { border-color: rgba(219, 39, 119, 0.45); }
+.du.trib, .du.wait { opacity: 0.65; }
+.du-nulla { visibility: hidden; }
+.duh { display: grid; grid-template-columns: 34px minmax(0px, 1fr); gap: 6px; align-items: center; height: 38px; }
+.duh { position: relative; }
+.duo { position: absolute; right: 0px; top: 50%; transform: translateY(-50%); padding: 2px 8px; border-radius: 6px; background: rgb(220, 38, 38); font-style: normal; font-weight: 900; font-size: 11px; letter-spacing: 0.08em; line-height: 1.3; box-shadow: rgb(255, 255, 255) 0px 0px 0px 1.5px, rgba(0, 0, 0, 0.4) 0px 2px 6px; color: rgb(255, 255, 255) !important; }
+.duh:has(.duo) .dun b { padding-right: 46px; }
+.duo { box-sizing: border-box; width: 43px; text-align: center; padding-left: 0px !important; padding-right: 0px !important; }
+.du:has(.duo) .duj svg { filter: drop-shadow(rgb(255, 42, 42) 0px 0px 3px); }
+.duj { width: 34px; height: 38px; display: grid; place-items: center; position: relative; }
 [data-ist] { --ist: #22c55e; --w: 100%; }
 [data-ist] .pcd::before { content: ""; position: absolute; left: 0px; right: 0px; top: 0px; height: calc(3px + var(--sepw,0px)); background: linear-gradient(90deg,var(--ist) var(--w),#e6e6e6 var(--w)) 0 0/100% 3px no-repeat,var(--sepc,#0b0b12); z-index: 2; }
 .cpl .pnm, .dpc .pnm, .cpl .pcd, .dpc .pcd { position: relative; z-index: 4; }
+.duj svg { width: 34px; height: 38px; }
+.dun { min-width: 0px; }
+.dun b { display: block; font-family: var(--display); font-style: italic; font-weight: 800; font-size: 14px; color: rgb(255, 255, 255); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dun small { font-size: 10px; color: rgb(169, 163, 204); }
+.dus { display: flex; align-items: center; justify-content: space-between; gap: 4px; height: 24px; }
+.dus .pdkx { font-size: 15px; min-width: 46px; }
+.duwk { display: grid; grid-template-columns: repeat(4, minmax(0px, 1fr)); gap: 2px; min-height: 32px; }
+.duw { display: grid; justify-items: center; align-content: center; height: 32px; border-radius: 5px; background: rgba(255, 255, 255, 0.05); overflow: hidden; }
+.duw i { font-style: normal; font-size: 8px; font-weight: 800; letter-spacing: 0.04em; color: rgb(143, 137, 181); line-height: 1; }
+.duw b { font-family: var(--display); font-style: italic; font-weight: 800; font-size: 10.5px; line-height: 1.2; color: rgb(229, 231, 255); white-space: nowrap; letter-spacing: -0.03em; max-width: 100%; padding: 0px 1px; }
+.duw.duu { background: none; box-shadow: rgba(255, 255, 255, 0.28) 0px 0px 0px 1px inset; }
 @keyframes lvbd { 
   0%, 100% { box-shadow: rgb(255, 77, 94) 0px 0px 0px 2px inset, rgba(255, 77, 94, 0.7) 0px 0px 8px; }
   50% { box-shadow: rgba(255, 77, 94, 0.25) 0px 0px 0px 2px inset, rgba(255, 77, 94, 0) 0px 0px 0px; }
@@ -1433,6 +1482,21 @@ input, select, textarea { font-size: 16px !important; }
   0%, 100% { opacity: 1; filter: brightness(1.15) saturate(1.2); }
   50% { opacity: 0.22; filter: none; }
 }
+.duw.dun0 b { color: rgb(127, 121, 168); }
+.du { position: relative; }
+.fin-b { display: grid; place-items: center; position: absolute; right: 36px; top: calc(50% - 15px); width: 26px; height: 26px; color: rgb(250, 204, 21); filter: drop-shadow(rgba(0, 0, 0, 0.5) 0px 1px 2px); }
+.fin-b svg { width: 100%; height: 100%; }
+.duw.dung { box-shadow: rgb(239, 68, 68) 0px 0px 0px 1.5px inset !important; }
+.duw.dung b { color: rgb(239, 68, 68) !important; }
+.duw.dug i { color: rgba(0, 0, 0, 0.55); }
+.duw.dug b { color: rgb(17, 17, 17); }
+.duw.dug.r { background: rgb(239, 68, 68); }
+.duw.dug.y { background: rgb(245, 180, 0); }
+.duw.dug.g { background: rgb(34, 197, 94); }
+.duw.dug.v { background: rgb(139, 92, 246); }
+.duw.dug.r b, .duw.dug.v b { color: rgb(255, 255, 255); }
+.duw.dug.r i, .duw.dug.v i { color: rgba(255, 255, 255, 0.7); }
+.duf { font-size: 9.5px; color: rgb(143, 137, 181); }
 .hseg { flex: 0 0 auto; position: relative; display: grid; place-items: center; width: 40px; height: 38px; border: 0px; border-radius: 11px; cursor: pointer; color: rgb(26, 18, 3); background: radial-gradient(circle at 30% 20%, rgb(255, 226, 122), rgb(245, 180, 0) 60%, rgb(184, 127, 0)); box-shadow: rgba(245, 180, 0, 0.5) 0px 0px 12px, rgba(255, 255, 255, 0.3) 0px 0px 0px 1px inset; }
 .hseg svg { width: 19px; height: 19px; }
 @keyframes segbl { 
@@ -1482,6 +1546,7 @@ input, select, textarea { font-size: 16px !important; }
 @keyframes rstp { 
   100% { box-shadow: rgba(239, 68, 68, 0.55) 0px 0px 0px 3px; }
 }
+.pdkx.dugold { background: linear-gradient(rgb(247, 215, 116), rgb(212, 160, 23)); color: rgb(42, 28, 0); box-shadow: rgba(0, 0, 0, 0.2) 0px -2px 0px inset, rgba(245, 180, 0, 0.35) 0px 0px 10px; }
 .drtvg .drtvl .lg-DUC { transform: translateY(-4px); }
 .hbar { display: flex; align-items: center; gap: 8px; margin: 4px 0px 14px; }
 .hbar .tvgo, .hbar .hdrm { display: none !important; }
@@ -1493,9 +1558,43 @@ input, select, textarea { font-size: 16px !important; }
 .hntk { position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: rgb(226, 232, 240); color: rgb(26, 34, 64); transition: left 0.2s, background 0.2s; }
 .hntk svg { width: 14px; height: 14px; }
 html:not(.dreamfs) { padding-top: 0px !important; }
+.du .duh { grid-template-columns: 48px minmax(0px, 1fr); }
+.du .duj { width: 48px; height: 51px; align-self: start; margin-top: -1.5px; overflow: visible; }
+.du .duj svg { margin: 0px 1px; width: 46px !important; height: 51px !important; }
+.du .duh { display: grid; grid-template-columns: 48px minmax(0px, 1fr); gap: 6px; align-items: start; height: auto; min-height: 0px; }
+.du .dul { display: grid; justify-items: center; gap: 2px; }
+.du .dur { min-width: 0px; }
+.du .dun b { white-space: normal; overflow: visible; text-overflow: clip; line-height: 0.96; overflow-wrap: normal; hyphens: none; padding-right: 0px !important; }
+.du .dun small { display: block; margin-top: 1px; line-height: 1.05; }
+.du .dus { display: flex; align-items: center; gap: 6px; height: auto; margin-top: 4px; }
+.du .dufl { display: flex; justify-content: center; min-height: 0px; }
+.du .fin-b { position: static; flex: 0 0 24px; width: 24px; height: 24px; }
+.du .duo { position: static; transform: none; top: auto; right: auto; width: 42px; }
+.du .dubig { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; flex: 0 0 auto; margin-left: auto; min-width: 43px; width: auto; height: 34.5px; padding: 0px 4px; border-radius: 9px; box-sizing: border-box; box-shadow: rgba(0, 0, 0, 0.2) 0px -3px 0px inset; }
+.du .dubig.na { background: rgba(255, 255, 255, 0.08); color: rgb(169, 163, 204); box-shadow: rgba(255, 255, 255, 0.14) 0px 0px 0px 1px inset; }
+.du .dubig.dugold { box-shadow: rgba(0, 0, 0, 0.2) 0px -3px 0px inset, rgba(245, 180, 0, 0.35) 0px 0px 12px; }
+.du .dubig b { font-weight: 900; font-size: 21px; line-height: 1; }
+.du { gap: 4px; padding-bottom: 7px; }
+.du .dubig i { font-style: normal; font-weight: 800; font-size: 8.25px; line-height: 1.1; opacity: 0.82; white-space: nowrap; letter-spacing: 0.01em; }
+.du .dun b { font-family: CourtBlock, "Barlow Condensed", sans-serif; font-style: normal; font-weight: 400; text-transform: uppercase; letter-spacing: 0.01em; font-size: 19px; }
 body:not(.dreamfs) header { top: 0px !important; padding-top: env(safe-area-inset-top,0px) !important; }
 html:not(.setpg) body:not(.dreamfs)::before { display: none; }
 .drms .drr.slead em, .drms .drr.sgold em { color: rgb(216, 180, 254) !important; text-shadow: rgba(192, 132, 252, 0.95) 0px 0px 10px, rgba(168, 85, 247, 0.75) 0px 0px 22px !important; }
+.dustrip { display: flex; gap: 8px; justify-content: center; overflow-x: auto; margin: 10px 0px 2px; padding: 2px 1px 6px; scrollbar-width: none; }
+.dustrip::-webkit-scrollbar { display: none; }
+.dumini { flex: 1 1 0px; min-width: 72px; padding: 6px 7px; border: 1.5px solid var(--line); border-radius: 11px; background: var(--panel); color: inherit; display: flex; flex-direction: column; gap: 5px; cursor: pointer; font: inherit; }
+.dumini > span { display: flex; align-items: center; gap: 5px; opacity: 0.75; }
+.dumini > span.w { opacity: 1; }
+.dumini span.drlg { opacity: 1; display: block; flex: 0 0 26px !important; width: 26px !important; height: 26px !important; }
+.dumini .drlg .badge { width: 26px !important; height: 26px !important; }
+.dumini b { margin-left: auto; font-style: ; font-variant-ligatures: ; font-variant-caps: ; font-variant-east-asian: ; font-variant-alternates: ; font-variant-position: ; font-variant-emoji: ; font-weight: ; font-stretch: ; font-size: ; line-height: ; font-family: ; font-optical-sizing: ; font-size-adjust: ; font-kerning: ; font-feature-settings: ; font-variation-settings: ; font-language-override: ; font-variant-numeric: tabular-nums; }
+.dumini.on { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold) inset,0 0 12px rgba(255,200,60,.25); background: var(--panel2); }
+.dutop { display: flex; align-items: center; gap: 10px; }
+.dutop .gback { margin-bottom: 0px; }
+.dutop .shbtn.dunav { margin-left: 0px; font-size: 22px; font-weight: 900; line-height: 1; padding-bottom: 3px; }
+.dutop .shbtn.dunav.first { margin-left: auto; }
+.dutop .shbtn:not(.dunav) { margin-left: 0px; }
+.duhd .dut.lead b { color: rgb(216, 180, 254) !important; text-shadow: rgba(192, 132, 252, 0.95) 0px 0px 10px, rgba(168, 85, 247, 0.75) 0px 0px 22px !important; }
 .drplh.drplsh { display: flex; align-items: center; gap: 10px; }
 .drplh.drplsh > span { margin-left: auto; }
 .drplh.drplsh .shbtn { margin-left: 0px; }
@@ -1508,6 +1607,16 @@ html:not(.setpg) body:not(.dreamfs)::before { display: none; }
 .drfoot .drrulb { margin: 0px; }
 .drth small { font: 600 10px var(--body,Arial); letter-spacing: 0.04em; opacity: 0.8; margin-left: 2px; text-transform: none; }
 .drr em, .drms .drr em { display: block; font-variant-numeric: tabular-nums lining-nums !important; font-feature-settings: "tnum", "lnum" !important; min-width: 84px !important; text-align: right !important; }
+.duz { border-radius: 22px; padding: 14px 8px 8px; margin: 30px -8px 0px; position: relative; border: 2px solid; }
+.z-campo { background: rgba(34, 197, 94, 0.13); border-color: rgba(74, 222, 128, 0.55); }
+.z-panch { background: rgba(244, 114, 182, 0.12); border-color: rgba(249, 168, 212, 0.5); }
+.z-trib { background: rgba(148, 163, 184, 0.12); border-color: rgba(148, 163, 184, 0.4); border-style: dashed; }
+.duzt { position: absolute; top: -17px; left: 50%; transform: translateX(-50%); white-space: nowrap; z-index: 1; }
+.duzt span { display: block; font-family: var(--display); font-style: italic; font-weight: 800; font-size: 17px; letter-spacing: 0.2em; text-transform: uppercase; padding: 5px 18px; border-radius: 999px; color: rgb(6, 19, 10); box-shadow: rgba(0, 0, 0, 0.45) 0px 4px 14px; }
+.z-campo .duzt span { background: rgb(74, 222, 128); }
+.z-panch .duzt span { background: rgb(249, 168, 212); color: rgb(43, 6, 22); }
+.z-trib .duzt span { background: rgb(148, 163, 184); color: rgb(15, 23, 42); }
+.duz .dusec { font-size: 10.5px; opacity: 0.8; margin-top: 8px; }
 .drms .drr { padding-right: 36px !important; }
 .topbtns { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
 html.dlt-parquet { --pq-tx: var(--pq-ac,#d9560b); --pq-b1: #e8631a; --pq-b2: #cf5410; --pq-btn: linear-gradient(180deg,var(--pq-b1),var(--pq-b2)); --pq-card: linear-gradient(180deg,#fbeedb,#fdf3e1); --pq-box: #fff; --pq-line: rgba(217,86,11,.45); --pq-on: #fff; --pq-sh: 0 6px 14px rgba(90,50,10,.22); }
@@ -1526,12 +1635,30 @@ body.dreamfs .drroom[data-th="3"], .drroom.gdemb[data-th="3"] { border-color: rg
 .drroom[data-th="3"] .drexit, .drroom[data-th="3"] .drroom > .drexit { border-radius: 16px; }
 .drroom[data-th="3"] .drst { background: rgb(217, 72, 15) !important; color: rgb(255, 255, 255) !important; }
 .drroom[data-th="3"] .drr em, .drroom[data-th="3"] .drcwl b, .drroom[data-th="3"] .drlogo { text-shadow: none; }
+.drroom[data-th="3"] .duhd { box-shadow: var(--dsh); background: linear-gradient(90deg,color-mix(in srgb,var(--ca,#6d4bd8) 28%,#fff6e4),#fff6e4 50%,color-mix(in srgb,var(--cb,#2563eb) 28%,#fff6e4)) !important; border: 1px solid var(--dpb) !important; border-radius: var(--drad) !important; }
+.drroom[data-th="3"] .dut b, .drroom[data-th="3"] .dunm, .drroom[data-th="3"] .dut b span { color: rgb(43, 22, 8) !important; }
+.drroom[data-th="3"] .dut small, .drroom[data-th="3"] .dupct, .drroom[data-th="3"] .dun small, .drroom[data-th="3"] .dus em, .drroom[data-th="3"] .duf, .drroom[data-th="3"] .dunb { color: rgb(122, 86, 50) !important; }
+.drroom[data-th="3"] .duvs { background: rgb(217, 72, 15); color: rgb(255, 255, 255); }
 .drroom[data-th="3"] :is(b, em, strong, span, i, small, div) { text-shadow: none !important; }
 .drroom[data-th="3"] .duhd .dut.lead b, .drroom[data-th="3"] .drtop > b, .drroom[data-th="3"] .drr.w em, .drroom[data-th="3"] .drms .drr.slead em, .drroom[data-th="3"] .drms .drr.sgold em { color: rgb(194, 65, 12) !important; text-shadow: none !important; }
+.drroom[data-th="3"] .dusec.cap { color: rgb(180, 83, 9); }
+.drroom[data-th="3"] .dusec.full { color: rgb(21, 128, 61); }
+.drroom[data-th="3"] .dusec.half { color: rgb(190, 24, 93); }
+.drroom[data-th="3"] .dusec.trib { color: rgb(107, 98, 88); }
+.drroom[data-th="3"] .duw:not(.dug) { background: rgba(0, 0, 0, 0.06); }
+.drroom[data-th="3"] .duw:not(.dug) i { color: rgb(122, 86, 50); }
+.drroom[data-th="3"] .duw:not(.dug) b { color: rgb(43, 22, 8); }
+.drroom[data-th="3"] .duw.duu { box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 0px 1px inset; }
+.drroom[data-th="3"] .duw.dun0 b { color: rgb(122, 86, 50); }
+.drroom[data-th="3"] .duslot { background: rgba(0, 0, 0, 0.08); color: rgb(43, 22, 8); }
 .drroom[data-th="3"] .dusec, .drroom[data-th="3"] .dusec.cap, .drroom[data-th="3"] .dusec.full, .drroom[data-th="3"] .dusec.half, .drroom[data-th="3"] .dusec.trib, .drroom[data-th="3"] .dusec.wait, .drroom[data-th="3"] .gback, .drroom[data-th="3"] .dutop .gback, .drroom[data-th="3"] .drhd small, .drroom[data-th="3"] .note { color: rgb(43, 22, 8) !important; }
 .drroom[data-th="3"] .shbtn, .drroom[data-th="3"] .shb, .drroom[data-th="3"] [data-share] { background: rgb(255, 246, 228) !important; color: rgb(43, 22, 8) !important; border: 1px solid rgb(43, 22, 8) !important; }
 .drroom[data-th="3"] .drms .drr.slead em, .drroom[data-th="3"] .drms .drr.sgold em, .drroom[data-th="3"] .drr.w em { color: rgb(194, 65, 12) !important; text-shadow: rgba(242, 112, 26, 0.85) 0px 0px 10px, rgba(255, 150, 40, 0.6) 0px 0px 22px !important; }
 .drroom[data-th="3"] .drms .drr.slead em, .drroom[data-th="3"] .drms .drr.sgold em, .drroom[data-th="3"] .drr.w em { text-shadow: none !important; }
+.drroom[data-th="3"] .z-campo { background: rgba(22, 163, 74, 0.14); border-color: rgba(21, 128, 61, 0.6); }
+.drroom[data-th="3"] .z-panch { background: rgba(219, 39, 119, 0.1); border-color: rgba(190, 24, 93, 0.5); }
+.drroom[data-th="3"] .z-trib { background: rgba(107, 98, 88, 0.12); border-color: rgba(107, 98, 88, 0.5); }
+.drroom[data-th="3"] .duzt span { box-shadow: rgba(60, 30, 10, 0.35) 0px 3px 10px; }
 .drroom[data-th="3"] .badge, .drroom[data-th="3"] .logo, .drroom[data-th="3"] .drlg, .drroom[data-th="3"] .drlg .badge, .drroom[data-th="3"] .bklg, .drroom[data-th="3"] .bklg .badge, .drroom[data-th="3"] .dulg, .drroom[data-th="3"] .dulg *, .drroom[data-th="3"] .hlogo, .drroom[data-th="3"] .tvlw, .drroom[data-th="3"] .dtlg, .drroom[data-th="3"] .drlg * { filter: none !important; box-shadow: none !important; text-shadow: none !important; }
 .drroom[data-th="3"] .bkt b, .drroom[data-th="3"] .bkt em { color: rgb(43, 22, 8) !important; }
 .drroom[data-th="3"] .bkt i { color: rgb(122, 86, 50); }
@@ -1738,8 +1865,8 @@ html:root:not(#ofz) body[data-v="fa"] .fagl > .lg-DUC { scale: 0.951 0.748 !impo
 html:root:not(#ofz) body[data-v="home"] .hmo > .lg-DUC { scale: 1.029 0.951 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz) body[data-v="campo"] .lbml > .lg-DUC { scale: 1.02 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz) body[data-v="tv"] .drtvl > .lg-DUC { scale: 1 0.941 !important; transform-origin: center center !important; transform-box: fill-box !important; }
-html:root:not(#ofz) body[data-v="valtrade"] .wedge > .lg-DUC { scale: 0.96 0.92 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz) body[data-v="giochi"] .drlg > .lg-DUC { scale: 0.83 0.762 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html:root:not(#ofz) body[data-v="valtrade"] .wedge > .lg-DUC { scale: 0.96 0.92 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz) body[data-v="giochi"] .drlg.l > .lg-DUC { scale: 1.118 0.966 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html body[data-v="campo"] .court .dxst .txtw { animation-name: txtw; animation-timing-function: ease-in-out; animation-iteration-count: infinite; }
 html body .court > canvas.dxpu { position: absolute; inset: 0px; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
@@ -1769,8 +1896,8 @@ html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmrail > .hrl > .lg
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="efficienza"] .snrow > .wedge > .lg-DUC { scale: 0.929 0.819 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmr > .hmdl > .lg-DUC { scale: 0.97 0.856 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="fa"] .fagl > .lg-DUC { scale: 1.011 0.78 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-html:root:not(#ofz):not(#ofy) body[data-v="tv"] .drtvl > .lg-DUC { scale: 1 0.866 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz):not(#ofy) body[data-v="giochi"] .drlg > .lg-DUC { scale: 0.882 0.731 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html:root:not(#ofz):not(#ofy) body[data-v="tv"] .drtvl > .lg-DUC { scale: 1 0.866 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz):not(#ofy) body[data-v="giochi"] .drlg.s > .lg-DUC { scale: 0.978 0.796 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz):not(#ofy) body[data-v="giochi"] .drlg.l > .lg-DUC { scale: 1.066 0.864 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz):not(#ofy) body[data-v="valtrade"] .wedge > .lg-DUC { scale: 0.96 0.865 !important; transform-origin: center center !important; transform-box: fill-box !important; }
@@ -1895,8 +2022,8 @@ body[data-v="home"] .hrl > .lg-DUC { transform: scale(1.1) !important; transform
 body[data-v="home"] .tmlg > .lg-DUC { transform: scale(1.05) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 body[data-v="giochi"] .drlg.l > .lg-DUC { transform: scale(0.98); transform-origin: center center; }
 body[data-v="giochi"] .bklg > .lg-DUC { transform: scale(0.99); transform-origin: center center; }
-body[data-v="tv"] .drtvl > .lg-DUC { transform: scale(1.11) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 body[data-v="giochi"] .drlg > .lg-DUC { transform: scale(1.15) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+body[data-v="tv"] .drtvl > .lg-DUC { transform: scale(1.11) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 body[data-v="roster"] .chip > .lg-DUC { transform: scale(1.04); transform-origin: center center; }
 @keyframes txtw { 
   0%, 100% { opacity: 0.15; }
@@ -2001,6 +2128,7 @@ header .hnt.hnthd .hntk:not(#a):not(#b):not(#c):not(#d):not(#e) { transform: tra
 header .hnt.hnthd:not(#a):not(#b):not(#c):not(#d):not(#e) { transition: background 0.28s, border-color 0.28s, box-shadow 0.28s !important; }
 header #hnt { view-transition-name: hntbtn; }
 html body .pdkx:not(#a):not(#b):not(#c):not(#d):not(#e):not(#f):not(#g), html body .pdkb:not(#a):not(#b):not(#c):not(#d):not(#e):not(#f):not(#g), html body .pdkx :not(#a):not(#b):not(#c):not(#d):not(#e):not(#f):not(#g), html body .pdkb :not(#a):not(#b):not(#c):not(#d):not(#e):not(#f):not(#g) { color: rgb(255, 255, 255) !important; -webkit-text-fill-color: rgb(255, 255, 255) !important; }
+html body .duw.dug:not(#a):not(#b):not(#c):not(#d):not(#e):not(#f):not(#g), html body .duw.dug :not(#a):not(#b):not(#c):not(#d):not(#e):not(#f):not(#g) { color: rgb(255, 255, 255) !important; -webkit-text-fill-color: rgb(255, 255, 255) !important; }
 .drroom .bkt.tint { background-image: none !important; }
 .drroom .bklg .badge, .drroom .bkt .badge { filter: none !important; }
 .drroom .pob { padding: 14px 4px 16px !important; }
@@ -2018,8 +2146,8 @@ html body .pdkx:not(#a):not(#b):not(#c):not(#d):not(#e):not(#f):not(#g), html bo
 .tvbox.tvsq .sqc .tvown { justify-content: center; gap: 2px; pointer-events: none; position: static !important; transform: none !important; opacity: 1 !important; display: inline-flex !important; }
 .drroom .pobh small { font-size: 13.5px !important; }
 .tvbox.tvsq .sqc .tvown .badge, .tvbox.tvsq .sqc .tvown .tvob { width: 30px !important; height: 30px !important; }
-.drroom .pobt2 span { font-size: 15px !important; }
 .lglogo { -webkit-tap-highlight-color: transparent !important; }
+.drroom .pobt2 span { font-size: 15px !important; }
 .tvbox.tvsq tbody tr:not(.grp):not(.tot):not(.pct) td:first-child { min-width: 150px !important; max-width: 150px !important; width: 150px !important; padding-right: 6px !important; white-space: normal !important; }
 .drroom .pobt2 small { font-size: 11.5px !important; }
 .tvbox.tvsq thead th:first-child { min-width: 150px !important; max-width: 150px !important; }
@@ -2099,8 +2227,8 @@ html body[data-v="home"] .hmo > .lg-DUC { scale: 1.05 0.97 !important; transform
 html:not(.dxlp) body[data-v="campo"] .teamhead > img.hlogo[data-t="DUC"] { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:not(.dxlp) body[data-v="home"] .hmo > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html body[data-v="giochi"] .drlg > .lg-DUC { scale: 0.96 0.9 !important; transform-origin: center center !important; transform-box: fill-box !important; }
-html:not(.dxlp) body[data-v="giochi"] .drlg > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html body[data-v="giochi"] .drlg.s > .lg-DUC { scale: 1 0.92 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html:not(.dxlp) body[data-v="giochi"] .drlg > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html body[data-v="giochi"] .drlg.l > .lg-DUC { scale: 1.01 0.95 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:not(.dxlp) body[data-v="giochi"] .drlg.s > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:not(.dxlp) body[data-v="giochi"] .drlg.l > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
