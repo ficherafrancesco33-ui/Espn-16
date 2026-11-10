@@ -96,7 +96,7 @@ document.addEventListener("pointerdown",ev=>{const g=ev.target.closest('.oss [da
 /* ---------- ritocchi del DOM dopo ogni disegno: segnalibri nella ricerca, «Segui» nel profilo, tasto Osservatorio in Home ---------- */
 function decora(){try{
  const hr=document.getElementById("hres");if(hr)hr.querySelectorAll(".hrr[data-pl]").forEach(b=>{if(b.querySelector(".segi"))return;const n=b.dataset.pl,i=b.querySelector(":scope > i");const w=document.createElement("span");w.innerHTML=segBtn(n);i?b.insertBefore(w.firstChild,i):b.appendChild(w.firstChild)});
- if(cur==="gioc"){/* il nome del giocatore è nell intestazione del profilo (stats.js tiene ST chiuso nel suo modulo) */const h=document.querySelector(".grhd > div"),nm=h&&h.querySelector(":scope > b");if(h&&nm&&!h.querySelector(".segrow"))h.insertAdjacentHTML("beforeend",`<div class="segrow">${segBtn(nm.textContent.trim(),1)}</div>`)}
+ /* (35) il «Segui» del profilo ora è nella scheda giocatore (stats.js, segrow come Dreamers): niente più aggiunta qui */
  if(cur==="home"&&!curTeam){const hm=document.getElementById("hmmain");if(hm&&!hm.querySelector(".oss"))hm.insertAdjacentHTML("beforeend",segPanel())}
  const hb=document.querySelector("#main .hbar");if(hb&&!hb.querySelector("#hseg")){const tv=hb.querySelector(".tvgo");const html=`<button class="hseg" id="hseg" aria-label="Apri Osservatorio (giocatori seguiti)">${SEG_SVG(false).replace('fill="none"','fill="currentColor"')}${segBadgeHtml()}</button>`;tv?tv.insertAdjacentHTML("beforebegin",html):hb.insertAdjacentHTML("beforeend",html)}
 }catch(_){}}
@@ -125,4 +125,5 @@ window.addEventListener("click",ev=>{
   else if(a==="clr"){if(SEGUI.length&&confirm("Smettere di seguire tutti i giocatori?")){SEGUI=[];segSave();render()}}}
 },true);
 window.e16Segui={has:segHas,list:()=>SEGUI.slice()};
+window.e16SegBtn=segBtn;/* (35) usato dal profilo giocatore */
 })();

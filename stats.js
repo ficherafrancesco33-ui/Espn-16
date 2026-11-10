@@ -119,11 +119,11 @@ function chart(series,met){
  return `<svg class="grsvg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Andamento">${o}</svg>`}
 function trend(P){const n=P.length;if(n<3)return null;const mx=(n-1)/2,my=P.reduce((a,b)=>a+b,0)/n;let num=0,den=0;P.forEach((v,i)=>{num+=(i-mx)*(v-my);den+=(i-mx)**2});const sl=num/den;return my?sl*(n-1)/Math.abs(my)*100:0}
 const fmV=(v,m)=>m==="e"?f2(v):f1(v);
-/* ===== PROFILO GIOCATORE (come il Grafico di Dreamers) ===== */
-function vPl(){const ok=needOld();const n=ST.pl;const G=gamesOf(n).filter(inP);const o=ownOf(n),t=o&&TM[o.t];const last=gamesOf(n).slice(-1)[0];
+/* ===== GRAFICO DEL GIOCATORE (come il Grafico di Dreamers: si apre dal tasto «📈 Grafico» del profilo) ===== */
+function vGraf(){/* (35) dal profilo: il tasto indietro torna al profilo */const ok=needOld();const n=ST.pl;const G=gamesOf(n).filter(inP);const o=ownOf(n),t=o&&TM[o.t];const last=gamesOf(n).slice(-1)[0];
  const gr=groups(G);const P=gr.map(g=>val(g.L,ST.met));const tr=trend(P);const av=m=>G.length?val(G,m):0;
  const names=[...new Set(all().map(x=>x.n))].sort();
- return `<div class="grroom" style="--tc:${t?TCOL[t.id]:"#1747c9"};--tf:#ffffff"><button class="grback" data-sv="${ST.back||"sgioc"}">‹ Indietro</button>
+ return `<div class="grroom" style="--tc:${t?TCOL[t.id]:"#1747c9"};--tf:#ffffff"><button class="grback" data-sv="gioc">‹ Indietro</button>
  <div class="grhd"><span class="grlg">${t?`<span class="badge logo lg-${t.id}"></span>`:""}</span><div><small>${t?e(t.nome)+" · ":""}${last?last.t:""}${etaOf(n)!=null?" · "+etaTxt(n)+" (nato il "+nascOf(n).split("-").reverse().join("/")+")":""}</small><b>${e(n)}</b></div></div>
  <div class="grtop"><div class="grctl"><label class="grsel"><span>Giocatore</span><select data-psel="pl">${names.map(x=>`<option${x===n?" selected":""}>${e(x)}</option>`).join("")}</select></label> <button class="perbtn" data-peropen="1"><span>Periodo</span><b>${SV.cal}${fmtD(ST.a)} → ${fmtD(ST.b)}</b></button></div><div class="grjs e16js">${t?`<img src="${t.logo}" alt="">`:""}</div></div>
  ${PEROPEN?perBox():""}
@@ -133,6 +133,169 @@ function vPl(){const ok=needOld();const n=ST.pl;const G=gamesOf(n).filter(inP);c
  <div class="esqctl"><button class="advbtn ggy grbtn" data-cmp="${e(n)}">📈 Confronta con un altro giocatore</button></div>
  <div class="tbl-wrap"><table class="fatbl e16log"><thead><tr><th>Data</th><th>Vs</th><th>Min</th><th>AVG</th><th>PT</th><th>RB</th><th>AS</th><th>ST</th><th>BL</th><th>TO</th><th>Tiri</th></tr></thead><tbody>
  ${G.slice().reverse().slice(0,120).map(x=>{const r=x.r;return`<tr><td>${fmtD(x.d)}</td><td>${x.o}</td><td>${r[3]}</td><td class="fapdk"><span class="pdkx ${gvC(x.f)}">${f1(x.f)}</span></td><td>${r[4]}</td><td>${r[11]+r[12]}</td><td>${r[13]}</td><td>${r[14]}</td><td>${r[15]}</td><td>${r[16]}</td><td>${r[5]}/${r[6]}</td></tr>`}).join("")}</tbody></table></div></div>`}
+/* ===== (35) PROFILO GIOCATORE come la scheda giocatore di Dreamers (vGiocatore) =====
+   Banner con i colori della squadra del fanta e la maglia (campo.js), nome, «Segui» (Osservatorio) e «Condividi» (immagine),
+   ruolo · squadra NBA · numero, età con i mesi, infortunio dal Centro Medico; tasti «📈 Grafico» e «⚖ Confronta»;
+   scelta della stagione; AVG medio ed efficienza (AVG al minuto) con le barre rispetto alla media della squadra;
+   partite, minuti, proiezione 36', ultima partita, posizione in lega; partita per partita divisa per mese; pagella con le stelline. */
+const SZP=[["2627","Stagione 26/27"],["2526","Stagione 25/26"],["2425","Stagione 24/25"]];
+const effLv=v=>v==null?"na":evC(v);/* pallino efficienza: verde da 1,40 · giallo 1,00–1,40 · rosso sotto 1,00 (AVG al minuto) */
+const evB=v=>v==null?'<span class="ev na">—</span>':`<span class="ev ${effLv(v)}"><i></i>${f2(v)}</span>`;
+const pdkB=(v,txt)=>v==null||isNaN(v)?'<span class="dash">—</span>':`<span style="color:#fff!important;-webkit-text-fill-color:#fff!important" class="pdkx ${gvC(v)}">${txt??f1(v)}</span>`;
+const n1=v=>v==null?"—":v.toLocaleString("it-IT",{minimumFractionDigits:1,maximumFractionDigits:1});
+const H2=(t,sub="")=>`<h2><span class="t"><span>${t}</span></span>${sub}</h2>`;
+function etaMesi(n){const d=typeof nascOf==="function"?nascOf(n):null;if(!d)return"";const b=new Date(d+"T00:00:00Z"),t=new Date();let m=(t.getUTCFullYear()-b.getUTCFullYear())*12+t.getUTCMonth()-b.getUTCMonth();if(t.getUTCDate()<b.getUTCDate())m--;if(m<0)return"";const a=Math.floor(m/12),mm=m%12;return`${a} anni${mm?` ${mm} ${mm===1?"mese":"mesi"}`:""}`}
+const nkOf=t=>TM[t]?TM[t].nome.split(" ").slice(-1)[0]:"";
+/* medie di una lista di partite: partite, minuti medi, AVG medio, efficienza */
+const aggG=L=>{if(!L.length)return null;const m=L.reduce((a,x)=>a+x.m,0),f=L.reduce((a,x)=>a+x.f,0);return{g:L.length,min:m/L.length,avg:f/L.length,eff:m?f/m:null}};
+/* stelline della pagella (stesso disegno di Dreamers) */
+const STAR_P="M6 .6l1.6 3.5 3.8.4-2.9 2.6.8 3.8L6 9 2.7 10.9l.8-3.8L.6 4.5l3.8-.4z";let PGID=0;
+const pgI=(x,P)=>{if(x<=P[0][0])return P[0][1];for(let i=1;i<P.length;i++)if(x<=P[i][0]){const[a,b]=P[i-1],[c,d]=P[i];return b+(d-b)*(x-a)/(c-a)}return P[P.length-1][1]};
+function pgStars(v,col){if(v==null)return`<span class="pgnd">n.d.</span>`;const id="e16pg"+(PGID++),w=64;const row=Array.from({length:5},(_,k)=>`<path d="${STAR_P}" transform="translate(${k*13} 0)"/>`).join("");
+ return`<span class="pgsw"><svg viewBox="0 0 ${w} 12" width="${Math.round(w*1.2)}" height="14" aria-label="${String(Math.round(v*10)/10).replace(".",",")} stelle"><defs><clipPath id="${id}"><rect width="${v*13}" height="12"/></clipPath></defs><g fill="rgba(255,255,255,.14)">${row}</g><g fill="${col}" clip-path="url(#${id})">${row}</g></svg><b>${(Math.round(v*10)/10).toLocaleString("it-IT",{minimumFractionDigits:1})}</b></span>`}
+const PG_COL={pdk:"#facc15",gio:"#22c55e",min:"#f97316",effe:"#818cf8"};
+/* pagella: valore e AVG pesato del Calcolatore (VAL), stelline per AVG, giovinezza, minutaggio, efficienza.
+   Infortuni e Spazio in squadra di Dreamers non ci sono: in ESPN 16 mancano i dati da cui nascono. */
+function pagellaHTML(n,A){const V=(typeof VAL!=="undefined"&&VAL.p&&VAL.p[n])||null,age=etaOf(n);
+ const s={avg:A?pgI(A.avg,[[5,0],[10,.5],[20,1.5],[30,2.5],[40,3.5],[50,4.5],[60,5]]):null,gio:age==null?null:pgI(age,[[20,5],[22,4.5],[24,4],[26,3.5],[28,3],[30,2.5],[32,2],[34,1.5],[36,1],[38,.5],[40,0]]),
+  min:A?pgI(A.min,[[0,0],[4,1],[7,1.5],[15,2],[20,2.5],[25,3],[29,3.5],[31,4],[34,4.5],[36,5]]):null,eff:A&&A.eff!=null?pgI(A.eff,[[.5,.5],[.7,1],[.85,1.5],[1,2],[1.1,2.5],[1.2,3],[1.3,3.5],[1.4,4],[1.55,4.5],[1.7,5]]):null};
+ const c=(lab,sub,val,col)=>`<div class="pgc"><small>${lab}${sub?` <em>${sub}</em>`:""}</small>${pgStars(val,col)}</div>`;
+ return`<div class="pgbox"><div class="pgvp"><div><small>Valore</small><b>${V?V[0]:"n.d."}</b></div><div><small>AVG pesato</small><b class="pr">${V?n1(V[1]):"—"}</b></div><div class="pgag"><small>Agg.</small><span>${typeof VAL!=="undefined"&&VAL.upd?e(VAL.upd.split(",")[0])+" (automatico)":"—"}</span></div></div>
+ <div class="pgg">${c("AVG",A?n1(A.avg):"",s.avg,PG_COL.pdk)}${c("Giovinezza",age!=null?age+" anni":"",s.gio,PG_COL.gio)}${c("Minutaggio",A?n1(A.min)+"'":"",s.min,PG_COL.min)}${c("Efficienza",A&&A.eff!=null?f2(A.eff):"",s.eff,PG_COL.effe)}</div>
+ <p class="pgnote">Più stelle = meglio. Valore e AVG pesato del Calcolatore scambi (aggiornati ogni domenica).</p></div>`}
+let SHR_PL=null;
+function vPl(){const ok=needOld();const n=ST.pl;const o=ownOf(n),t=o&&TM[o.t]?o.t:null,T=t?TM[t]:null;
+ const sz=SZP.some(x=>x[0]===ST.psz)?ST.psz:"2627",GLall=gamesOf(n),GL=GLall.filter(x=>x.s===sz),A=aggG(GL),last=GLall.slice(-1)[0];
+ const nba=last?last.t:"",num=window.e16Num?e16Num(n):"",ruolo=o?ROLE(o.ruolo):(last&&last.r[22]?({G:"Guardia",F:"Ala",C:"Centro"})[String(last.r[22])[0]]||"":"");
+ const bg=T?TCOL[t]:"#334155";
+ /* media efficienza della squadra del fanta nella stagione scelta */
+ const ts=t?aggG((ROSE[t]||[]).flatMap(g=>gamesOf(g[0]).filter(x=>x.s===sz))):null;
+ /* posizione in lega: giocatori delle 16 rose con almeno una partita nella stagione */
+ const LG=[];for(const tt in ROSE)for(const g of ROSE[tt]){const a=aggG(gamesOf(g[0]).filter(x=>x.s===sz));if(a)LG.push([g[0],a])}
+ const rA=A?[...LG].sort((a,b)=>b[1].avg-a[1].avg).findIndex(x=>nrm(x[0])===nrm(n))+1:0,rE=A?[...LG].sort((a,b)=>(b[1].eff||0)-(a[1].eff||0)).findIndex(x=>nrm(x[0])===nrm(n))+1:0;
+ const inj=window.e16InjOf?e16InjOf(n):null;
+ SHR_PL={n,t,num,r:ruolo||"—",nba,sz,GL,a:A,rk:rA?[rA,LG.length]:null};
+ const pct=v=>Math.max(3,Math.min(100,(v||0)/2*100));
+ const stat=(lab,val,sub="")=>`<div class="gst"><small>${lab}</small><b>${val}</b>${sub?`<em>${sub}</em>`:""}</div>`;
+ const SEG=window.e16SegBtn?e16SegBtn(n,1):"";
+ const SH=`<span class="segi shpl" data-plsh="1" role="button" tabindex="0" aria-label="Condividi la scheda del giocatore">${SH_ICO}<em>Condividi</em></span>`;
+ const jer=t&&window.e16Jersey?e16Jersey(t,num,nkOf(t)):(nba?`<img src="https://a.espncdn.com/i/teamlogos/nba/500/${String(nba).toLowerCase()}.png" alt="" style="width:96px;height:96px;object-fit:contain;display:block;margin:auto">`:"");
+ const MESI=["","Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
+ const by={};GL.forEach(x=>{const k=x.d.slice(0,7);(by[k]=by[k]||[]).push(x)});const ms=Object.keys(by).sort().reverse();
+ return `<button class="gback" data-sv="${ST.back||"sgioc"}">‹ Indietro</button>
+ <div class="ghead" style="background:linear-gradient(115deg,${bg} 0%,color-mix(in srgb,${bg} 60%,#000) 100%);color:#ffffff;border-bottom:4px solid #0b0b0b">
+  <div class="gjer">${jer}</div>
+  <div class="gtit"><small>${T?e(T.nome):"Svincolato"}</small><h3>${e(n)}</h3><div class="segrow">${SEG}${SH}</div><p>${[ruolo,nba,num!==""?"#"+num:""].filter(Boolean).join(" · ")}${etaMesi(n)?`<span style="display:block">${etaMesi(n)}</span>`:""}</p>${inj?`<div class="injtag ${inj.k}">${e(inj.lab)} · ${e(inj.txt)}</div>`:""}</div>
+ </div>
+ <button class="advbtn ggrbtn ggy" data-plgr="1">📈 Grafico</button>
+ <button class="advbtn ggrbtn ggy" data-cmp="${e(n)}">⚖ Confronta con un altro giocatore</button>
+ <div class="gszn"><label for="gseason">Stagione</label><select id="gseason" data-psz="1">${SZP.map(([k,l])=>`<option value="${k}"${k===sz?" selected":""}>${l}</option>`).join("")}</select></div>
+ ${!A?`<p class="note">${sz!=="2627"?(ok?"Nessuna partita NBA in questa stagione: non era in NBA o non ha giocato.":"Carico le stagioni passate…"):"Nessuna partita giocata finora: i dati compariranno dopo la prima gara."}</p>`:`
+ <div class="gbig g2"><div><b class="gpdk"><span style="color:#fff!important;-webkit-text-fill-color:#fff!important" class="pdkx big ${gvC(A.avg)}">${f2(A.avg)}</span></b><small>AVG medi a partita</small></div><div>${evB(A.eff)}<small>Efficienza media</small></div></div>
+ <div class="gbars">
+  <div><span>${e(n.split(" ").slice(-1)[0])}</span><i><b style="width:${pct(A.eff)}%;background:${bg}"></b></i><em>${A.eff==null?"—":f2(A.eff)}</em></div>
+  ${ts&&ts.eff!=null?`<div><span>Media ${e(nkOf(t))}</span><i><b style="width:${pct(ts.eff)}%;background:#5b6b95"></b></i><em>${f2(ts.eff)}</em></div>`:""}
+ </div>
+ <div class="gstats">
+  ${stat("Partite",A.g)}${stat("Minuti medi",n1(A.min))}${stat("Proiezione 36'",A.eff==null?"—":n1(A.eff*36),"AVG")}${stat("Ultima partita",n1(GL[GL.length-1].f),"AVG")}
+  ${stat("Lega · AVG",rA?rA+"°":"—",rA?"su "+LG.length:"fuori dalle rose")}${stat("Lega · efficienza",rE?rE+"°":"—",rE?"su "+LG.length:"fuori dalle rose")}
+ </div>`}
+ ${GL.length?`${H2("Partita per partita",`<em>${GL.length} ${GL.length===1?"gara":"gare"}</em>`)}
+ ${ms.map((m,i)=>{const l=by[m],a=aggG(l);return `<details class="gmese"${i===0?" open":""}><summary><span class="gmn">${MESI[+m.slice(5)]}</span><span class="gmesi">${l.length} ${l.length===1?"gara":"gare"} · media</span>${evB(a.eff)}</summary>
+  <div class="tbl-wrap"><table class="gtab"><thead><tr><th>Data</th><th>Min</th><th>AVG</th><th>Eff.</th><th>Proj 36'</th></tr></thead><tbody>${l.slice().reverse().map(x=>{const r=x.r,ef=x.m?x.f/x.m:null;return `<tr><td class="gd"><b>${fmtD(x.d).slice(0,5)} <i>vs ${e(x.o)}</i></b><small>${r[4]} pt · ${r[11]+r[12]} rb · ${r[13]} as</small></td><td>${n1(x.m)}</td><td class="gdk">${pdkB(x.f,f1(x.f))}</td><td>${evB(ef)}</td><td class="gpj">${ef==null?"—":n1(ef*36)}</td></tr>`}).join("")}</tbody></table></div></details>`}).join("")}`:""}
+ ${H2("Pagella")}
+ ${pagellaHTML(n,A)}
+ <p class="note">Lega · AVG e Lega · efficienza: posizione tra tutti i giocatori delle 16 rose con almeno una partita nella stagione scelta, per <b>AVG</b> (punti medi a partita con la formula ESPN della lega) e per <b>efficienza</b> (AVG fatti per ogni minuto giocato). Dati ESPN, stagioni passate solo regular season. Pallino: verde da 1,40 · giallo 1,00–1,40 · rosso sotto 1,00.</p>`}
+/* ===== CONDIVIDI SCHEDA GIOCATORE (come Dreamers): foglio con «Condividi profilo» e «Condividi ultima partita», immagini come quelle di Dreamers ===== */
+const SH_ICO='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>';
+function shRR(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+const SH_F=(w,s,it)=>`${it?"italic ":""}${w} ${s}px "Barlow Condensed","Arial Narrow",Arial,sans-serif`,SH_B=(w,s)=>`${w} ${s}px Barlow,Arial,sans-serif`;
+function shImg(src){return new Promise(r=>{if(!src)return r(null);const i=new Image();if(/^https?:/.test(src))i.crossOrigin="anonymous";i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src})}
+const SH_PK={r:["#ef4444","#fff"],y:["#f5b400","#111"],g:["#22c55e","#06240f"],v:["#8b5cf6","#fff"],na:["#334155","#cbd5e1"]};
+function shPill(c,v,x,y,w,h,fs,txt){const[bg,fg]=SH_PK[v==null?"na":gvC(v)];shRR(c,x,y,w,h,h*.28);c.fillStyle=bg;c.fill();c.fillStyle=fg;c.font=SH_F(800,fs||h*.62,1);c.textAlign="center";c.textBaseline="middle";c.fillText(txt??(v==null?"—":f2(v)),x+w/2,y+h/2+1);c.textBaseline="alphabetic"}
+/* di giorno sfondo parquet (come Dreamers con lo stile Parquet), di notte viola galassia */
+const isNight=()=>typeof E16N!=="undefined"&&E16N;
+async function shBase(H,W){try{await Promise.all([document.fonts.load(SH_F(800,40,1)),document.fonts.load(SH_F(700,40)),document.fonts.load(SH_B(500,30))])}catch(e){}
+ const cv=document.createElement("canvas");cv.width=W;cv.height=H;const c=cv.getContext("2d");let g;
+ if(!isNight()){g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,"#b9763a");g.addColorStop(1,"#9b5f2c");c.fillStyle=g;c.fillRect(0,0,W,H);c.save();c.strokeStyle="rgba(0,0,0,.07)";c.lineWidth=26;c.beginPath();for(let x=0;x<W;x+=60){c.moveTo(x,0);c.lineTo(x,H)}c.stroke();c.restore()}
+ else{g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,"#2a1260");g.addColorStop(.45,"#160a38");g.addColorStop(1,"#0a0618");c.fillStyle=g;c.fillRect(0,0,W,H);
+  g=c.createRadialGradient(200,0,0,200,0,760);g.addColorStop(0,"rgba(168,85,247,.55)");g.addColorStop(1,"rgba(168,85,247,0)");c.fillStyle=g;c.fillRect(0,0,W,H);
+  let s=7;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;for(let i=0;i<Math.round(H/14);i++){c.globalAlpha=.25+rnd()*.6;c.fillStyle=rnd()<.3?"#e9d5ff":"#fff";c.beginPath();c.arc(rnd()*W,rnd()*H,.8+rnd()*1.8,0,7);c.fill()}c.globalAlpha=1}
+ const lg=await shImg("logo-app.png");c.save();shRR(c,56,56,76,76,16);c.clip();if(lg)c.drawImage(lg,56,56,76,76);else{c.fillStyle="#ea580c";c.fillRect(56,56,76,76)}c.restore();
+ c.textBaseline="alphabetic";c.textAlign="left";c.font=SH_F(800,48,1);c.letterSpacing="6px";c.fillStyle="#fff";c.shadowColor="rgba(0,0,0,.35)";c.shadowBlur=12;c.fillText("ESPN 16",150,102);c.shadowBlur=0;c.letterSpacing="3px";c.font=SH_F(700,19,1);c.fillStyle="rgba(255,240,220,.85)";c.fillText("FANTABASKET USA · AVG",153,128);c.letterSpacing="0px";
+ return{cv,c,W}}
+const PAN=()=>isNight()?"rgba(15,8,40,.55)":"rgba(48,25,10,.55)",BRD=()=>isNight()?"rgba(196,181,253,.3)":"rgba(255,184,108,.35)",LAB=()=>isNight()?"rgba(196,181,253,.9)":"rgba(255,214,170,.95)";
+function shFoot(c,W,H,txt){const PQ=!isNight();if(PQ){shRR(c,40,H-92,W-80,72,18);c.fillStyle="#fdf3e1";c.fill()}else{c.strokeStyle="rgba(196,181,253,.25)";c.lineWidth=2;c.beginPath();c.moveTo(56,H-96);c.lineTo(W-56,H-96);c.stroke()}
+ const d=new Date(),p=v=>String(v).padStart(2,"0");c.font=SH_B(500,24);c.fillStyle=PQ?"#b8410a":"rgba(226,232,240,.6)";c.textAlign="left";c.textBaseline="middle";c.fillText(txt,56,H-56);c.textAlign="right";c.fillText(`${p(d.getDate())}/${p(d.getMonth()+1)} · ${p(d.getHours())}:${p(d.getMinutes())}`,W-56,H-56);c.textBaseline="alphabetic"}
+const fit=(c,t,w)=>{if(c.measureText(t).width<=w)return t;while(t.length>1&&c.measureText(t+"…").width>w)t=t.slice(0,-1);return t+"…"};
+/* intestazione dell immagine: banner con i colori della squadra, maglia (o logo NBA per gli svincolati), nome, ruolo, età, squadra */
+async function shHead(c,W,S,y0,hh){const T=S.t?TM[S.t]:null,bg=T?TCOL[S.t]:"#334155";
+ c.save();shRR(c,56,y0,W-112,hh,28);c.clip();const dk=(h,k)=>{const v=parseInt(h.slice(1),16),q=x=>Math.round(x*(1-k)).toString(16).padStart(2,"0");return"#"+q(v>>16)+q((v>>8)&255)+q(v&255)};
+ const gg=c.createLinearGradient(56,y0,W-56,y0+hh);gg.addColorStop(0,bg);gg.addColorStop(1,dk(bg,.4));c.fillStyle=gg;c.fillRect(56,y0,W-112,hh);
+ c.strokeStyle="rgba(255,255,255,.07)";c.lineWidth=18;c.beginPath();for(let x=-hh;x<W;x+=44){c.moveTo(x+56,y0+hh);c.lineTo(x+56+hh,y0)}c.stroke();c.fillStyle="#0b0b0b";c.fillRect(56,y0+hh-10,W-112,10);c.restore();
+ let ic=null;try{if(S.t&&window.e16Jersey){const s=e16Jersey(S.t,S.num,nkOf(S.t));ic=await shImg("data:image/svg+xml;charset=utf-8,"+encodeURIComponent(s.includes("xmlns=")?s:s.replace("<svg",'<svg xmlns="http://www.w3.org/2000/svg"')))}else if(S.nba)ic=await shImg(`https://a.espncdn.com/i/teamlogos/nba/500/${String(S.nba).toLowerCase()}.png`)}catch(e){}
+ if(ic){const bx=230,r=Math.min(bx/ic.width,bx/ic.height),w=ic.width*r,h=ic.height*r;c.drawImage(ic,56+20+(bx-w)/2,y0+(hh-h)/2,w,h)}
+ const tx=56+20+250+16,tw=W-56-24-tx;c.textAlign="left";c.fillStyle="#fff";const nm=S.n.toUpperCase();let fs=92;c.font=SH_F(800,fs,1);while(fs>44&&c.measureText(nm).width>tw){fs-=2;c.font=SH_F(800,fs,1)}c.fillText(nm,tx,y0+112);
+ c.font=SH_F(700,38,1);c.globalAlpha=.85;c.fillText(fit(c,[S.r.toUpperCase(),S.nba||null,S.num!==""?"#"+S.num:null].filter(Boolean).join(" · "),tw),tx,y0+170);c.globalAlpha=1;
+ const eta=etaOf(S.n);c.font=SH_F(800,38,1);c.fillStyle="#fde68a";if(eta!=null)c.fillText(eta+" ANNI",tx,y0+222);
+ c.font=SH_F(700,30,1);c.fillStyle="#fff";c.globalAlpha=.8;c.fillText(fit(c,T?T.nome.toUpperCase():"SVINCOLATO",tw-(eta!=null?190:0)),tx+(eta!=null?190:0),y0+222);c.globalAlpha=1}
+/* scheda giocatore 1080×1350: AVG ed efficienza medi, minuti, partite, ultima gara, proiezione 36', trend AVG partita per partita */
+async function shPlayer(){const S=SHR_PL;if(!S)return null;const H=1350,W=1080,{cv,c}=await shBase(H,W),a=S.a,GL=S.GL||[];
+ c.font=SH_F(700,28,1);c.textAlign="right";c.fillStyle="rgba(255,240,220,.8)";c.fillText((SZP.find(x=>x[0]===S.sz)||["",""])[1].toUpperCase(),W-56,100);
+ const y0=170,hh=260;await shHead(c,W,S,y0,hh);
+ if(!a){c.textAlign="center";c.font=SH_F(800,46,1);c.fillStyle="#fff";c.fillText("NESSUNA PARTITA NBA",W/2,y0+hh+190);c.fillText("IN QUESTA STAGIONE",W/2,y0+hh+250);shFoot(c,W,H,"Dati ESPN");return cv}
+ const yb=y0+hh+28,bh=216,bw=(W-112-30)/2;
+ [[0,"AVG MEDI A PARTITA"],[1,"EFFICIENZA MEDIA"]].forEach(([i,lab])=>{const x=56+i*(bw+30);shRR(c,x,yb,bw,bh,28);c.fillStyle=PAN();c.fill();c.strokeStyle=BRD();c.lineWidth=2;c.stroke();
+  c.textAlign="center";c.font=SH_F(700,30,1);c.fillStyle=LAB();c.letterSpacing="3px";c.fillText(lab,x+bw/2,yb+54);c.letterSpacing="0px";
+  if(i===0)shPill(c,a.avg,x+bw/2-150,yb+72,300,114,90,f2(a.avg));
+  else{const ev=a.eff,col=ev==null?"#94a3b8":ev>=1.4?"#22c55e":ev>=1?"#f5b400":"#ef4444";c.fillStyle=col;c.beginPath();c.arc(x+bw/2-128,yb+132,16,0,7);c.fill();c.font=SH_F(800,116,1);c.fillStyle="#fff";c.textAlign="center";c.fillText(ev==null?"—":f2(ev),x+bw/2+22,yb+174)}});
+ const ys=yb+bh+22,sh=132,sw=(W-112-3*20)/4,lst=GL.length?GL[GL.length-1].f:null;
+ [["MINUTI MEDI",n1(a.min)],["PARTITE",String(a.g)],["ULTIMA GARA",n1(lst)],["PROIEZ. 36'",a.eff==null?"—":n1(a.eff*36)]].forEach(([l,v],i)=>{const x=56+i*(sw+20);shRR(c,x,ys,sw,sh,22);c.fillStyle=PAN();c.fill();c.strokeStyle=BRD();c.lineWidth=2;c.stroke();
+  c.textAlign="center";c.font=SH_F(700,24,1);c.fillStyle=LAB();c.letterSpacing="2px";c.fillText(l,x+sw/2,ys+40);c.letterSpacing="0px";c.font=SH_F(800,64,1);c.fillStyle="#fff";c.fillText(v,x+sw/2,ys+102)});
+ const yt=ys+sh+22,th=H-96-24-yt;shRR(c,56,yt,W-112,th,28);c.fillStyle=PAN();c.fill();c.strokeStyle=BRD();c.lineWidth=2;c.stroke();
+ c.textAlign="left";c.font=SH_F(800,36,1);c.fillStyle="#fff";c.letterSpacing="3px";c.fillText("TREND AVG",90,yt+56);c.letterSpacing="0px";
+ if(GL.length>=2){const v=GL.map(g=>g.f),av=v.reduce((p,q)=>p+q,0)/v.length,kn=Math.max(1,Math.min(3,Math.floor(v.length/2))),k3=v.slice(-kn),l3=k3.reduce((p,q)=>p+q,0)/k3.length,d=l3-av;
+  c.textAlign="right";c.font=SH_F(800,34,1);c.fillStyle=d>=0?"#4ade80":"#f87171";c.fillText(`${kn===1?"ULTIMA GARA":"ULTIME "+kn}: ${n1(l3)}  ${Math.abs(d)<.05?"= IN LINEA":(d>=0?"▲ +":"▼ −")+n1(Math.abs(d))+" VS MEDIA"}`,W-90,yt+56);
+  const gx=110,gy=yt+100,gw=W-220,gh=th-100-70,lo=Math.min(...v,av),hi=Math.max(...v,av),pad=(hi-lo||1)*.15,mn=lo-pad,mx=hi+pad,px=i=>gx+i*gw/(v.length-1),py=q=>gy+gh-(q-mn)/(mx-mn)*gh;
+  c.strokeStyle="rgba(255,255,255,.15)";c.lineWidth=2;for(let i=0;i<4;i++){const yy=gy+gh*i/3;c.beginPath();c.moveTo(gx,yy);c.lineTo(gx+gw,yy);c.stroke()}
+  c.setLineDash([14,10]);c.strokeStyle="#facc15";c.lineWidth=3;c.beginPath();c.moveTo(gx,py(av));c.lineTo(gx+gw,py(av));c.stroke();c.setLineDash([]);
+  c.textAlign="left";c.font=SH_F(700,26,1);c.fillStyle="#facc15";c.fillText("MEDIA "+n1(av),gx+6,py(av)-12);
+  const up=d>=0,lc=up?"#22c55e":"#ef4444",lr=up?"34,197,94":"239,68,68",gr=c.createLinearGradient(0,gy,0,gy+gh);gr.addColorStop(0,`rgba(${lr},.5)`);gr.addColorStop(1,`rgba(${lr},0)`);c.beginPath();v.forEach((q,i)=>i?c.lineTo(px(i),py(q)):c.moveTo(px(i),py(q)));c.lineTo(px(v.length-1),gy+gh);c.lineTo(px(0),gy+gh);c.closePath();c.fillStyle=gr;c.fill();
+  c.strokeStyle=lc;c.lineWidth=7;c.lineJoin="round";c.beginPath();v.forEach((q,i)=>i?c.lineTo(px(i),py(q)):c.moveTo(px(i),py(q)));c.stroke();
+  v.forEach((q,i)=>{const L=i===v.length-1;c.fillStyle=L?"#fff":lc;c.beginPath();c.arc(px(i),py(q),L?12:v.length>25?4:7,0,7);c.fill();if(L){c.strokeStyle=lc;c.lineWidth=5;c.stroke()}});
+  const bi=v.indexOf(Math.max(...v)),LI=v.length-1;c.font=SH_F(800,34,1);c.textAlign="center";c.fillStyle="#fff";
+  [...new Set([bi,LI])].forEach(i=>{const x=Math.min(Math.max(px(i),gx+30),gx+gw-30);c.lineWidth=9;c.strokeStyle="#140c33";c.strokeText(n1(v[i]),x,py(v[i])-24);c.fillText(n1(v[i]),x,py(v[i])-24)});
+  c.font=SH_F(700,26,1);c.fillStyle=LAB();c.textAlign="left";c.fillText(fmtD(GL[0].d).slice(0,5),gx,gy+gh+46);c.textAlign="right";c.fillText(fmtD(GL[GL.length-1].d).slice(0,5),gx+gw,gy+gh+46);c.textAlign="center";c.fillText(`${v.length} PARTITE`,gx+gw/2,gy+gh+46)}
+ else{c.textAlign="center";c.font=SH_F(700,40,1);c.fillStyle=LAB();c.fillText(GL.length?"Il trend compare dopo la seconda partita":"Partite non ancora disponibili",W/2,yt+th/2+20)}
+ shFoot(c,W,H,S.rk?`Lega · AVG ${S.rk[0]}° su ${S.rk[1]} · dati ESPN`:"Dati ESPN");return cv}
+/* immagine dell ultima partita giocata: intestazione, AVG della partita e tabellino */
+async function shUltima(){const S=SHR_PL;const L=gamesOf(S.n),x=L[L.length-1];if(!x)return null;const H=1080,W=1080,{cv,c}=await shBase(H,W),r=x.r;
+ c.font=SH_F(700,28,1);c.textAlign="right";c.fillStyle="rgba(255,240,220,.8)";c.fillText(`ULTIMA PARTITA · ${fmtD(x.d)} · VS ${x.o}`,W-56,100);
+ await shHead(c,W,S,170,260);const yb=470;shRR(c,56,yb,W-112,200,28);c.fillStyle=PAN();c.fill();c.strokeStyle=BRD();c.lineWidth=2;c.stroke();
+ c.textAlign="center";c.font=SH_F(700,30,1);c.fillStyle=LAB();c.letterSpacing="3px";c.fillText("AVG DELLA PARTITA",W/2,yb+50);c.letterSpacing="0px";shPill(c,x.f,W/2-150,yb+68,300,110,86,f1(x.f));
+ const st=[["MIN",r[3]],["PT",r[4]],["RB",r[11]+r[12]],["AS",r[13]],["ST",r[14]],["BL",r[15]],["TO",r[16]],["TIRI",r[5]+"/"+r[6]]],sw=(W-112-3*16)/4,sh=130;
+ st.forEach(([l,v],i)=>{const x0=56+(i%4)*(sw+16),y=yb+230+Math.floor(i/4)*(sh+16);shRR(c,x0,y,sw,sh,22);c.fillStyle=PAN();c.fill();c.strokeStyle=BRD();c.lineWidth=2;c.stroke();c.textAlign="center";c.font=SH_F(700,26,1);c.fillStyle=LAB();c.fillText(l,x0+sw/2,y+42);c.font=SH_F(800,62,1);c.fillStyle="#fff";c.fillText(String(v),x0+sw/2,y+104)});
+ shFoot(c,W,H,"Dati ESPN · formula AVG della lega");return cv}
+/* foglio di condivisione come Dreamers: anteprima, Chiudi, Salva, Condividi */
+async function shOpen(k){const sh=document.createElement("div");sh.className="shsheet";sh.innerHTML='<div class="shbox"><p class="shwait">Preparo l\'immagine…</p></div>';document.body.appendChild(sh);
+ sh.addEventListener("click",ev=>{if(ev.target===sh||ev.target.closest(".shx"))sh.remove()});
+ let cv=null;try{cv=await(k==="nt"?shUltima():shPlayer())}catch(err){console.error(err)}
+ if(!cv){sh.querySelector(".shbox").innerHTML='<p class="shwait">Niente da condividere adesso.</p><button class="shx">Chiudi</button>';return}
+ const name=(SHR_PL.n||"giocatore").toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g,"-")+".png";let blob=null;try{blob=await new Promise(r=>cv.toBlob(r,"image/png"))}catch(_){}
+ if(!blob){sh.querySelector(".shbox").innerHTML='<p class="shwait">Immagine non disponibile.</p><button class="shx">Chiudi</button>';return}
+ const file=new File([blob],name,{type:"image/png"}),url=URL.createObjectURL(blob);
+ sh.querySelector(".shbox").innerHTML=`<img src="${url}" alt="Anteprima da condividere"><div class="shfoot"><div class="shbar"><button class="shx">Chiudi</button><a class="shsv" href="${url}" download="${name}">Salva</a><button class="shgo">${SH_ICO} Condividi</button></div></div>`;
+ const go=sh.querySelector(".shgo");if(!(navigator.canShare&&navigator.canShare({files:[file]})))go.remove();else go.addEventListener("click",async()=>{try{await navigator.share({files:[file],title:"ESPN 16 · "+SHR_PL.n})}catch(_){}})}
+/* foglio di scelta come Dreamers (plShAsk): profilo o ultima partita */
+function plShAsk(){const S=SHR_PL;if(!S)return;const old=document.querySelector(".shsheet");if(old)old.remove();const L=gamesOf(S.n),U=L[L.length-1];
+ const sh=document.createElement("div");sh.className="shsheet shch";
+ sh.innerHTML=`<div class="shchb" role="dialog" aria-label="Cosa vuoi condividere"><div class="shchh"><b>Condividi</b><small>${e(S.n)}</small></div>
+  <button class="shco" data-shc="pl"><span class="shci">👤</span><span><b>Condividi profilo</b><small>Scheda con età, AVG, efficienza e andamento</small></span></button>
+  <button class="shco" data-shc="nt"${U?"":" disabled"}><span class="shci">🌙</span><span><b>Condividi ultima partita</b><small>${U?`vs ${e(U.o)} · ${fmtD(U.d).slice(0,5)} · ${f1(U.f)} AVG`:"Nessuna partita giocata"}</small></span></button>
+  <button class="shchx" data-shc="x">Annulla</button></div>`;
+ document.body.appendChild(sh);
+ sh.addEventListener("click",ev=>{const b=ev.target.closest("[data-shc]");if(ev.target===sh||(b&&b.dataset.shc==="x")){sh.remove();return}if(!b||b.disabled)return;sh.remove();shOpen(b.dataset.shc)})}
+window.e16PlShare={shPlayer,shUltima,plShAsk,shOpen};
 /* ===== COMPARATORE (due giocatori sullo stesso grafico) ===== */
 function vComp(){const ok=needOld();const names=[...new Set(all().map(x=>x.n))].sort();const A=ST.pa,B=ST.pb;
  const sel=(k,v,c)=>`<label class="grsel"><span><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${c};margin-right:5px"></i>Giocatore ${k==="pa"?"A":"B"}</span><select data-psel="${k}"><option value="">🔍 Cerca il giocatore ${k==="pa"?"A":"B"}</option>${names.map(x=>`<option${x===v?" selected":""}>${e(x)}</option>`).join("")}</select></label>`;
@@ -148,9 +311,11 @@ function vComp(){const ok=needOld();const names=[...new Set(all().map(x=>x.n))].
  ${ok?"":`<div class="grfoot">Carico le stagioni passate…</div>`}</div>`}
 /* ===== collegamento con l app ===== */
 window.e16ResetStats=()=>{ALL=null};
-(window.NAVX=window.NAVX||[]).push({k:"st",get:()=>({pl:ST.pl,back:ST.back,pa:ST.pa,pb:ST.pb}),set:o=>Object.assign(ST,o)});
-window.STATV={stat:vHub,sgioc:vGioc,ssq:vSq,gioc:vPl,comp:vComp};
-document.addEventListener("click",ev=>{const c=ev.target.closest("[data-sv],[data-pr],[data-ss],[data-box],[data-sq],[data-pl],[data-per],[data-met],[data-cmp],[data-peropen],[data-snd],[data-avgr]");if(!c||!window.STATV[cur]&&!c.dataset.pl)return;
+(window.NAVX=window.NAVX||[]).push({k:"st",get:()=>({pl:ST.pl,back:ST.back,pa:ST.pa,pb:ST.pb,psz:ST.psz}),set:o=>Object.assign(ST,o)});
+window.STATV={stat:vHub,sgioc:vGioc,ssq:vSq,gioc:vPl,grafico:vGraf,comp:vComp};
+document.addEventListener("click",ev=>{/* (35) profilo: «Condividi» apre il foglio di scelta, «📈 Grafico» apre la pagina del grafico */const sh=ev.target.closest("[data-plsh]");if(sh&&cur==="gioc"){ev.preventDefault();ev.stopPropagation();plShAsk();return}
+ const gr=ev.target.closest("[data-plgr]");if(gr&&cur==="gioc"){ev.preventDefault();ev.stopPropagation();cur="grafico";PEROPEN=false;render();scrollTo(0,0);return}
+ const c=ev.target.closest("[data-sv],[data-pr],[data-ss],[data-box],[data-sq],[data-pl],[data-per],[data-met],[data-cmp],[data-peropen],[data-snd],[data-avgr]");if(!c||!window.STATV[cur]&&!c.dataset.pl)return;
  const d=c.dataset;
  if(d.peropen){PEROPEN=!PEROPEN;render();return}
  if(d.snd){SND=d.snd;render();return}
@@ -164,6 +329,6 @@ document.addEventListener("click",ev=>{const c=ev.target.closest("[data-sv],[dat
  if(d.met){ST.met=d.met;save();render();return}
  if(d.cmp){ST.pa=d.cmp;ST.back="gioc";save();cur="comp";render();scrollTo(0,0);return}
  if(d.pl){ST.back=window.STATV[cur]?cur:"sgioc";ST.pl=d.pl;save();curTeam=null;cur="gioc";render();scrollTo(0,0);return}},true);
-document.addEventListener("change",ev=>{const t=ev.target;if(t.dataset.szsel){[ST.a,ST.b]=t.value.split("|");save();render();return}if(t.dataset.sp){ST[t.dataset.sp]=t.value;save();render()}else if(t.dataset.psel){ST[t.dataset.psel]=t.value;save();render()}});
+document.addEventListener("change",ev=>{const t=ev.target;if(t.dataset.psz){ST.psz=t.value;save();render();return}if(t.dataset.szsel){[ST.a,ST.b]=t.value.split("|");save();render();return}if(t.dataset.sp){ST[t.dataset.sp]=t.value;save();render()}else if(t.dataset.psel){ST[t.dataset.psel]=t.value;save();render()}});
 document.addEventListener("input",ev=>{if(ev.target.id==="sq"){ST.q=ev.target.value;save();const p=ev.target.selectionStart;render();const i=document.getElementById("sq");i.focus();try{i.setSelectionRange(p,p)}catch(_){}}});
 })();
