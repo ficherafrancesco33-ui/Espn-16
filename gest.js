@@ -72,7 +72,7 @@ function vReg(){const art=(n,t,b)=>`<details class="rart"${n===1?" open":""}><su
  ${art(5,"Salary cap",`<p>Cap di <b>${CAP_TOT}</b> per squadra. Contratti, tagli e spazio libero nella sezione Cap & Scelte.</p>`)}
  ${art(6,"Playoff",`<p>Provvisorio: regole Dreamers per ogni conference (1ª–4ª tabellone titolo, 5ª–8ª l'altro), in attesa delle regole della lega.</p>`)}`}
 window.GESTV={lega:vLega,roster:vRoster,inf:vInf,reg:vReg};
-window.e16Roster=t=>{G.rt=t;save()};
+window.e16Roster=t=>{G.rt=t;save()};window.e16RT=()=>G.rt;
 document.addEventListener("click",ev=>{const c=ev.target.closest("[data-lg2],[data-lgw],[data-rt],[data-it]");if(!c)return;const d=c.dataset;
  if(d.lgw){G.wk=+d.lgw;if(d.lg2)G.tab=d.lg2;save();render();return}
  if(d.lg2){G.tab=d.lg2;save();render();return}

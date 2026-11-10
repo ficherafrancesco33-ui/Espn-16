@@ -11,6 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="fonts.css">
 <link rel="stylesheet" href="skin-giorno.css" id="skg">
 <link rel="stylesheet" href="skin-notte.css" id="skn" disabled>
 <style>/* ===== ESPN 16 – app del Fantabasket Dynasty a 16 squadre (base grafica: app Dreamers) =====
@@ -189,6 +190,8 @@ html,body{margin:0}
 .grjs.e16js{display:grid;place-items:center}
 .grjs.e16js img{width:120px;height:120px;border-radius:50%;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45))}
 .snrow[data-pl],.farow,.plink{cursor:pointer}
+/* (10) campo: riquadro dei 9 titolari fuori dal campo a tutta larghezza */
+.e16dp .dpg{display:grid;grid-template-columns:repeat(3,1fr)}
 /* (9) scelte: previsione e valore */
 .e16 .pk small.pkpr{font-weight:700}.e16 .pk small.pkpr.qa{color:#16a34a}.e16 .pk small.pkpr.qm{color:#b45309}.e16 .pk small.pkpr.qb{color:#dc2626}
 .e16 .pkv{flex:none;text-align:right;font:800 italic 18px/1 'Barlow Condensed';color:var(--acc)}.e16 .pkv i{display:block;font:700 9px 'Barlow Condensed';font-style:normal;color:var(--mut);letter-spacing:.8px;text-transform:uppercase}
@@ -346,12 +349,13 @@ function render(){
  document.getElementById("nav").innerHTML=TABS.map(([k,l])=>`<button role="tab" data-go="${k}" aria-selected="${cur===k&&!curTeam||k==="stat"&&!!(window.STATV&&STATV[cur])||k==="gest"&&(SUB.some(x=>x[0]===cur)||!!curTeam)||k==="scambi"&&SUB2.some(x=>x[0]===cur)?"true":"false"}"${k==="gest"||k==="scambi"?` data-menu="${k}" aria-haspopup="true"`:""}><span>${l}${k==="gest"||k==="scambi"?'<i class="car">▾</i>':""}</span></button>`).join("");
  {const sn=document.getElementById("subnav");sn.hidden=true}
  /* (6) come Dreamers: body[data-v] dice in che pagina siamo (alcuni stili Dreamers dipendono da questo) */
+ document.body.dataset.ct=cur==="campo"&&window.e16RT&&e16RT()==="QUE"?"DUC":(window.e16RT?e16RT():"");
  document.body.dataset.v=curTeam?"squadra":({stat:"efficienza",sgioc:"fa",gioc:"grafico",comp:"compar",ssq:"effsquadra",lega:"dreamers",inf:"infortuni",reg:"regolamento"})[cur]||cur;
  e16Tema(E16N);
  document.getElementById("foot").textContent=typeof ESPN!=="undefined"?"ULTIMO AGGIORNAMENTO ESPN: "+ESPN.upd:"";
  const m=document.getElementById("main");
  /* (6) le pagine proprie di ESPN 16 (squadra, lega, cap) stanno dentro .e16: le loro regole non toccano le classi Dreamers */
- m.innerHTML='<div class="view">'+(curTeam?'<div class="e16">'+vTeam(curTeam)+'</div>':window.STATV&&STATV[cur]?STATV[cur]():window.GESTV&&GESTV[cur]?GESTV[cur]():window.TRADEV&&TRADEV[cur]?TRADEV[cur]():cur==="tv"?vTv():cur==="cap"?'<div class="e16">'+vCapAll()+'</div>':vHome())+'</div>';
+ m.innerHTML='<div class="view">'+(curTeam?'<div class="e16">'+vTeam(curTeam)+'</div>':window.STATV&&STATV[cur]?STATV[cur]():cur==="campo"&&window.vCampo?`<div class="chips">${TEAMS.map(x=>`<button class="chip" data-team="${x.id}" aria-pressed="${x.id===e16RT()}"><span class="badge logo lg-${x.id}"></span>${esc(x.nome.split(" ").slice(-1)[0])}</button>`).join("")}</div>`+vCampo(e16RT()):window.GESTV&&GESTV[cur]?GESTV[cur]():window.TRADEV&&TRADEV[cur]?TRADEV[cur]():cur==="tv"?vTv():cur==="cap"?'<div class="e16">'+vCapAll()+'</div>':vHome())+'</div>';
  if(cur==="tv"){const w=document.getElementById("tvweek"),b=w&&w.querySelector('[aria-pressed="true"]');if(b)w.scrollLeft=b.offsetLeft-w.clientWidth/2+b.clientWidth/2}
 }
 document.addEventListener("click",e=>{if(e.target.closest("#sw")){E16N=!E16N;try{localStorage.setItem("e16_notte",E16N?"1":"0")}catch(_){}e16Tema(E16N);render();return}
@@ -359,7 +363,7 @@ document.addEventListener("click",e=>{if(e.target.closest("#sw")){E16N=!E16N;try
  const mn=e.target.closest("[data-menu]");if(mn){const sn=document.getElementById("subnav"),r=mn.getBoundingClientRect();const L=mn.dataset.menu==="scambi"?SUB2:SUB,open=!sn.hidden&&sn.dataset.m===mn.dataset.menu;sn.dataset.m=mn.dataset.menu;sn.innerHTML=L.map(([k,l])=>`<button data-go="${k}" aria-selected="${cur===k}"><span>${l}</span></button>`).join("");if(open){sn.hidden=true;return}sn.hidden=false;sn.style.left=Math.max(8,Math.min(r.left,innerWidth-200))+"px";sn.style.top=(r.bottom+4)+"px";sn.style.minWidth="180px";return}
  if(!e.target.closest("#subnav")){const sn=document.getElementById("subnav");if(sn&&!sn.hidden)sn.hidden=true}
  const g=e.target.closest("[data-go]");if(g){go(g.dataset.go);return}
- const t=e.target.closest("[data-team]");if(t){if(!t.dataset.tab){try{e16Roster(t.dataset.team)}catch(_){}curTeam=null;cur="roster";render();scrollTo(0,0);return}curTeam=t.dataset.team;tmTab=t.dataset.tab;render();scrollTo(0,0);return}
+ const t=e.target.closest("[data-team]");if(t){if(!t.dataset.tab){try{e16Roster(t.dataset.team)}catch(_){}curTeam=null;cur="campo";render();scrollTo(0,0);return}curTeam=t.dataset.team;tmTab=t.dataset.tab;render();scrollTo(0,0);return}
  const tt=e.target.closest("[data-tmtab]");if(tt){tmTab=tt.dataset.tmtab;render();return}
  const n=e.target.closest("[data-night]");if(n){night=n.dataset.night;render();return}
  const l=e.target.closest("[data-lg]");if(l){lgTab=l.dataset.lg;render();return}
@@ -491,6 +495,8 @@ render();
 <script src="tv.js"></script>
 <script src="gest.js"></script>
 <script src="trade.js"></script>
+<script src="campo-assets.js"></script>
+<script src="campo.js"></script>
 <script src="live.js"></script>
 <script src="parquet.js"></script>
 <script>render();

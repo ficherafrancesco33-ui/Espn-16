@@ -1,4 +1,4 @@
-/* ESPN 16 – stili dell app Dreamers (stesse classi, stesso ordine), estratti dalle pagine Home, Dreamers, Statistiche, Giocatori, Grafico, Squadre, Dynasty TV, Roster, Centro Medico, Regolamento. Un file per il giorno e uno per la notte: se ne accende uno solo. Non modificare qui: le regole proprie di ESPN 16 stanno in index.html. */
+/* ESPN 16 – stili dell app Dreamers (stesse classi, stesso ordine), estratti dalle pagine Home, Campo, Dreamers, Statistiche, Giocatori, Grafico, Squadre, Dynasty TV, Roster, Centro Medico, Regolamento. Un file per il giorno e uno per la notte: se ne accende uno solo. Non modificare qui: le regole proprie di ESPN 16 stanno in index.html. */
 :root { --rG: #ef4444; --rF: #60a5fa; --rC: #fbbf24; padding-top: env(safe-area-inset-top,0px); padding-bottom: env(safe-area-inset-bottom,0px); }
 body { margin: 0px; }
 img { max-width: 100%; }
@@ -21,6 +21,9 @@ html { text-size-adjust: 100%; }
 .trbtn svg { width: 20px; height: 20px; flex: 0 0 auto; }
 .trbtn span { font-family: var(--display); font-style: italic; font-weight: 800; font-size: 17px; letter-spacing: 0.22em; text-transform: uppercase; line-height: 1; }
 .trbtn i { font-style: normal; font-family: var(--display); font-weight: 800; font-size: 20px; line-height: 1; }
+.crwrap { position: relative; }
+.cpow { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; padding: 5px; border: 0px; border-radius: 50%; background: transparent; color: rgba(255, 255, 255, 0.09); cursor: pointer; }
+.cpow svg { width: 100%; height: 100%; }
 @keyframes shk { 
   20%, 60% { transform: translateX(-8px); }
   40%, 80% { transform: translateX(8px); }
@@ -261,6 +264,34 @@ html body .vsqr .z { opacity: 0.6; }
 nav { overflow-x: auto; scrollbar-width: none; }
 nav::-webkit-scrollbar { display: none; }
 nav button { flex: 0 0 auto; padding: 8px 10px; font-size: 13px; }
+.court { position: relative; width: 100%; max-width: 380px; margin: 0px auto 6px; aspect-ratio: 100 / 128.8; box-shadow: rgba(0, 0, 0, 0.5) 0px 12px 28px; border: 3px solid rgb(42, 26, 12); }
+.cbg { position: absolute; inset: 0px; width: 100%; height: 100%; display: block; }
+.cpl { position: absolute; transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 2px; background: none; border: 0px; padding: 0px; cursor: pointer; width: 104px; }
+.cpl svg { width: 58px; height: 70px; overflow: visible; filter: drop-shadow(rgba(0, 0, 0, 0.45) 0px 4px 6px); }
+.bev { display: grid; justify-items: end; gap: 2px; }
+.cev { font-family: var(--display); font-style: italic; font-weight: 800; font-size: 14px; padding: 0px 7px; color: rgb(10, 15, 31); line-height: 1.35; }
+.cev.r { background: var(--loss); color: rgb(255, 255, 255); }
+h2.lbmh { margin-top: 4px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 6px; }
+h2.lbmh::after { display: none; }
+h2.lbmh > .lbmw { display: flex; align-items: center; gap: 5px; justify-self: center; }
+.lbma { flex: 0 0 auto; display: inline-grid; place-items: center; width: 30px; height: 34px; padding: 0px; border-radius: 9px; border: 1px solid rgba(255, 255, 255, 0.18); background: rgb(20, 27, 54); color: rgb(123, 255, 176); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 0.12s; }
+.lbma svg { width: 16px; height: 16px; }
+.lbma:disabled { opacity: 0.28; cursor: default; }
+.lbmcap { margin: -4px 0px 8px; text-align: center; font: 700 11px var(--display); letter-spacing: 0.08em; text-transform: uppercase; color: rgb(159, 176, 208); }
+.lbmcap.lbmnt { margin: -6px 0px 3px; line-height: 1; }
+.lbmcap.lbmnt b { color: rgb(123, 255, 176); font-weight: 800; }
+.kitbtn { flex: 0 0 auto; display: inline-grid; place-items: center; width: 38px; height: 28px; padding: 0px; border-radius: 9px; border: 1px solid rgba(255, 255, 255, 0.18); background: rgb(20, 27, 54); cursor: pointer; margin-left: auto; }
+.kitbtn svg { width: 19px; height: 19px; filter: drop-shadow(rgba(0, 0, 0, 0.5) 0px 1px 1px); }
+h2.lbmh > .kitbtn { justify-self: start; margin-left: 0px; }
+.lbm { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; height: 34px; box-sizing: border-box; padding: 0px 9px; border-radius: 9px; background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.13); box-shadow: rgba(0, 0, 0, 0.3) 0px 6px 18px; cursor: pointer; font-variant-numeric: tabular-nums; }
+.lbmn { font-family: var(--display); font-style: italic; font-weight: 800; font-size: 21px; line-height: 1; color: var(--sc,#f1f5f9); letter-spacing: -0.02em; }
+.lbmn.dim { opacity: 0.5; }
+.lbmx { width: 1px; height: 20px; background: rgba(255, 255, 255, 0.2); }
+.lbmg { display: grid; justify-items: center; line-height: 1.1; gap: 1px; }
+.lbmg i { font-style: normal; font-size: 9.5px; font-weight: 800; color: rgb(148, 163, 184); }
+.lbmg b { font-size: 11.5px; font-weight: 800; color: rgb(123, 255, 176); }
+.lbml { display: inline-grid; place-items: center; width: 22px; height: 22px; }
+.lbml .badge { font-size: 9px; width: 22px !important; height: 22px !important; }
 @keyframes lbbr { 
   0%, 100% { border-color: rgb(255, 59, 48); box-shadow: rgba(255, 59, 48, 0.75) 0px 0px 10px, rgba(0, 0, 0, 0.3) 0px 6px 18px; }
   50% { border-color: rgba(255, 59, 48, 0.18); box-shadow: rgba(255, 59, 48, 0) 0px 0px 0px, rgba(0, 0, 0, 0.3) 0px 6px 18px; }
@@ -268,28 +299,89 @@ nav button { flex: 0 0 auto; padding: 8px 10px; font-size: 13px; }
 @keyframes lbdp { 
   50% { opacity: 0.25; }
 }
+.cev.wait { background: rgb(229, 231, 235); color: rgb(71, 85, 105); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; padding: 1px 6px; }
+.dpan { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; align-items: start; margin-bottom: 16px; }
+.dpan h5 { margin: 0px 0px 2px; line-height: 1.1; text-align: center; font-family: var(--display); font-style: italic; font-weight: 800; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg); }
+.dpan h5 small { display: block; margin-top: 0px; font-style: normal; font-size: 10px; letter-spacing: 0.12em; color: var(--muted); }
+.dpsix { padding: 6px 4px 12px; border-radius: 14px; background: linear-gradient(180deg,color-mix(in srgb,var(--win) 16%,transparent),transparent 75%); box-shadow: inset 0 0 0 1.5px color-mix(in srgb,var(--win) 55%,transparent); }
+.dphalf { padding: 6px 4px 12px; border-radius: 14px; background: rgba(127, 127, 127, 0.16); }
+.dpg { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 4px; }
+.dpc { display: grid; justify-items: center; width: 100%; background: none; border: 0px; padding: 0px; cursor: pointer; color: inherit; min-width: 0px; }
+.pj { position: relative; display: block; width: 58px; height: 70px; }
+.court .cpl.dr .pj { width: 64px; height: 77px; }
+.court .cpl.dr .pj svg { width: 64px !important; height: 77px !important; }
+.pj svg { display: block; filter: drop-shadow(rgba(0, 0, 0, 0.4) 0px 4px 6px); width: 58px !important; height: 70px !important; }
+.pjc { position: absolute; right: -19px; top: 1px; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: rgb(255, 247, 0); color: rgb(26, 26, 0); font-style: normal; font-family: var(--display); font-weight: 900; font-size: 12px; box-shadow: rgba(0, 0, 0, 0.55) 0px 0px 0px 2px, rgb(255, 247, 0) 0px 0px 9px; }
 .pnm { position: relative; z-index: 1; margin-top: -7px; width: 86px; box-sizing: border-box; background: rgb(11, 13, 18); color: rgb(255, 255, 255); border-radius: 6px; padding: 3px 3px 2px; font-family: var(--display); font-style: italic; font-weight: 800; font-size: 11.5px; line-height: 1.25; text-transform: uppercase; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pnm i { font-style: normal; color: rgb(139, 147, 167); margin-right: 3px; }
 .pnm { text-overflow: clip !important; }
+.pnm .pn { display: inline-block; font: inherit; }
+.gw { display: flex; flex-direction: column; align-items: center; }
 .gd { display: flex; gap: 4px; justify-content: center; margin-top: 4px; }
+.gd i { width: 9px; height: 9px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid rgba(255, 255, 255, 0.9); background: transparent; box-shadow: rgba(0, 0, 0, 0.4) 0px 1px 2px; }
+.gd i.ok { background: var(--gc,#9ca3af); border-color: rgb(255, 255, 255); }
 @keyframes gdbl { 
   50% { opacity: 0.1; transform: scale(0.6); }
 }
+.pcd { display: grid; justify-items: center; align-content: center; width: 70px; min-height: 31px; margin-top: 5px; box-sizing: border-box; padding: 2px 4px 3px; border-radius: 9px; border: 1px solid rgba(255, 255, 255, 0.28); color: rgb(11, 11, 11); cursor: pointer; box-shadow: rgba(0, 0, 0, 0.2) 0px -2px 0px inset, rgba(0, 0, 0, 0.35) 0px 3px 8px; transition: transform 0.12s; }
+html body .pcd:not(.na):not(.pf) b:not(#z):not(#y) { color: rgb(255, 255, 255) !important; -webkit-text-fill-color: rgb(255, 255, 255) !important; text-shadow: rgba(0, 0, 0, 0.45) 0px 1px 0px, rgba(0, 0, 0, 0.35) 0px 0px 3px !important; }
+html body .pcd.y:not(.na):not(.pf) b:not(#z):not(#y) { color: rgb(17, 17, 17) !important; -webkit-text-fill-color: rgb(17, 17, 17) !important; text-shadow: none !important; }
+html[data-ducdk] body div.teamhead:has(.hlogo[data-t="DUC"]):not(#dx) { color: rgb(255, 255, 255) !important; -webkit-text-fill-color: rgb(255, 255, 255) !important; }
+.pcs { display: block; position: relative; touch-action: pan-y; }
+.cpl:has(.pcs), .dpc:has(.pcs), .cpl:has(.pcs) *, .dpc:has(.pcs) * { touch-action: pan-y; }
 @keyframes pjsw { 
   0% { transform: perspective(300px) rotateY(0deg); }
   45% { transform: perspective(300px) rotateY(var(--pjr,25deg)); }
   100% { transform: perspective(300px) rotateY(0deg); }
 }
+.pcs > .pcd.off { position: absolute; left: 0px; top: 0px; clip-path: inset(0px 100% 0px 0px); pointer-events: none; animation: auto ease 0s 1 normal none running none; }
+.pcd.pg { padding: 2px 3px; gap: 0px; }
+.pcd.pg b { font-size: 14px; }
+.pcd.pf { display: flex; align-items: center; justify-content: space-between; gap: 2px; overflow: hidden; padding: 2px 2px 2px 4px !important; }
+.pcd.pf .pfl { display: grid; justify-items: start; line-height: 1; min-width: 0px; overflow: hidden; }
+.pcd.pf .pfl b { font-style: italic; white-space: nowrap; font-size: 8.5px !important; letter-spacing: 0px !important; }
+.pfv { position: relative; flex: 0 0 auto; display: inline-flex; align-items: center; padding: 0px 5px 3.5px; margin: 2px 0px 0px; box-sizing: border-box; border-radius: 4px; background: rgba(12, 52, 92, 0.92); border: 1px solid rgba(125, 211, 252, 0.55); line-height: 1; }
+.pfv b { color: rgb(125, 211, 252); -webkit-text-fill-color: rgb(125, 211, 252); font-size: 12px !important; line-height: 0.88 !important; letter-spacing: 0px !important; }
+.pfv::after { content: ""; position: absolute; left: 4px; right: 4px; bottom: 1px; height: 1.5px; border-radius: 1px; background: var(--lv,#22c55e); opacity: 0.9; }
+.pfv.g { --lv: #22c55e; }
+.pfv.y { --lv: #f5b400; }
+.pfv.v { --lv: #8b5cf6; }
+.pcd.pg.na { background: linear-gradient(rgb(229, 231, 235), rgb(156, 163, 175)); color: rgb(17, 17, 17); }
 @keyframes pcin-l { 
   0% { transform: translateX(26px); opacity: 0; }
 }
 @keyframes pcin-r { 
   0% { transform: translateX(-26px); opacity: 0; }
 }
+.pcd.lk { display: flex; align-items: center; justify-content: center; gap: 3px; }
+.pcd.lk .lkx { flex: 0 0 auto; display: block; box-sizing: content-box; width: 9px; height: 9px; padding: 3px; border-radius: 50%; background: rgba(11, 13, 18, 0.82); color: rgb(250, 204, 21); }
+.pcd b { font-family: var(--display); font-style: italic; font-weight: 900; font-size: 16px; line-height: 1; font-variant-numeric: tabular-nums; }
+.pcd.r { background: linear-gradient(rgb(248, 113, 113), rgb(220, 38, 38)); color: rgb(255, 255, 255); }
+.pcd.y { background: linear-gradient(rgb(252, 211, 77), rgb(245, 180, 0)); }
+.pcd.g { background: linear-gradient(rgb(74, 222, 128), rgb(22, 163, 74)); }
+.pcd.v { background: linear-gradient(rgb(167, 139, 250), rgb(124, 58, 237)); color: rgb(255, 255, 255); }
+.pcd.na { background: linear-gradient(rgb(241, 245, 249), rgb(215, 221, 230)); color: rgb(100, 116, 139); }
+.pcd.na b { font-size: 10px; white-space: nowrap; font-style: normal; letter-spacing: 0.04em; text-transform: uppercase; padding-top: 2px; }
+.pcd.cap { box-shadow: rgba(0, 0, 0, 0.2) 0px -3px 0px inset, rgba(0, 0, 0, 0.35) 0px 3px 8px; }
+.court .cpl.dr { gap: 0px; width: 30cqw; }
+.dpc.six .pcd { box-shadow: inset 0 -3px 0 rgba(0,0,0,.18),0 0 0 2px color-mix(in srgb,var(--win) 80%,transparent),0 4px 10px rgba(0,0,0,.35); }
+.dpc.half .pj { opacity: 0.94; }
+.dptrib .bpl { opacity: 0.62; filter: saturate(0.6); }
+.dptrib .bpl svg { width: 28px; height: 34px; }
+.dptrib .bnm { font-size: 13px; }
+.pj, .court .cpl.dr .pj { width: 64px; height: 77px; }
+.pj svg, .court .cpl.dr .pj svg { width: 64px !important; height: 77px !important; }
+.court .cpl.dr { width: 94px; }
 .pnm { width: 90px; margin-top: -10px; padding: 3.2px 3px 2.4px; font-size: 13px; border-radius: 6px 6px 0px 0px; }
+.pcd { width: 90px; min-height: 27px; margin-top: 0px; border-radius: 0px 0px 9px 9px; border-top: 0px; }
+.pcd b { font-size: 16.8px; }
+.pcd.na b { font-size: 9.6px; }
+.dpg { gap: 12px 4px; }
 @keyframes glhit { 
   0%, 40% { box-shadow: rgb(250, 204, 21) 0px 0px 0px 2px inset; background: rgba(250, 204, 21, 0.12); }
   100% { box-shadow: none; }
 }
+.pcd { position: relative; }
 .grshc { position: relative; }
 .grshc > .shbtn { position: absolute; left: 12px; top: 10px; margin: 0px; }
 .pergr { display: grid; gap: 3px; min-width: 0px; }
@@ -311,6 +403,17 @@ nav button { flex: 0 0 auto; padding: 8px 10px; font-size: 13px; }
   0% { opacity: 0; }
   100% { opacity: 1; }
 }
+.bev[data-drwk] { cursor: pointer; }
+.trlk { margin-left: auto; width: 24px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; }
+.bench { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 16px; }
+.bpl { display: flex; align-items: center; gap: 10px; background: linear-gradient(180deg,var(--panel2),var(--panel)); border: 0px; padding: 6px 12px 6px 8px; cursor: pointer; text-align: left; color: var(--fg); }
+.bpl svg { width: 34px; height: 41px; flex: 0 0 auto; }
+.bnm { flex: 1 1 0%; min-width: 0px; font-family: var(--display); font-style: italic; font-weight: 800; font-size: 15px; text-transform: uppercase; line-height: 1.1; }
+.bnm small { display: block; font-style: normal; font-weight: 700; font-size: 10.5px; letter-spacing: 0.1em; color: var(--muted); }
+.croster { display: block; margin: 0px auto 10px; background: var(--red); color: var(--onred); border: 0px; font-family: var(--display); font-style: italic; font-weight: 800; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 18px; cursor: pointer; }
+.cpl { width: 92px; }
+.cpl svg { width: 50px; height: 60px; }
+.cev { font-size: 13px; }
 header .wrap { position: relative; }
 .subnav { position: absolute; z-index: 30; top: 0px; left: 0px; min-width: 180px; display: grid; gap: 2px; padding: 6px; background: linear-gradient(180deg,var(--pn1),var(--pn2)); border-right: 1px solid rgba(255, 255, 255, 0.14); border-bottom: 1px solid rgba(255, 255, 255, 0.14); border-left: 1px solid rgba(255, 255, 255, 0.14); border-image: none; border-top: 3px solid var(--red); box-shadow: rgba(0, 0, 0, 0.6) 0px 16px 34px; transform-origin: center top; }
 .subnav[hidden] { display: none; }
@@ -494,6 +597,7 @@ nav button { font-size: 12px; letter-spacing: 0px; padding: 8px 1px; }
 .hmscroll { max-height: 312px; overflow-y: auto; overscroll-behavior: contain; margin: 0px -6px; padding: 0px 6px; }
 .hmo { display: inline-block; width: 18px; height: 18px; vertical-align: -4px; margin-right: 6px; }
 .hmo .badge { display: block; font-size: 8px; width: 18px !important; height: 18px !important; }
+.clgo { cursor: pointer; }
 .hn6 { display: grid; grid-template-columns: 56px minmax(0px, 1fr); gap: 10px; align-items: start; margin-top: 10px; }
 .hmrail { display: grid; gap: 7px; align-content: start; }
 .hrl { width: 56px; height: 56px; padding: 3px; border-radius: 14px; border: 1px solid var(--hnbd); cursor: pointer; background: var(--hnbg); box-shadow: var(--hnsh); display: grid; place-items: center; }
@@ -575,6 +679,8 @@ body:not(.notte) .hmqt .tmc { background: linear-gradient(160deg,var(--pn1),var(
 .hmn small { display: block; font-size: 10px; color: var(--hnmu); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hmvu { margin: 6px 0px 8px; font-size: 12px; color: var(--hnsub); }
 html body :is(.hrl, .hlg, .htile) .lg-DUC:not(#z), html body .htile[data-team="DUC"] .hlg .badge:not(#z), html body .teamhead .hlogo[data-t="DUC"]:not(#z):not(#a):not(#b), html body img[src*="2402cd92d5d7"]:not(#z) { box-shadow: none !important; filter: none !important; }
+.teamhead .hlogo[data-t="DUC"] { width: 74px; height: 74px; margin: -10px -4px -10px -6px; object-fit: contain; }
+.teamhead .hlogo[data-t="DUC"] { width: 72px; height: 72px; margin: -10px -4px -10px -6px; }
 .rhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin: -4px 0px 12px; }
 .rhead p { margin: 0px; color: var(--muted); font-size: 13px; }
 .rpdf { display: inline-flex; align-items: center; gap: 6px; background: var(--red); color: var(--onred); text-decoration: none; font-family: var(--display); font-style: italic; font-weight: 800; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; padding: 7px 14px; transform: skewX(-10deg); }
@@ -744,6 +850,21 @@ html body :is(.hrl, .hlg, .htile) .lg-DUC:not(#z), html body .htile[data-team="D
 .grl.G { background: var(--rG); }
 .grl.F { background: var(--rF); }
 .grl.C { background: var(--rC); }
+.cassa { display: grid; grid-template-columns: auto 1fr; gap: 0px; margin: -6px 0px 18px; background: linear-gradient(90deg, rgba(34, 197, 94, 0.09), rgba(255, 255, 255, 0.02) 55%); border-left: 3px solid var(--win); box-shadow: rgba(0, 0, 0, 0.25) 0px 6px 16px; }
+.trophies + .cassa { margin-top: -12px; }
+.csal { display: grid; align-content: center; padding: 8px 10px 8px 12px; border-right: 1px solid rgba(255, 255, 255, 0.07); }
+.csal small { font-family: var(--display); font-style: italic; font-weight: 800; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--win); }
+.csal b { font-family: var(--display); font-style: italic; font-weight: 800; font-size: clamp(24px, 7.5vw, 30px); line-height: 1; color: rgb(255, 255, 255); white-space: nowrap; }
+.csal b i { font-size: 15px; font-style: italic; color: var(--muted); margin-left: 3px; }
+.csal em { font-style: normal; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+.ctab { display: grid; grid-template-columns: auto 1fr 1fr; align-items: center; padding: 6px 10px 6px 2px; gap: 2px 8px; min-width: 0px; }
+.ctab > span { font-family: var(--display); font-weight: 700; font-size: 9.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); text-align: right; white-space: nowrap; }
+.ctab > span.rl { text-align: left; padding: 0px 2px 0px 8px; font-style: italic; font-weight: 800; font-size: 11.5px; letter-spacing: 0.08em; }
+.ctab > span.rl.p { color: rgb(94, 234, 143); }
+.ctab > span.rl.n { color: rgb(255, 115, 115); }
+.ctab > b { font-family: var(--display); font-style: italic; font-weight: 800; font-size: 18px; line-height: 1.25; text-align: right; white-space: nowrap; }
+.ctab > b.n { color: rgb(255, 115, 115); }
+.ctab > b.z { color: rgb(75, 90, 130); }
 .rostc { display: grid; gap: 8px; }
 .rcg { background: var(--card,#16213f); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 10px; overflow: hidden; }
 .rcg h4 { margin: 0px; display: flex; align-items: center; gap: 8px; padding: 5px 10px; font-family: var(--display); font-style: italic; font-weight: 800; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(203, 213, 225); background: rgba(255, 255, 255, 0.04); }
@@ -1036,6 +1157,17 @@ body.dreamfs .drroom { padding-top: calc(env(safe-area-inset-top,0px) + 52px) !i
 .cupbtn span, .trbtn span { flex: 1 1 0%; text-align: left; letter-spacing: 0.1em !important; font-size: 19px !important; }
 .cupbtn i, .trbtn i { width: 30px; height: 30px; line-height: 30px; text-align: center; border-radius: 50%; background: rgba(255, 255, 255, 0.2); }
 .hsh { position: absolute; right: 6px; top: 6px; z-index: 2; margin: 0px !important; background: rgba(0, 0, 0, 0.28) !important; border-color: rgba(255, 255, 255, 0.35) !important; }
+.clink { cursor: pointer; flex-wrap: wrap; transition: transform 0.12s; }
+.cgo { grid-column: 1 / -1; border-top: 1px solid rgba(255, 255, 255, 0.06); padding: 5px 12px; text-align: right; font-family: var(--display); font-style: italic; font-weight: 800; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--win); }
+.p { color: rgb(94, 234, 143); }
+.n { color: rgb(255, 115, 115); }
+.trophies { display: flex; align-items: center; gap: 12px; margin: -6px 0px 18px; padding: 7px 12px; background: linear-gradient(90deg, rgba(245, 180, 0, 0.1), rgba(255, 255, 255, 0.02) 60%); border-left: 3px solid var(--gold); box-shadow: rgba(0, 0, 0, 0.25) 0px 6px 16px; }
+.trophies > small { font-family: var(--display); font-style: italic; font-weight: 800; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+.trophies .shelf { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.cup { display: flex; align-items: center; gap: 5px; }
+.cup svg { width: 20px; height: 23px; flex: 0 0 auto; filter: drop-shadow(rgba(0, 0, 0, 0.5) 0px 2px 3px); }
+.cup span { display: grid; line-height: 1; font-family: var(--display); font-style: italic; font-weight: 800; font-size: 14px; color: rgb(255, 255, 255); white-space: nowrap; }
+.cup span small { font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-top: 2px; }
 nav button > span { white-space: nowrap; }
 nav { gap: 2px; }
 nav button { flex: 1 1 auto; min-width: 0px; font-size: clamp(11px, 3.1vw, 15px); letter-spacing: 0px; padding: 8px 2px; }
@@ -1084,10 +1216,17 @@ input, select, textarea { font-size: 16px !important; }
 .drtvh { margin-top: 18px; }
 .drtvl { width: 34px; height: 34px; display: grid; place-items: center; }
 .drtvl .badge, .drsbl .badge { filter: drop-shadow(rgba(0, 0, 0, 0.45) 0px 2px 3px); width: 100% !important; height: 100% !important; background-color: transparent !important; box-shadow: none !important; border-radius: 0px !important; }
+.drbox { min-width: 0px !important; }
 .drtvg { border-color: rgba(139, 92, 246, 0.45); background: linear-gradient(180deg,rgba(76,29,149,.35),var(--panel)); }
 .drtvg .tvst b.pre { background: rgb(109, 75, 216); }
 .drr em, .drms .drr em, .drch em { line-height: 1; font-family: var(--display) !important; font-style: italic !important; font-weight: 800 !important; font-size: 26px !important; letter-spacing: 0px !important; }
 .drtvg .tvt .tvsc { font-size: 22px; }
+.clbox td.pts { color: rgb(255, 255, 255); font-weight: 800; }
+.clbox th, .clbox td { padding-left: 5px !important; padding-right: 5px !important; }
+.clbox td:first-child, .clbox th:first-child { min-width: 132px !important; max-width: 150px !important; }
+[data-ist] { --ist: #22c55e; --w: 100%; }
+[data-ist] .pcd::before { content: ""; position: absolute; left: 0px; right: 0px; top: 0px; height: calc(3px + var(--sepw,0px)); background: linear-gradient(90deg,var(--ist) var(--w),#e6e6e6 var(--w)) 0 0/100% 3px no-repeat,var(--sepc,#0b0b12); z-index: 2; }
+.cpl .pnm, .dpc .pnm, .cpl .pcd, .dpc .pcd { position: relative; z-index: 4; }
 @keyframes lvbd { 
   0%, 100% { box-shadow: rgb(255, 77, 94) 0px 0px 0px 2px inset, rgba(255, 77, 94, 0.7) 0px 0px 8px; }
   50% { box-shadow: rgba(255, 77, 94, 0.25) 0px 0px 0px 2px inset, rgba(255, 77, 94, 0) 0px 0px 0px; }
@@ -1114,6 +1253,26 @@ input, select, textarea { font-size: 16px !important; }
   0%, 100% { stroke-opacity: 1; }
   50% { stroke-opacity: 0.18; }
 }
+.clwrap { margin-top: 34px; }
+.cltgw { margin: 2px 0px 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cltg { display: inline-flex; gap: 0px; border: 1px solid rgba(196, 181, 253, 0.45); border-radius: 999px; overflow: hidden; flex: 0 0 auto; }
+.cltg button { background: rgba(124, 58, 237, 0.18); border: 0px; color: rgb(233, 213, 255); font-family: var(--display); font-style: italic; font-weight: 800; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; padding: 7px 12px; cursor: pointer; }
+.cltg button[aria-pressed="true"] { background: linear-gradient(rgb(167, 139, 250), rgb(124, 58, 237)); color: rgb(255, 255, 255); }
+.court { max-width: 560px; container-type: inline-size; }
+.court .cpl { width: 26cqw; }
+.court .cpl.dr { transform: translate(-50%,-50%) scale(calc(var(--k,1)*var(--g5,1.05))); }
+.dpan .dpc { zoom: 1.05; }
+.court .cpl.dr .pcd, .dpan .pcd { padding: 2.5px 4px; }
+.court .cpl.dr .pcd b, .dpan .pcd b { position: relative; top: 0.5px; }
+.pcd.lk .lkx { position: relative; top: 0.7px; }
+.court .cpl svg { width: 14.6cqw; height: 17.5cqw; }
+.court .cpl.dr .pj, .dpan .pj { width: calc(64px*var(--sj,1)); height: calc(77px*var(--sj,1)); }
+.court .cpl.dr .pj svg, .dpan .pj svg { width: calc(64px*var(--sj,1)) !important; height: calc(77px*var(--sj,1)) !important; }
+.court .cpl.dr { width: calc(94px*max(1,var(--sn,1))); }
+.court .cpl.dr .pnm, .dpan .pnm { width: calc(90px*var(--sn,1)); font-size: calc(13px*var(--st,1)); margin-top: calc(var(--sov,-10)*1px); }
+.court .cpl.dr .pcd, .dpan .pcd { width: calc(90px*var(--sn,1)); min-height: calc(27px*var(--sp,1)); }
+.court .cpl.dr .pcd b, .dpan .pcd b { font-size: calc(16.8px*var(--sp,1)); }
+.court .cpl.dr .pcd.na b, .dpan .pcd.na b { font-size: calc(9.6px*var(--sp,1)); }
 .setbtn { flex: 0 0 auto; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.22); background: rgba(255, 255, 255, 0.08); color: rgb(255, 255, 255); cursor: pointer; padding: 0px; }
 .nsbtn { position: relative; width: 40px; height: 40px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.18); background: rgb(20, 27, 54); color: rgb(201, 210, 245); }
 .nsbtn svg { width: 21px; height: 21px; }
@@ -1140,6 +1299,9 @@ html:not(.setpg) body:not(.dreamfs)::before { display: none; }
 .drplh.drplsh > span { margin-left: auto; }
 .drplh.drplsh .shbtn { margin-left: 0px; }
 .shbtn { margin-left: auto; flex: 0 0 32px; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0px; border: 1px solid rgba(196, 181, 253, 0.45); border-radius: 999px; background: rgba(124, 58, 237, 0.22); color: rgb(233, 213, 255); font-family: var(--display); font-style: italic; font-weight: 800; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; position: relative; z-index: 2; }
+.clbox td:first-child { position: relative; padding-right: 42px !important; min-width: 158px !important; max-width: 170px !important; }
+.clbox th:first-child { min-width: 158px !important; max-width: 170px !important; }
+.clbox .rsh { position: absolute; right: 7px; top: 50%; transform: translateY(-50%); margin: 0px; width: 28px; height: 28px; flex: 0 0 auto; }
 .drcr[data-dr="cteam"] { cursor: pointer; }
 .drfoot { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 18px 0px 4px; }
 .drfoot .drrulb { margin: 0px; }
@@ -1208,14 +1370,24 @@ html.dlt-parquet:not(.notte) .tvbox td:first-child:not(#z), html.dlt-parquet:not
 html.dlt-parquet:not(.notte) .tvbox tbody tr:not(.grp):not(.tot) td:first-child small:not(#z) { color: rgb(180, 84, 15) !important; }
 html.dlt-parquet:not(.notte) .tvbox tr:not(.grp):not(.tot) td:not(:first-child):not(.pdkl):not(#z) { color: rgb(217, 86, 11) !important; }
 html.dlt-parquet:not(.notte) .tvbox tr.tot td:not(#z) { color: rgb(255, 255, 255) !important; }
+html.dlt-parquet:not(.notte) .tvbox td:first-child button:not(#z) { background: rgb(232, 99, 26) !important; border: 1px solid rgb(255, 255, 255) !important; color: rgb(255, 255, 255) !important; }
+html.dlt-parquet:not(.notte) .tvbox td:first-child button svg:not(#z) { color: rgb(255, 255, 255) !important; stroke: rgb(255, 255, 255); }
 html.dlt-parquet:not(.notte) .tvtabs .tvtab[aria-pressed="true"]:not(#z) { background: linear-gradient(rgb(232, 99, 26), rgb(207, 84, 16)) !important; color: rgb(255, 255, 255) !important; border-color: rgb(207, 84, 16) !important; }
 html.dlt-parquet:not(.notte) .tvtabs .tvtab[aria-pressed="true"] :not(#z) { color: rgb(255, 255, 255) !important; }
 html.dlt-parquet:not(.notte) div.teamhead:not(#dx) { color: rgb(254, 255, 253) !important; -webkit-text-fill-color: rgb(254, 255, 253) !important; border-color: rgb(255, 255, 255) !important; }
 html.dlt-parquet:not(.notte) button.shbtn:not(#dx) { color: rgb(255, 253, 251) !important; -webkit-text-fill-color: rgb(255, 253, 251) !important; }
+html.dlt-parquet:not(.notte) svg.cbg:not(#dx) { color: rgb(0, 0, 0) !important; -webkit-text-fill-color: rgb(0, 0, 0) !important; border-color: rgb(0, 0, 0) !important; }
 html.dlt-parquet:not(.notte) th.fasrt:not(#dx) { background: none rgb(220, 92, 21) !important; }
 html.dlt-parquet:not(.notte) span.t:not(#dx) { background: none rgb(229, 99, 22) !important; }
+html.dlt-parquet:not(.notte) .cname:not(#dx), html.dlt-parquet:not(.notte) .cname text:not(#dx) { fill: rgb(255, 255, 255) !important; }
+html body .cname.cn-duc:not(#dx):not(#dy), html body .cname.cn-duc text:not(#dx):not(#dy) { fill: var(--ducin,#000) !important; fill-opacity: 1 !important; opacity: 1 !important; stroke: none !important; }
+html.dlt-parquet:not(.notte) .dphalf h5, html.dlt-parquet:not(.notte) .dphalf h5 small { color: rgb(255, 255, 255) !important; text-shadow: rgba(80, 30, 0, 0.5) 0px 1px 2px !important; }
+html.dlt-parquet:not(.notte) .dphalf.pqw, html.dlt-parquet:not(.notte) .dphalf { background: linear-gradient(180deg,color-mix(in srgb,var(--loss) 16%,transparent),transparent 75%) !important; box-shadow: inset 0 0 0 1.5px color-mix(in srgb,var(--loss) 55%,transparent) !important; }
 html.dlt-parquet .pqw { box-shadow: rgba(120, 60, 10, 0.15) 0px 2px 6px; background: none rgb(255, 255, 255) !important; border-color: rgba(217, 86, 11, 0.35) !important; }
 html.dlt-parquet .pqw, html.dlt-parquet .pqw :is(span, b, small, i, em, strong, p, label, h2, h3, h4, h5, td, th, a, button, li, div):not(.pdkx):not(.pdkb):not(.gv):not(.gr2):not(.badge):not(.injtag):not([class*="lg-"]) { color: var(--pq-ac,#d9560b) !important; }
+html.dlt-parquet main .cltn, html.dlt-parquet main .cltg { background: rgb(255, 255, 255) !important; border: 1px solid rgba(217, 86, 11, 0.5) !important; }
+html.dlt-parquet main .cltn button, html.dlt-parquet main .cltg button { background: rgb(255, 255, 255) !important; color: var(--pq-ac,#d9560b) !important; text-shadow: none !important; }
+html.dlt-parquet main .cltn button[aria-pressed="true"], html.dlt-parquet main .cltg button[aria-pressed="true"], html.dlt-parquet main .cltn button.on, html.dlt-parquet main .cltg button.on { background: linear-gradient(rgb(232, 99, 26), rgb(207, 84, 16)) !important; color: rgb(255, 255, 255) !important; }
 .drroom[data-th="3"] .drsw { box-shadow: rgba(120, 60, 10, 0.25) 0px 3px 10px; background: rgb(255, 255, 255) !important; border: 2px solid rgb(217, 86, 11) !important; }
 .drroom[data-th="3"] .drsw button { background: rgb(255, 255, 255) !important; color: rgb(217, 86, 11) !important; text-shadow: none !important; box-shadow: none !important; }
 .drroom[data-th="3"] .drsw button[aria-selected="true"] { background: linear-gradient(rgb(242, 112, 26), rgb(194, 65, 12)) !important; color: rgb(255, 255, 255) !important; }
@@ -1249,6 +1421,9 @@ html.dlt-parquet:not(.notte) main .perbtn svg { color: var(--pq-tx) !important; 
 html.dlt-parquet:not(.notte) main :is(select, option) { color: var(--pq-tx); }
 html.dlt-parquet:not(.notte) main :is(textarea, input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"])) { background: var(--pq-box) !important; color: var(--pq-tx) !important; border: 1px solid var(--pq-line) !important; }
 html.dlt-parquet:not(.notte) main :is(textarea, input)::placeholder { color: var(--pq-tx); opacity: 0.6; }
+html.dlt-parquet:not(.notte) main :is(.trophies, .cassa) { box-shadow: var(--pq-sh); background-position-x:  !important; background-position-y:  !important; background-size:  !important; background-repeat:  !important; background-attachment:  !important; background-origin:  !important; background-clip:  !important; background-color:  !important; background-image: var(--pq-card) !important; border: 1px solid var(--pq-line) !important; }
+html.dlt-parquet:not(.notte) main :is(.trophies, .cassa) :is(small, .cgo, .rl) { color: var(--pq-tx) !important; text-shadow: none !important; }
+html.dlt-parquet:not(.notte) main :is(.trophies, .cassa) :is(b, em, i, strong) { color: var(--pq-ink,#2b1608) !important; text-shadow: none !important; }
 html.dlt-parquet:not(.notte) main .pvn b { background: none !important; -webkit-text-fill-color: var(--pq-tx) !important; color: var(--pq-tx) !important; }
 html.dlt-parquet:not(.notte) main :is(.tvst b.pre) { background: var(--pq-btn) !important; color: var(--pq-on) !important; }
 .tvps { font-style: normal; font-weight: 700; letter-spacing: 0.06em; margin: 0px; opacity: 1; }
@@ -1301,9 +1476,11 @@ html.dlt-parquet:not(.notte) main table thead th, html.dlt-parquet:not(.notte) m
 html.dlt-parquet:not(.notte) main table tbody td.pnm { background: rgb(251, 238, 219) !important; color: var(--pq-ac,#d9560b) !important; -webkit-text-fill-color: var(--pq-ac,#d9560b) !important; border-right: 2px solid rgba(217, 86, 11, 0.35) !important; border-bottom: 1px solid rgba(217, 86, 11, 0.18) !important; }
 html.dlt-parquet:not(.notte) main table tbody td.pnm :is(small, .plgo) { color: rgb(154, 74, 18) !important; -webkit-text-fill-color: rgb(154, 74, 18) !important; }
 main .view > :is(.tbl-wrap, details, div, article, section):has(table):not(.rart, .drroom, .view) { margin-left: -16px !important; margin-right: -16px !important; width: auto !important; max-width: none !important; border-left: 0px !important; border-right: 0px !important; border-radius: 0px !important; }
+main .view > :is(div, details, article, section):has(table) .tbl-wrap { margin-left: 0px !important; margin-right: 0px !important; border-left: 0px !important; border-right: 0px !important; border-radius: 0px !important; }
 main .view table :is(th, td):first-child { padding-left: 12px; }
 main .view table :is(th, td):last-child { padding-right: 12px; }
 body:not([data-v="campo"]):not([data-v="college"]) main.wrap .view > :not(button, h2, h3, h4, p, .note, .gback, .esqback, .capintro, .lbmcap, .lbmh, .rhead, .rlegend, .chips, .ctabs, .gdmsw, .snsw, .esqctl, .fabar, .fbxrow, .hbar, .hn6, .drnav, .tabtn, .capchips, .gmenu, .effpair2, .vtreset, .sumrow, .sndate, input, select, .drroom, .cuproom, .grroom, .sala-oro) { margin-left: -16px !important; margin-right: -16px !important; width: auto !important; max-width: none !important; }
+body:is([data-v="campo"], [data-v="college"]) main.wrap .view > .clwrap { margin-left: -16px !important; margin-right: -16px !important; width: auto !important; max-width: none !important; }
 html.dlt-parquet:not(.notte) main .mnb.mnb.mg { color: rgb(21, 160, 74) !important; -webkit-text-fill-color: rgb(21, 160, 74) !important; }
 html.dlt-parquet:not(.notte) main .mnb.mnb.mr { color: rgb(224, 36, 36) !important; -webkit-text-fill-color: rgb(224, 36, 36) !important; }
 html.dlt-parquet:not(.notte) main .bxs.bxs span.gv.gv :is(b, small) { opacity: 1; color: rgb(21, 160, 74) !important; -webkit-text-fill-color: rgb(21, 160, 74) !important; }
@@ -1334,6 +1511,8 @@ html body header .brand:not(#a):not(#b):not(#c), html body .top .brand:not(#a):n
 .lg-PEA { background-image: url("img/447ab01f859c.webp"); }
 .lg-DUC:not(.hrl *):not(.hlg *):not(.htile *) { background-size: contain !important; background-position: center center !important; }
 .hlg .lg-DUC, .hrl .lg-DUC, .htile .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; }
+[data-ist]:not([data-ist="out"]):not([data-ist="dub"]) { --ist: #5dcb3c; }
+.pcd.g { background: linear-gradient(color-mix(in srgb, rgb(59, 167, 100) 70%, rgb(255, 255, 255) 30%), rgb(59, 167, 100)); color: rgb(255, 255, 255); }
 .cev.g, .pdkx.g, .gv.g { background: rgb(59, 167, 100); color: rgb(255, 255, 255); }
 .ev.g i { background: rgb(59, 167, 100); }
 @keyframes dxpu { 
@@ -1344,13 +1523,25 @@ html body header .brand:not(#a):not(#b):not(#c), html body .top .brand:not(#a):n
   0% { transform: translateX(-160%) skewX(-20deg); }
   60%, 100% { transform: translateX(860%) skewX(-20deg); }
 }
+html:not(.notte):not(.gotc) body:not(.notte)[data-v="campo"] .teamhead:has(.hlogo[data-t="DUC"])::after { content: ""; position: absolute; top: -10%; bottom: -10%; left: 0px; width: 14%; background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0)); pointer-events: none; z-index: 3; animation: 3.5s linear 0s infinite normal none running dxsb; }
+.court .cbg image { cursor: pointer; }
+html:root:not(#ofz) body[data-v="campo"] .teamhead > img.hlogo[data-t="DUC"] { scale: 1.405 1.254 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html:root:not(#ofz) body[data-v="campo"] .cbg > image { scale: 1.234 1.117 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz) body[data-v="home"] .hrl > .lg-DUC { scale: 0.941 0.894 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz) body[data-v="efficienza"] .wedge > .lg-DUC { scale: 0.95 0.87 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz) body[data-v="fa"] .fagl > .lg-DUC { scale: 0.951 0.748 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz) body[data-v="home"] .hmo > .lg-DUC { scale: 1.029 0.951 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html:root:not(#ofz) body[data-v="campo"] .lbml > .lg-DUC { scale: 1.02 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html:root:not(#ofz) body[data-v="tv"] .drtvl > .lg-DUC { scale: 1 0.941 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz) body[data-v="giochi"] .drlg > .lg-DUC { scale: 0.83 0.762 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz) body[data-v="giochi"] .drlg.l > .lg-DUC { scale: 1.118 0.966 !important; transform-origin: center center !important; transform-box: fill-box !important; }
-html:root:not(#ofz) body[data-v="tv"] .drtvl > .lg-DUC { scale: 1 0.941 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html body[data-v="campo"] .court .dxst .txtw { animation-name: txtw; animation-timing-function: ease-in-out; animation-iteration-count: infinite; }
+html body .court > canvas.dxpu { position: absolute; inset: 0px; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+html body .view > canvas.dxpo { position: absolute; left: 0px; pointer-events: none; z-index: 2; }
+html body .view:has(> canvas.dxpo) { position: relative; }
+html body .court:has(> canvas.dxpu) .cln path[d^="M46 12.5A4"] { visibility: hidden; }
+html.dxhoop body[data-v="campo"] main .court > svg.cbg image { opacity: 0 !important; }
+html:not(.gotc) body[data-v="campo"] .court .cname.cn-duc text { cursor: pointer; pointer-events: auto; }
 @keyframes lvtk { 
   0% { transform: translateX(0px); }
   100% { transform: translateX(-50%); }
@@ -1369,49 +1560,57 @@ html:root:not(#ofz):not(#ofy) body[data-v="home"] .hmo > .lg-DUC { scale: 1.06 0
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hrl > .lg-DUC { scale: 0.923 0.886 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; translate: calc(0px) calc(-1px) !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmrl > .lg-DUC { scale: 1.02 0.902 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmrail > .hrl > .lg-DUC { scale: 0.995 0.993 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-html:root:not(#ofz):not(#ofy) body[data-v="giochi"] .drlg > .lg-DUC { scale: 0.882 0.731 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="efficienza"] .snrow > .wedge > .lg-DUC { scale: 0.929 0.819 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmr > .hmdl > .lg-DUC { scale: 0.97 0.856 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="fa"] .fagl > .lg-DUC { scale: 1.011 0.78 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy) body[data-v="giochi"] .drlg > .lg-DUC { scale: 0.882 0.731 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html:root:not(#ofz):not(#ofy) body[data-v="tv"] .drtvl > .lg-DUC { scale: 1 0.866 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz):not(#ofy) body[data-v="giochi"] .drlg.s > .lg-DUC { scale: 0.978 0.796 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz):not(#ofy) body[data-v="giochi"] .drlg.l > .lg-DUC { scale: 1.066 0.864 !important; transform-origin: center center !important; transform-box: fill-box !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="fa"] .fagl > .lg-DUC { scale: 1.011 0.78 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy) body[data-v="giochi"] .bklg > .lg-DUC { scale: 1.147 0.904 !important; transform-origin: center center !important; transform-box: fill-box !important; }
-html:root:not(#ofz):not(#ofy) body[data-v="tv"] .drtvl > .lg-DUC { scale: 1 0.866 !important; transform-origin: center center !important; transform-box: fill-box !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .drr > .drlg > .lg-DUC { scale: 0.744 0.669 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="campo"] .teamhead > img.hlogo[data-t="DUC"] { scale: 1.113 1.021 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="campo"] .lbml > .lg-DUC { scale: 0.979 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="campo"] .court:has(.cname.cn-duc) > .cbg > image { scale: 1.172 1.061 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="efficienza"] .snrow > .wedge > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="campo"] .court:has(.cname.cn-duc) > .cbg > image { scale: 1.234 1.117 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="campo"] .view > .teamhead > img.hlogo[data-t="DUC"] { scale: 1.172 1.075 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy) body[data-v="roster"] .chip > .lg-DUC { scale: 1.06 0.977 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz):not(#ofy) body[data-v="infortuni"] .wedge > .lg-DUC { scale: 0.91 0.84 !important; transform-origin: center center !important; transform-box: fill-box !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="efficienza"] .snrow > .wedge > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-html:root:not(#ofz):not(#ofy) body[data-v="infortuni"] .chip.ichip > .lg-DUC { scale: 1.04 0.96 !important; transform-origin: center center !important; transform-box: fill-box !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .h > .drlg.s > .lg-DUC { scale: 0.95 0.838 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .drcr > .drlg.l > .lg-DUC { scale: 1.055 0.929 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="fa"] .fagl > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy) body[data-v="infortuni"] .chip.ichip > .lg-DUC { scale: 1.04 0.96 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hrl > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmrl > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .bkt > .bklg > .lg-DUC { scale: 1.092 0.932 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmrail > .hrl > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmr > .hmdl > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .drr > .drlg > .lg-DUC { scale: 0.744 0.669 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="campo"] .teamhead > img.hlogo[data-t="DUC"] { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .h > .drlg.s > .lg-DUC { scale: 0.95 0.838 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="campo"] .lbml > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="campo"] .view > .teamhead > img.hlogo[data-t="DUC"] { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .drcr > .drlg.l > .lg-DUC { scale: 1.055 0.929 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .bkt > .bklg > .lg-DUC { scale: 1.092 0.932 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmrail > .hrl > .lg-DUC { scale: 0.905 0.86 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; translate: calc(0px) !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmp > .hmrl > .lg-DUC { scale: 1.03 0.875 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmtm > .hmrl > .lg-DUC { scale: 1.061 0.901 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .drr > .drlg > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="roster"] .chips > .chip > .lg-DUC { scale: 1.06 0.977 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; translate: calc(0px) calc(-2px) !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="efficienza"] .snrow > .wedge > .lg-DUC { scale: 0.864 0.762 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="infortuni"] .chips > .chip.ichip > .lg-DUC { scale: 1.04 0.96 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="infortuni"] .irow > .wedge > .lg-DUC { scale: 0.91 0.84 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .h > .drlg.s > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmrail > .hrl > .lg-DUC { scale: 0.905 0.86 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; translate: calc(0px) !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .drcr > .drlg.l > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmp > .hmrl > .lg-DUC { scale: 1.03 0.875 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmtm > .hmrl > .lg-DUC { scale: 1.061 0.901 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="efficienza"] .snrow > .wedge > .lg-DUC { scale: 0.864 0.762 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .bkt > .bklg > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="fa"] .fagl > .lg-DUC { scale: 1.011 0.812 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .drcr > .drlg.l > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .bkt > .bklg > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmp > .hmrl > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmtm > .hmrl > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="tv"] .tvt > .drtvl > .lg-DUC { scale: 1.03 0.892 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .drr > .drlg > .lg-DUC { scale: 0.891 0.801 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="roster"] .chips > .chip > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="infortuni"] .chips > .chip.ichip > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .drr > .drlg > .lg-DUC { scale: 0.891 0.801 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="infortuni"] .irow > .wedge > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html.lvoff :is(.tvdot, .tvbox .lvd, .lbm.live, .lbm.live .lbmd, .pcdlv, .tag.live .dot, h2 .live .dot, .tvst b.lv i, .ntch .ntst, .drlive i, .clbox .clv i, .duw.lv, .dwr.lv, .hseg b.lvb, .court.clive .cln, .cntbtn.on i, .cnlv, .tvgmc.lv .tvlv i, .gv.gvlive, .snbtn.live, .snlvd, .navlive, .navlive *) { animation: auto ease 0s 1 normal none running none !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="roster"] .chips > .chip > .lg-DUC { scale: 1.06 0.977 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="tv"] .tvt > .drtvl > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="roster"] .chips > .chip > .lg-DUC { scale: 1.06 0.977 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="infortuni"] .chips > .chip.ichip > .lg-DUC { scale: 1.04 0.96 !important; transform-origin: center center !important; transform-box: fill-box !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; translate: calc(0px) calc(-1px) !important; }
 @keyframes hofp { 
   0%, 100% { opacity: 0.5; }
@@ -1483,13 +1682,12 @@ body[data-v="home"] .hmdl > .lg-PEA { transform: scale(1.05) !important; transfo
 body[data-v="fa"] .fagl > .lg-DUC { transform: scale(1.25) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 body[data-v="home"] .hmo > .lg-DUC { transform: scale(1.12) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 body[data-v="effsquadra"] .chip > .lg-DUC { transform: scale(1.11) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-body[data-v="giochi"] .drlg.l > .lg-DUC { transform: scale(0.98); transform-origin: center center; }
 body[data-v="home"] .hrl > .lg-DUC { transform: scale(1.1) !important; transform-origin: center center !important; }
-body[data-v="giochi"] .bklg > .lg-DUC { transform: scale(0.99); transform-origin: center center; }
 body[data-v="home"] .tmlg > .lg-DUC { transform: scale(1.05) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+body[data-v="giochi"] .drlg.l > .lg-DUC { transform: scale(0.98); transform-origin: center center; }
+body[data-v="giochi"] .bklg > .lg-DUC { transform: scale(0.99); transform-origin: center center; }
 body[data-v="giochi"] .drlg > .lg-DUC { transform: scale(1.15) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 body[data-v="roster"] .chip > .lg-DUC { transform: scale(1.04); transform-origin: center center; }
-body[data-v="giochi"] .bklg > .lg-DUC { transform: scale(1.02) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 body[data-v="tv"] .drtvl > .lg-DUC { transform: scale(1.11) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 @keyframes txtw { 
   0%, 100% { opacity: 0.15; }
@@ -1501,12 +1699,23 @@ body[data-v="tv"] .drtvl > .lg-DUC { transform: scale(1.11) !important; transfor
   0%, 100% { filter: drop-shadow(rgba(250, 204, 21, 0.6) 0px 0px 0.1px); }
   50% { filter: drop-shadow(rgba(250, 204, 21, 0.9) 0px 0px 0.3px); }
 }
-body[data-v="roster"] .chip > .lg-DUC { transform: scale(1.1) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-body[data-v="infortuni"] .wedge > .lg-DUC { transform: scale(1.1) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-body[data-v="infortuni"] .chip.ichip > .lg-DUC { transform: scale(1.12) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+body[data-v="giochi"] .bklg > .lg-DUC { transform: scale(1.02) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html body[data-v="campo"] .lbml > .lg-DUC { transform: scale(1.228) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html body[data-v="efficienza"] .wedge > .lg-DUC { transform: scale(1.17, 1.22) !important; transform-origin: center center !important; }
 html body[data-v="home"] .hrl > .lg-DUC { transform: scale(1.09, 1.09) !important; transform-origin: center center !important; }
 html body[data-v="home"] .hmrl > .lg-DUC { transform: scale(0.98, 1.02) !important; transform-origin: center center !important; }
+html body[data-v="campo"] .cbg > image { transform: scale(0.96, 0.99) !important; transform-origin: center center !important; transform-box: fill-box !important; }
+body[data-v="roster"] .chip > .lg-DUC { transform: scale(1.1) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+body[data-v="infortuni"] .wedge > .lg-DUC { transform: scale(1.1) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+body[data-v="infortuni"] .chip.ichip > .lg-DUC { transform: scale(1.12) !important; transform-origin: center center !important; background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html body[data-v="campo"] .teamhead > img.hlogo[data-t="DUC"] { transform: scale(1.05) !important; transform-origin: center center !important; }
+.lbmh { grid-template-columns: auto minmax(0px, 1fr) auto !important; gap: 8px !important; }
+.lbmh > .lbmw { min-width: 0px; gap: 3px !important; }
+.lbmh .lbma { width: 24px !important; }
+.lbmh .lbm { gap: 3px !important; padding: 0px 5px !important; }
+.lbmh .lbmn { font-size: 17px !important; }
+.lbmh .lbml { width: 19px !important; height: 19px !important; }
+.lbmh .lbmg { font-size: 9.5px; }
 html body[data-v="giochi"] .drlg.l > .lg-DUC { transform: scale(1.09, 1.13) !important; transform-origin: center center !important; }
 html body[data-v="giochi"] .bklg > .lg-DUC { transform: scale(1, 1.04) !important; transform-origin: center center !important; }
 html body[data-v="giochi"] .bklg > .lg-PEA { transform: scale(1, 1.01) !important; transform-origin: center center !important; }
@@ -1517,35 +1726,35 @@ html.dlt-parquet:not(.notte) .drroom button.shbtn:not(#dx), html.dlt-parquet:not
 html.dlt-parquet:not(.notte) .drroom button.shbtn:not(#dx) svg { color: rgb(217, 86, 11) !important; stroke: currentcolor; }
 html.dlt-parquet main .effbig.pl { background: linear-gradient(135deg, rgb(16, 26, 58), rgb(42, 63, 122)) !important; }
 html.dlt-parquet main .effbig.sq { background: linear-gradient(135deg, rgb(184, 65, 10), rgb(242, 112, 26)) !important; }
-html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2) { background: rgb(253, 243, 225) !important; border: 3px solid rgb(217, 86, 11) !important; box-shadow: rgb(154, 58, 12) 0px 6px 0px !important; border-radius: 18px !important; }
-html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2) .drr { background: none !important; border-color: rgba(217, 86, 11, 0.35) !important; }
-html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2) .drn b { color: rgb(184, 65, 10) !important; -webkit-text-fill-color: rgb(184, 65, 10) !important; }
-html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2) .drn small { color: rgb(138, 90, 58) !important; }
-html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2) em { color: rgb(154, 58, 12) !important; -webkit-text-fill-color: rgb(154, 58, 12) !important; }
-html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2) .drst { background: rgb(217, 86, 11) !important; color: rgb(255, 255, 255) !important; }
 html.dlt-parquet:not(.notte) body .tvbox tbody tr:not(.grp):not(.tot) td:not(#z):not(#y), html.dlt-parquet:not(.notte) body .tvbox tbody tr:not(.grp):not(.tot) td :not(.pdkb):not(.badge):not(img):not(small):not(#z) { color: rgb(122, 67, 24) !important; -webkit-text-fill-color: rgb(122, 67, 24) !important; }
 html.dlt-parquet:not(.notte) body .tvbox .plk:not(#z):not(#y) { font-weight: 700; color: rgb(122, 67, 24) !important; -webkit-text-fill-color: rgb(122, 67, 24) !important; }
 html.dlt-parquet:not(.notte) body .tvbox .plk small:not(#z):not(#y) { font-weight: 500; color: rgb(176, 122, 64) !important; -webkit-text-fill-color: rgb(176, 122, 64) !important; }
-html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2):not(#q3):not(#q4) .drr.slead em { color: rgb(107, 36, 10) !important; -webkit-text-fill-color: rgb(107, 36, 10) !important; }
 html.dlt-parquet:not(.notte) body .tvbox tbody td.pos:not(#z):not(#y) { color: rgb(21, 128, 61) !important; -webkit-text-fill-color: rgb(21, 128, 61) !important; }
-html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2):not(#q3):not(#q4) .drr.strail em { color: rgb(201, 169, 138) !important; -webkit-text-fill-color: rgb(201, 169, 138) !important; }
 html.dlt-parquet:not(.notte) body .tvbox tbody td.neg:not(#z):not(#y) { color: rgb(185, 28, 28) !important; -webkit-text-fill-color: rgb(185, 28, 28) !important; }
+html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2) { background: rgb(253, 243, 225) !important; border: 3px solid rgb(217, 86, 11) !important; box-shadow: rgb(154, 58, 12) 0px 6px 0px !important; border-radius: 18px !important; }
 html.dlt-parquet:not(.notte) body .tvbox .pdkb:not(#z):not(#y) { color: rgb(255, 255, 255) !important; -webkit-text-fill-color: rgb(255, 255, 255) !important; }
+html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2) .drr { background: none !important; border-color: rgba(217, 86, 11, 0.35) !important; }
 html.dlt-parquet:not(.notte) body .tvbox tbody tr:not(.grp):not(.tot) td:not(#z):not(#y):not(#x) { background: rgb(255, 255, 255) !important; }
+html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2) .drn b { color: rgb(184, 65, 10) !important; -webkit-text-fill-color: rgb(184, 65, 10) !important; }
 html.dlt-parquet:not(.notte) body .tvbox tbody tr:not(.grp):not(.tot):nth-child(2n) td:not(#z):not(#y):not(#x):not(#w) { background: rgb(249, 249, 249) !important; }
-html.dlt-parquet body .drroom .drcla .drcr:not(#q1):not(#q2) { background: rgb(253, 243, 225) !important; border: 3px solid rgb(217, 86, 11) !important; box-shadow: rgb(154, 58, 12) 0px 6px 0px !important; border-radius: 18px !important; }
+html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2) .drn small { color: rgb(138, 90, 58) !important; }
 html.dlt-parquet:not(.notte) body .tvbox tbody tr:not(.grp):not(.tot) td:first-child:not(#z):not(#y):not(#x):not(#w):not(#v) { background: rgb(255, 255, 255) !important; }
-html.dlt-parquet body .drroom .drcla .drcr:not(#q1):not(#q2).lead { border-color: rgb(184, 65, 10) !important; box-shadow: rgb(124, 45, 18) 0px 6px 0px !important; }
+html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2) em { color: rgb(154, 58, 12) !important; -webkit-text-fill-color: rgb(154, 58, 12) !important; }
 html.dlt-parquet:not(.notte) body .tvbox tbody tr.pct td:not(#z):not(#y):not(#x) { background: rgb(255, 255, 255) !important; }
+html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2) .drst { background: rgb(217, 86, 11) !important; color: rgb(255, 255, 255) !important; }
 .tvbox .plk small:not(#z) { margin-left: 6px; font-size: 0.82em; opacity: 0.55; display: inline !important; }
 .tvbox .plk small .tvps { font-weight: 700; letter-spacing: 0.04em; }
 .tvbox thead th:not(#z), .tvbox tr.grp td:not(#z), .tvbox tr.tot td:not(#z) { border-top: 1px solid rgba(255, 255, 255, 0.55) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.55) !important; }
+html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2):not(#q3):not(#q4) .drr.slead em { color: rgb(107, 36, 10) !important; -webkit-text-fill-color: rgb(107, 36, 10) !important; }
 .tvbox thead th:first-child:not(#z), .tvbox tr.grp td:first-child:not(#z), .tvbox tr.tot td:first-child:not(#z) { border-right: 1px solid rgba(255, 255, 255, 0.55) !important; }
+html.dlt-parquet body .drroom button.drm:not(#q1):not(#q2):not(#q3):not(#q4) .drr.strail em { color: rgb(201, 169, 138) !important; -webkit-text-fill-color: rgb(201, 169, 138) !important; }
 html.dlt-parquet:not(.notte) body .tvbox .plk small:not(#z):not(#y) { opacity: 0.55; color: rgb(122, 67, 24) !important; -webkit-text-fill-color: rgb(122, 67, 24) !important; }
 .tvbox tbody tr:not(.grp):not(.tot) td:not(#z):not(#y) { border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; border-top: 0px !important; }
 .tvbox tbody tr:not(.grp):not(.tot) td:first-child:not(#z):not(#y) { border-right: 1px solid rgba(255, 255, 255, 0.08) !important; }
 html.dlt-parquet:not(.notte) body .tvbox tbody tr:not(.grp):not(.tot) td:not(#z):not(#y):not(#x) { border-bottom: 1px solid rgba(122, 67, 24, 0.13) !important; }
+html.dlt-parquet body .drroom .drcla .drcr:not(#q1):not(#q2) { background: rgb(253, 243, 225) !important; border: 3px solid rgb(217, 86, 11) !important; box-shadow: rgb(154, 58, 12) 0px 6px 0px !important; border-radius: 18px !important; }
 html.dlt-parquet:not(.notte) body .tvbox tbody tr:not(.grp):not(.tot) td:first-child:not(#z):not(#y):not(#x):not(#w) { border-right: 1px solid rgba(122, 67, 24, 0.13) !important; border-bottom: 1px solid rgba(122, 67, 24, 0.13) !important; }
+html.dlt-parquet body .drroom .drcla .drcr:not(#q1):not(#q2).lead { border-color: rgb(184, 65, 10) !important; box-shadow: rgb(124, 45, 18) 0px 6px 0px !important; }
 html.dlt-parquet:not(.notte) body .tvbox tbody tr:not(.grp):not(.tot):nth-child(2n) td:not(#z):not(#y):not(#x):not(#w), html.dlt-parquet:not(.notte) body .tvbox tbody tr:not(.grp):not(.tot):nth-child(2n) td:first-child:not(#z):not(#y):not(#x):not(#w):not(#v) { background: rgb(255, 255, 255) !important; }
 html.dlt-parquet:not(.notte) body .tvbox tbody tr:not(.grp):not(.tot) td:not(#z):not(#y):not(#x), html.dlt-parquet:not(.notte) body .tvbox tbody tr:not(.grp):not(.tot) td :not(.pdkb):not(.badge):not(img):not(#z):not(#y), html.dlt-parquet:not(.notte) body .tvbox .plk:not(#z):not(#y):not(#x) { color: rgb(74, 36, 16) !important; -webkit-text-fill-color: rgb(74, 36, 16) !important; }
 html.dlt-parquet:not(.notte) body .tvbox .plk small:not(#z):not(#y):not(#x) { opacity: 0.5; color: rgb(74, 36, 16) !important; -webkit-text-fill-color: rgb(74, 36, 16) !important; }
@@ -1597,48 +1806,52 @@ html body .pdkx:not(#a):not(#b):not(#c):not(#d):not(#e):not(#f):not(#g), html bo
 .drroom .pobh small { font-size: 13.5px !important; }
 .drroom .pobt2 span { font-size: 15px !important; }
 .drroom .pobt2 small { font-size: 11.5px !important; }
-.drroom .pobp h6 { font-size: 16px !important; }
-.drroom .pobk .pkcup .drcup { width: 96px !important; height: 96px !important; }
-.drroom .pkcup.prz b { font-size: 44px !important; }
-.drroom .pkcup.prz span { font-size: 12px !important; }
-.drroom .pkcup.prz { gap: 6px !important; }
-html.dlt-parquet:not(.notte) .drcup #drg stop:nth-child(1) { stop-color: rgb(255, 230, 199); }
-html.dlt-parquet:not(.notte) .drcup #drg stop:nth-child(2) { stop-color: rgb(251, 146, 60); }
-html.dlt-parquet:not(.notte) .drcup #drg stop:nth-child(3) { stop-color: rgb(194, 65, 12); }
-html.dlt-parquet:not(.notte) .drcup rect { fill: rgb(124, 45, 18); }
-html.dlt-parquet:not(.notte) .drroom .drcup { filter: drop-shadow(rgba(249, 115, 22, 0.7) 0px 0px 12px) drop-shadow(rgba(0, 0, 0, 0.35) 0px 4px 6px) !important; }
 .tvbox.tvsq .sqc, .tvbox.tvsq .sqh { width: 36px; min-width: 36px; text-align: center !important; padding: 0px 4px !important; }
-.drroom .pobp .pobpm { width: 60% !important; max-width: none !important; }
+.drroom .pobp h6 { font-size: 16px !important; }
 .tvbox.tvsq .sqc .tvown { justify-content: center; gap: 2px; pointer-events: none; position: static !important; transform: none !important; opacity: 1 !important; display: inline-flex !important; }
-.drroom .pobp .bkt { min-height: 48px !important; padding: 5px 10px !important; }
+.drroom .pobk .pkcup .drcup { width: 96px !important; height: 96px !important; }
 .tvbox.tvsq .sqc .tvown .badge, .tvbox.tvsq .sqc .tvown .tvob { width: 30px !important; height: 30px !important; }
-.drroom .pobp .bkm.tbd .bkt b, .drroom .pobp .bkt b { font-size: 14.5px !important; }
+.drroom .pkcup.prz b { font-size: 44px !important; }
 .lglogo { -webkit-tap-highlight-color: transparent !important; }
 .tvbox.tvsq tbody tr:not(.grp):not(.tot):not(.pct) td:first-child { min-width: 150px !important; max-width: 150px !important; width: 150px !important; padding-right: 6px !important; white-space: normal !important; }
-.drroom .pobp .bklab { font-size: 10px !important; line-height: 17px !important; padding: 0px 7px !important; }
+.drroom .pkcup.prz span { font-size: 12px !important; }
 .tvbox.tvsq thead th:first-child { min-width: 150px !important; max-width: 150px !important; }
-.drroom .pobk2 .pk.s1, .drroom .pobk2 .pk.s2 { left: 0px !important; width: 52% !important; }
+.drroom .pkcup.prz { gap: 6px !important; }
 .tvbox.tvsq .tvpn .plk { white-space: normal !important; overflow: visible !important; line-height: 1.15 !important; text-overflow: clip !important; }
-.drroom .pobk2 .pk.f1 { left: 58% !important; width: 42% !important; }
+html.dlt-parquet:not(.notte) .drcup #drg stop:nth-child(1) { stop-color: rgb(255, 230, 199); }
 .tvbox.tvsq td.sqc { vertical-align: middle !important; line-height: 0 !important; padding-top: 0px !important; padding-bottom: 0px !important; }
-.drroom .pobk2 .pkcup { left: 58% !important; width: 42% !important; }
+html.dlt-parquet:not(.notte) .drcup #drg stop:nth-child(2) { stop-color: rgb(251, 146, 60); }
 .tvbox.tvsq .sqc .tvown { height: 100%; display: inline-flex !important; align-items: center !important; vertical-align: middle !important; opacity: 0.6 !important; margin: 0px !important; }
-.drroom .pobt2 { grid-template-columns: 52fr 6fr 42fr !important; }
+html.dlt-parquet:not(.notte) .drcup #drg stop:nth-child(3) { stop-color: rgb(194, 65, 12); }
 .tvbox.tvsq .sqc .tvown .badge, .tvbox.tvsq .sqc .tvown .tvob { display: block !important; margin: 0px !important; }
-.drroom .pobx .bkt { align-items: center !important; }
+html.dlt-parquet:not(.notte) .drcup rect { fill: rgb(124, 45, 18); }
 html body .tvbox.tvsq td.sqc .tvown:not(#a):not(#b):not(#c) { opacity: 0.6 !important; }
+html.dlt-parquet:not(.notte) .drroom .drcup { filter: drop-shadow(rgba(249, 115, 22, 0.7) 0px 0px 12px) drop-shadow(rgba(0, 0, 0, 0.35) 0px 4px 6px) !important; }
+.drroom .pobp .pobpm { width: 60% !important; max-width: none !important; }
+.tbl-wrap:has(.clall) { overflow-x: auto !important; touch-action: pan-x pan-y; }
+.drroom .pobp .bkt { min-height: 48px !important; padding: 5px 10px !important; }
+.tvbox.clall { min-width: max-content !important; width: max-content !important; }
+.drroom .pobp .bkm.tbd .bkt b, .drroom .pobp .bkt b { font-size: 14.5px !important; }
+.tvbox.clall td, .tvbox.clall th { white-space: nowrap; }
+.drroom .pobp .bklab { font-size: 10px !important; line-height: 17px !important; padding: 0px 7px !important; }
+.tvbox.clall td:first-child { white-space: normal; }
+.drroom .pobk2 .pk.s1, .drroom .pobk2 .pk.s2 { left: 0px !important; width: 52% !important; }
+.drroom .pobk2 .pk.f1 { left: 58% !important; width: 42% !important; }
+html body .tvbox.tvsq td:nth-child(n+4), html body .tvbox.tvsq th:nth-child(n+4) { padding-left: 9px !important; padding-right: 9px !important; text-align: center !important; }
+.drroom .pobk2 .pkcup { left: 58% !important; width: 42% !important; }
+html body .tvbox.tvsq tr.grp td:nth-child(n+2) { padding: 0px !important; }
+.drroom .pobt2 { grid-template-columns: 52fr 6fr 42fr !important; }
+.drroom .pobx .bkt { align-items: center !important; }
 .drroom .pobx .bkt b { overflow: hidden !important; text-overflow: clip !important; line-height: 1.15 !important; }
 .drroom .pobx .bkm.tbd .bkt, .drroom .pobp .bkm .bkt { justify-content: center !important; text-align: center !important; }
 .drroom .pobx .bkm.tbd .bkt b, .drroom .pobp .bkm.tbd .bkt b { flex: 0 0 auto !important; text-align: center !important; white-space: nowrap !important; }
 .drroom .pobp .pobpm { width: 52% !important; }
-html body .tvbox.tvsq td:nth-child(n+4), html body .tvbox.tvsq th:nth-child(n+4) { padding-left: 9px !important; padding-right: 9px !important; text-align: center !important; }
-html body .tvbox.tvsq tr.grp td:nth-child(n+2) { padding: 0px !important; }
-html.dreamfs:has(.drroom[data-th="3"]), html.dreamfs:has(.drroom[data-th="3"]) body { background: repeating-linear-gradient(90deg, rgb(200, 138, 76) 0px, rgb(200, 138, 76) 26px, rgb(190, 128, 67) 26px, rgb(190, 128, 67) 52px) rgb(200, 138, 76) !important; }
 .tkbar { display: flex; align-items: stretch; margin: 2px 16px 12px; border-radius: 12px; overflow: hidden; background: rgb(255, 248, 236); border: 2px solid rgb(217, 86, 11); box-shadow: rgba(90, 40, 5, 0.2) 0px 4px 12px; height: 40px; }
 .tklab { flex: 0 0 auto; display: grid; place-content: center; padding: 0px 10px; background: linear-gradient(rgb(242, 112, 26), rgb(194, 65, 12)); color: rgb(255, 255, 255); font-family: var(--display); font-style: italic; font-weight: 900; font-size: 14px; letter-spacing: 0.06em; line-height: 1; text-align: center; }
 .tklab small { display: block; font-size: 9px; font-style: normal; font-weight: 700; opacity: 0.85; margin-top: 2px; letter-spacing: 0.04em; }
 .tkvw { flex: 1 1 0%; overflow: hidden; position: relative; mask-image: linear-gradient(90deg, transparent, rgb(0, 0, 0) 16px, rgb(0, 0, 0) calc(100% - 16px), transparent); }
 .tktr { display: inline-flex; align-items: center; height: 100%; white-space: nowrap; animation: 60s linear 0s infinite normal none running tkmv; }
+html.dreamfs:has(.drroom[data-th="3"]), html.dreamfs:has(.drroom[data-th="3"]) body { background: repeating-linear-gradient(90deg, rgb(200, 138, 76) 0px, rgb(200, 138, 76) 26px, rgb(190, 128, 67) 26px, rgb(190, 128, 67) 52px) rgb(200, 138, 76) !important; }
 .tki { display: inline-flex; align-items: baseline; gap: 5px; padding: 0px 14px; border-right: 1px solid rgba(217, 86, 11, 0.25); font-size: 14px; color: rgb(122, 52, 16); }
 .tki b { font-weight: 800; }
 .tki i { font-style: normal; font-weight: 900; }
@@ -1654,6 +1867,10 @@ html.dlt-parquet:not(.notte) body .tki b:not(#a), html.dlt-parquet:not(.notte) b
 @keyframes drmglow { 
   50% { box-shadow: rgba(167, 139, 250, 0.9) 0px 0px 18px, rgba(255, 255, 255, 0.35) 0px 1px 0px inset; }
 }
+html body .drmbtn:not(#a):not(#b) { margin-left: auto; flex: 0 0 auto; display: inline-grid; place-items: center; width: 38px; height: 28px; padding: 0px; border-radius: 9px; box-shadow: rgba(139, 92, 246, 0.65) 0px 0px 12px, rgba(255, 255, 255, 0.35) 0px 1px 0px inset; cursor: pointer; animation: 2.6s ease-in-out 0s infinite normal none running drmglow; border: 1px solid rgb(196, 181, 253) !important; background: linear-gradient(rgb(139, 92, 246), rgb(91, 33, 182)) !important; }
+html body .drmbtn svg { width: 20px; height: 20px; display: block; }
+h2.lbmh > .drmbtn { justify-self: end; margin-left: 0px !important; }
+html body[data-v="campo"] .cbg > image { scale: 1.122 1.034 !important; translate: 0px -0.35px !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html body[data-v="effsquadra"] .chip > .lg-DUC { scale: 1 0.92 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html body[data-v="fa"] .fagl > .lg-DUC { scale: 1.05 0.97 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:not(.dxlp) body[data-v="effsquadra"] .chip > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
@@ -1662,7 +1879,9 @@ html body[data-v="home"] .hrl > .lg-DUC { scale: 0.86 0.83 !important; transform
 html:not(.dxlp) body[data-v="home"] .hrl > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html body[data-v="home"] .hmrl > .lg-DUC { scale: 1 0.96 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:not(.dxlp) body[data-v="home"] .hmrl > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
+html body[data-v="campo"] .teamhead > img.hlogo[data-t="DUC"] { scale: 1.05 0.97 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html body[data-v="home"] .tmlg > .lg-DUC { scale: 1.04 0.96 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html:not(.dxlp) body[data-v="campo"] .teamhead > img.hlogo[data-t="DUC"] { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:not(.dxlp) body[data-v="home"] .tmlg > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html body[data-v="home"] .hmdl > .lg-DUC { scale: 0.99 0.93 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:not(.dxlp) body[data-v="home"] .hmdl > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
@@ -1680,18 +1899,55 @@ html body[data-v="tv"] .drtvl > .lg-DUC { scale: 1 0.96 !important; transform-or
 html body .hrl:has(> .lg-DUC) { --tc: var(--duchrl,#7c3aed) !important; }
 html:not(.dxlp) body[data-v="tv"] .drtvl > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="home"] .hmrail > .hrl > .lg-DUC { scale: 0.905 0.86 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html body[data-v="campo"] .court:has(.cname.cn-duc):not(#a):not(#b) { border-top: 4px solid rgb(255, 255, 255) !important; }
+html:not(.notte) body:not(.notte)[data-v="campo"] .view:has(.cname.cn-duc) .cassa:not(#a):not(#b), html:not(.notte) body:not(.notte)[data-v="campo"] .view:has(.cname.cn-duc) .trophies:not(#a):not(#b) { background: rgb(255, 255, 255) !important; border-color: rgb(229, 231, 235) !important; color: rgb(46, 16, 101) !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="fa"] .fagl > .lg-DUC { scale: 0.991 0.796 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html:not(.notte) body:not(.notte)[data-v="campo"] .view:has(.cname.cn-duc) .cassa:not(#a) :not(#b), html:not(.notte) body:not(.notte)[data-v="campo"] .view:has(.cname.cn-duc) .trophies:not(#a) :not(#b) { color: rgb(46, 16, 101) !important; -webkit-text-fill-color: rgb(46, 16, 101) !important; border-color: rgb(229, 231, 235) !important; }
+html:not(.notte) body:not(.notte)[data-v="campo"] .view:has(.cname.cn-duc) .cassa:not(#a) b:not(#b), html:not(.notte) body:not(.notte)[data-v="campo"] .view:has(.cname.cn-duc) .cassa:not(#a) strong:not(#b), html:not(.notte) body:not(.notte)[data-v="campo"] .view:has(.cname.cn-duc) .trophies:not(#a) b:not(#b) { color: rgb(91, 33, 182) !important; -webkit-text-fill-color: rgb(91, 33, 182) !important; }
+html:not(.notte) body:not(.notte)[data-v="campo"] .court:has(.cname.cn-duc):not(#a):not(#b) { border-color: rgb(255, 255, 255) !important; border-top-width: 4px !important; border-top-style: solid !important; }
+html:not(.notte):not(.gotc) body:not(.notte)[data-v="campo"] .court .cname.cn-duc:not(#dx):not(#dy):not(#dz), html:not(.notte):not(.gotc) body:not(.notte)[data-v="campo"] .court .cname.cn-duc text:not(#dx):not(#dy):not(#dz) { fill: rgb(59, 15, 122) !important; fill-opacity: 1 !important; }
+html body .teamhead:has(.hlogo[data-t="DUC"]) > .hlogo + * { translate: 18px; }
+html body[data-v="campo"] .teamhead > img.hlogo[data-t="DUC"] { translate: 9px; }
 html body[data-v="infortuni"] .chip.ichip > .lg-DUC { scale: 1.04 0.96 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:not(.dxlp) body[data-v="infortuni"] .chip.ichip > .lg-DUC { background-image: url("loghi/duc-25.webp?v=1") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center center !important; content: url("loghi/duc-25.webp?v=1") !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="fa"] .fagl > .lg-DUC { scale: 0.991 0.796 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .drr > .drlg > .lg-DUC { scale: 0.865 0.778 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="campo"] .view > .teamhead > img.hlogo[data-t="DUC"] { scale: 1.172 1.075 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .h > .drlg.s > .lg-DUC, html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .a > .drlg.s > .lg-DUC { scale: 0.95 0.838 !important; transform-origin: center center !important; transform-box: fill-box !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .drcr > .drlg.l > .lg-DUC { scale: 1.055 0.929 !important; transform-origin: center center !important; transform-box: fill-box !important; }
-html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .bkt > .bklg > .lg-DUC { scale: 1.092 0.932 !important; transform-origin: center center !important; transform-box: fill-box !important; }
 @keyframes gbLv { 
   0%, 100% { filter: brightness(1) saturate(1); }
   50% { filter: brightness(0.45) saturate(0.7); }
 }
 .gd { gap: 5px !important; margin-top: 5px !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .drcr > .drlg.l > .lg-DUC { scale: 1.055 0.929 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html:root:not(#ofz):not(#ofy):not(#ofx) body[data-v="giochi"] .bkt > .bklg > .lg-DUC { scale: 1.092 0.932 !important; transform-origin: center center !important; transform-box: fill-box !important; }
+html body .court .cpl.dr .pj:not(#zz), html body .dpan .pj:not(#zz) { width: calc(61.4px*var(--sj,1)) !important; height: calc(73.9px*var(--sj,1)) !important; }
+html body .court .cpl.dr .pj svg:not(#zz), html body .dpan .pj svg:not(#zz) { width: calc(61.4px*var(--sj,1)) !important; height: calc(73.9px*var(--sj,1)) !important; }
+.gd.gbar { width: calc(72px*var(--sn,1)); padding: 4px 2px 1.5px; position: relative; z-index: 0; box-sizing: border-box; background: rgb(28, 22, 48); border-radius: 0px 0px 8px 8px; box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 4px; display: flex !important; gap: 2px !important; margin: -5px auto 0px !important; }
+.gd.gbar { --gbk: 1.29; }
+.gd.gbar i { flex: 1 1 0%; border-radius: 4px; background: rgb(44, 37, 69); font: 800 italic calc(6px*var(--gbk,1))/calc(7px*var(--gbk,1)) var(--display),system-ui; color: rgb(165, 160, 192); text-align: center; letter-spacing: 0.02em; animation: auto ease 0s 1 normal none running none; width: auto !important; height: calc(7px*var(--gbk,1)) !important; margin: 0px !important; border: 0px !important; opacity: 1 !important; box-shadow: none !important; }
+.gd.gbar i.ok { background: var(--gc,#22c55e) !important; color: rgb(255, 255, 255) !important; -webkit-text-fill-color: rgb(255, 255, 255) !important; }
+.gd.gbar:not(#zz) i.ng { background: rgb(217, 211, 227) !important; color: rgb(91, 74, 122) !important; -webkit-text-fill-color: rgb(91, 74, 122) !important; }
+.gd.gbar:not(#zz) i { align-items: flex-end; justify-content: center; padding-bottom: 0.4px; box-sizing: border-box; display: flex !important; height: calc(8.4px*var(--gbk,1)) !important; font-variant-ligatures:  !important; font-variant-caps:  !important; font-variant-numeric:  !important; font-variant-east-asian:  !important; font-variant-alternates:  !important; font-variant-position:  !important; font-variant-emoji:  !important; font-weight:  !important; font-stretch:  !important; font-size:  !important; line-height:  !important; font-family:  !important; font-optical-sizing:  !important; font-size-adjust:  !important; font-kerning:  !important; font-feature-settings:  !important; font-variation-settings:  !important; font-language-override:  !important; font-style: normal !important; letter-spacing: 0.02em !important; text-shadow: none !important; }
+.gd.gbar i { letter-spacing: 0px !important; }
+html:not(.notte) .view:has(.cname.cn-duc) .gd.gbar:not(#zz) { background: rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.25) 0px 2px 5px; }
+.gw:has(> .gd.gbar) > .pcs, .gw:has(> .gd.gbar) > .pcd { position: relative; z-index: 1; }
+html:not(.notte) .view:has(.cname.cn-duc) .gd.gbar:not(#zz) i:not(.ok):not(.lv):not(.ng) { background: rgb(239, 233, 251) !important; color: rgb(91, 33, 182) !important; -webkit-text-fill-color: rgb(91, 33, 182) !important; }
+.court .cpl.dr .gw:has(> .gd.gbar) .pcd:not(#zz), .dpan .gw:has(> .gd.gbar) .pcd:not(#zz) { min-height: calc(25.4px*var(--sp,1)) !important; padding-top: 2px !important; padding-bottom: 2px !important; box-shadow: rgba(0, 0, 0, 0.35) 0px 3px 8px !important; }
+.court .cpl.dr:has(.gd.gbar) .pnm:not(#zz), .dpan .dpc:has(.gd.gbar) .pnm:not(#zz) { padding-top: 2.5px !important; padding-bottom: 1.75px !important; }
+html body .court .cpl.dr .pcd:not(#zz), html body .dpan .pcd:not(#zz) { box-shadow: rgba(0, 0, 0, 0.35) 0px 3px 8px !important; }
+.bev .gd.trgd { justify-content: flex-end; margin: 4px 0px 0px auto !important; }
+.bev .gd.trgd.gbar { width: 84px; border-radius: 6px; z-index: 0; margin: 3px 0px 0px auto !important; padding: 1.5px 2px !important; }
+html body .pjc:not(#zz) { scale: 0.75; transform-origin: center center; }
+.cltgw .clnt { display: inline-flex; gap: 4px; margin-left: 8px; vertical-align: middle; }
+.cltgw .clnt button { position: relative; border: 2px solid; border-radius: 12px; background: transparent; color: inherit; font: 800 italic 15px/1 var(--display),system-ui; padding: 6px 10px 4px; min-width: 46px; display: inline-grid; place-items: center; opacity: 0.75; }
+.cltgw .clnt button small { font: 600 9px / 1.2 system-ui; opacity: 0.8; }
+.cltgw .clnt button[aria-pressed="true"] { opacity: 1; background: var(--pq-ac,#7c3aed); border-color: var(--pq-ac,#7c3aed); color: rgb(255, 255, 255); }
+.cltgw .clnt .clnd { position: absolute; top: -4px; right: -4px; width: 9px; height: 9px; border-radius: 50%; background: rgb(239, 68, 68); box-shadow: rgb(255, 255, 255) 0px 0px 0px 2px; }
+.clbox tr.clwait td { opacity: 0.75; }
+.clbox .clwt { font-weight: 800; opacity: 0.6; }
+html:not(.notte) .gd.gbar:not(#zz) { background: rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.25) 0px 2px 5px; }
+html:not(.notte) .gd.gbar:not(#zz) i:not(.ok):not(.lv):not(.ng) { background: rgb(243, 240, 248); }
+html:not(.notte) body[data-ct="DOL"] .gd.gbar:not(#zz) i:not(.ok):not(.lv):not(.ng) { color: rgb(23, 71, 201) !important; -webkit-text-fill-color: rgb(23, 71, 201) !important; }
 /* loghi delle 16 squadre ESPN 16 */
 .badge.logo.lg-DET,.faglb.logo.lg-DET,.tvob.logo.lg-DET{background-image:url("loghi/det.png")!important;background-size:cover!important;border-radius:50%}
 .badge.logo.lg-CLE,.faglb.logo.lg-CLE,.tvob.logo.lg-CLE{background-image:url("loghi/cle.png")!important;background-size:cover!important;border-radius:50%}
