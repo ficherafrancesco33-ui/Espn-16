@@ -45,7 +45,7 @@ const capLib=id=>{const C=CAP[id];if(!C)return 0;return C.libero!=null?C.libero:
 const own=n=>{try{return OWNH[nk(n)]||null}catch(_){return null}};
 
 /* ---------- PROFILO: riquadro Contratto ---------- */
-window.e16ContrBox=function(n){const c=contr(n);
+window.e16ContrBox=function(n){const c0=contr(n),c=c0&&own(n)?c0:null;/* (45) contratto solo se è ancora in una rosa della lega ESPN: uno svincolato (es. tagliato) mostra il listino */
  if(c){const left=c.y.length,v=verd(n,c.y[0]);
   return `<div class="ctrbox"><div class="ctrh"><b>Contratto</b>${c.rk?`<span class="ctrrk">R · rookie</span>`:""}${pill(v)}</div>
   <div class="ctry">${YL.map((y,i)=>`<div class="cy${c.y[i]!=null?" on":""}${i===0?" now":""}"><small>${y}</small><b>${c.y[i]!=null?f1(c.y[i]):"–"}</b></div>`).join("")}</div>

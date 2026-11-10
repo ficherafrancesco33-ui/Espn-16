@@ -371,6 +371,7 @@ body:not(.notte) .hmqt .tmc .tmp{color:#7a3410}
 .e16mvt.add{background:#16a34a}.e16mvt.drop{background:#dc2626}
 html.notte .e16mv{background:rgba(20,12,48,.85);color:#fff}
 </style>
+<style>/* (45) maglia FREE AGENT nei risultati della ricerca */.hrfaj svg{width:100%;height:100%;display:block}</style>
 </head>
 <body>
 <div id="sbar" aria-hidden="true"></div>
@@ -577,7 +578,7 @@ function vHome(){
   for(const n of pool){const nk2=__ownKey(n);if(seen.has(nk2)||!nk2.includes(k))continue;seen.add(nk2);(ownH(n)?own:fa).push(n)}
   const val=n=>window.e16Val?e16Val(n):0;own.sort((a,b)=>val(b)-val(a));fa.sort((a,b)=>val(b)-val(a));
   const row=n=>{const o=ownH(n),V=typeof VAL!=="undefined"?(VAL.p[n]||null):null,g=o?(ROSE[o]||[]).find(x=>x[0]===n):null,r=g?g[3].split(",")[0]:"",rl=r==="C"?"C":/G/.test(r)?"G":r?"F":"";
-   return `<button class="hrr pqw" data-pl="${esc(n)}"><span class="hrj">${o?`<span class="badge logo lg-${o}" style="width:36px;height:36px;display:block"></span>`:`<span class="hrfan pqw">${V?Math.round(V[1]):"–"}</span>`}</span><span class="hrn"><b>${rl?`<i class="rtr ${rl}"></i>`:""}${esc(n)}</b><small>${o?esc(TM[o].nome.split(" ").slice(-1)[0]):"Svincolato"}${rl?" · "+({G:"Guardia",F:"Ala",C:"Centro"})[rl]:""}${V&&V[3]?" · "+V[3]:!o&&FAX[__ownKey(n)]?" · "+FAX[__ownKey(n)][1]+" · "+FAX[__ownKey(n)][2]:""}${V?" · valore "+V[0].toLocaleString("it-IT"):""}</small></span><i>›</i></button>`};
+   return `<button class="hrr pqw" data-pl="${esc(n)}"><span class="hrj">${o?`<span class="badge logo lg-${o}" style="width:36px;height:36px;display:block"></span>`:(window.e16Jersey?`<span class="hrfaj" style="width:36px;height:44px;display:block">${e16Jersey("FA",window.e16Num?e16Num(n):"","Free Agent")}</span>`:`<span class="hrfan pqw">${V?Math.round(V[1]):"–"}</span>`)}</span><span class="hrn"><b>${rl?`<i class="rtr ${rl}"></i>`:""}${esc(n)}</b><small>${o?esc(TM[o].nome.split(" ").slice(-1)[0]):"Svincolato"}${rl?" · "+({G:"Guardia",F:"Ala",C:"Centro"})[rl]:""}${V&&V[3]?" · "+V[3]:!o&&FAX[__ownKey(n)]?" · "+FAX[__ownKey(n)][1]+" · "+FAX[__ownKey(n)][2]:""}${V?" · valore "+V[0].toLocaleString("it-IT"):""}</small></span><i>›</i></button>`};
   hres=`<div class="hres" id="hres">${own.length?`<p class="hrsec">Squadre<span>${own.length}</span></p>${own.slice(0,20).map(row).join("")}`:""}${fa.length?`<p class="hrsec">Svincolati<span>${fa.length}</span></p>${fa.slice(0,20).map(row).join("")}`:""}${!own.length&&!fa.length?`<p class="hrsec">Nessun giocatore</p>`:""}</div>`}
  const ch=(v,l,c)=>`<span class="${c||""}"><b>${v}</b><small>${l}</small></span>`;
  const box=x=>{const r=x.r,miss=-((r[6]-r[5])+(r[10]-r[9])),rb=r[11]+r[12];

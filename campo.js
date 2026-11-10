@@ -21,6 +21,8 @@ const COL={DET:{bg:"#1d3fa0",fg:"#ffffff",trim:"#dc2626",fr:"#0b1a45",w1:"#ae592
  ALA:{bg:"#1d4ed8",fg:"#ffffff",trim:"#93c5fd",fr:"#0b1f5c",w1:"#a3602f",w2:"#d9944f"},
  WIC:{bg:"#ea580c",fg:"#ffffff",trim:"#9ca3af",fr:"#3b1a0a",w1:"#ae592c",w2:"#e8763a"},
  FAL:{bg:"#0b1022",fg:"#ffffff",trim:"#f97316",fr:"#0b1022",w1:"#9c5a2c",w2:"#d48a48"},
+ /* (45) maglia dei free agent: tutta bianca con scritta FREE AGENT */
+ FA:{bg:"#ffffff",fg:"#111827",trim:"#e5e7eb",fr:"#9ca3af",w1:"#ae592c",w2:"#e8763a"},
  SRO:{bg:"#0f172a",fg:"#f1f5f9",trim:"#b91c1c",fr:"#020617",w1:"#7c4a2d",w2:"#b9794a"}};
 let JID=0;
 /* maglia (stessa sagoma e luci delle maglie Dreamers) */
