@@ -128,3 +128,4 @@
 (62) Ducks: tolta anche la Rossa · stemma bianco.
 (63) Ducks: corretta la nera tolta (via la Nera violacea · rosso, rimessa la Nera · rosso fuori viola dentro).
 (64) Ducks: tolta la Viola · colletto tricolore.
+(65) Tasto maglia di nuovo come Dreamers (piccolo, blu notte; di giorno stile parquet), solo staccato di 12px dal bordo. Tolte immagini di prova finite per errore nel repository.
