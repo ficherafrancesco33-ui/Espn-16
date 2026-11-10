@@ -125,3 +125,4 @@
 (59) L app parte sempre in modalità notte; il giorno si accende con l interruttore e resta finché l app è aperta (sessionStorage e16_tema, non più localStorage e16_notte).
 (60) Ducks: tolte 4 maglie (Rossa tricolore viola, Viola lettere rosse, Nera viola fuori/rosso dentro, Nera rosso fuori/viola dentro). Tasto maglia più staccato dal bordo e nel colore della squadra (schiarito se scuro; Ducks viola acceso), anche di giorno.
 (61) Ducks: tolta la vecchia Casa viola col gessato nero; la Casa ora è la Viola lettere nere col gessato bianco.
+(62) Ducks: tolta anche la Rossa · stemma bianco.
