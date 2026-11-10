@@ -14,18 +14,21 @@ const COPPA=[
  {k:"r16",n:"Ottavi di finale",w:2,m:[
   ["CAN","ALA",651,1309.5],["WIC","CLE",1024.5,1407],["BOS","SRO",1420.5,755],["ALB","DET",1374,1631],
   ["LVA","QUE",1530,1107.5],["FAL","NYP",1064,1301],["HOU","CHA",1741.5,1323.5],["HON","NYS",1361,964]]},
- /* (81) quarti come da tabellone ufficiale (locandina): a sinistra Whales–Cadavers e TeaBags–Pythons, a destra Aliens–Pandas e Lions–Monk Seals.
-    Da qui niente più sorteggi: semifinali = vincente QF1 contro vincente QF2 e vincente QF3 contro vincente QF4; finale = lato sinistro contro lato destro. */
+ /* (81) quarti come da tabellone ufficiale (locandina, sorteggio degli admin). (82) semifinali e finale: sorteggio automatico a fine turno (fill) */
  {k:"qf",n:"Quarti di finale",w:4,m:[["ALA","CLE"],["BOS","DET"],["LVA","NYP"],["HOU","HON"]]},
  {k:"sf",n:"Semifinali",w:6,m:[]},
  {k:"f",n:"Finale",w:8,m:[]}];
 window.COPPA=COPPA;
-/* (81) semifinali e finale si riempiono da sole dal tabellone: accoppiamenti a due a due nell ordine del turno prima.
-   Finché il turno prima non è chiuso la sfida mostra «Vincente X / Y». */
-function fill(){for(let i=1;i<COPPA.length;i++){const r=COPPA[i],p=COPPA[i-1];if(r.fix)continue;if(!r.auto&&r.m.length)continue;r.auto=1;r.m=[];
- for(let j=0;j<p.m.length;j+=2){const w=k=>{const m=p.m[k];if(!m)return null;if(stato(p)!=="fin")return null;const s=score(p,m);return s.a==null||s.b==null?null:s.a>=s.b?m[0]:m[1]};
-  const lab=k=>{const m=p.m[k];return m?(m[0].startsWith("?")||m[1].startsWith("?")?"Vincente semifinale "+(k+1):"Vincente "+nick(m[0])+"/"+nick(m[1])):"?"};
-  const A=w(j),B=w(j+1);r.m.push([A||"?"+lab(j),B||"?"+lab(j+1)])}}}
+/* (82) DOPO OGNI TURNO NUOVO SORTEGGIO (regola corretta da Francesco): quando la settimana di un turno è finita, le vincenti si accoppiano
+   a caso per il turno dopo (semifinali, poi finale). Il sorteggio è «a seme fisso» (dipende solo da turno e qualificate), così è uguale
+   su tutti i telefoni e non cambia a ogni apertura. Gli accoppiamenti scritti a mano in COPPA (es. dagli admin) hanno la precedenza.
+   Prima della fine del turno: «Sorteggio a fine turno» con le squadre ancora in corsa. */
+function seedRnd(str){let h=2166136261;for(const c of str){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return()=>{h+=0x6D2B79F5;let t=h;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function fill(){for(let i=1;i<COPPA.length;i++){const r=COPPA[i],p=COPPA[i-1];if(!r.auto&&r.m.length)continue;r.auto=1;r.m=[];r.draw=null;
+ if(stato(p)!=="fin"||!p.m.length||p.m.some(m=>m[0].startsWith("?"))){r.pend=1;continue}r.pend=0;
+ const W=winners(p);if(W.length!==p.m.length){r.pend=1;continue}
+ const rnd=seedRnd("mcgee-2627-"+r.k+"-"+W.slice().sort().join(",")),A=W.slice();for(let k=A.length-1;k>0;k--){const j=Math.floor(rnd()*(k+1));[A[k],A[j]]=[A[j],A[k]]}
+ for(let k=0;k+1<A.length;k+=2)r.m.push([A[k],A[k+1]]);r.draw=1}}
 const nick=t=>TM[t]?TM[t].nome.split(" ").slice(-1)[0]:t;
 const lg=t=>`<span class="cplg" style="--tc:${TCOL[t]||"#333"}"><span class="badge logo lg-${t}" role="img" aria-label="${e(TM[t]?TM[t].nome:t)}"></span></span>`;
 const wNow=()=>{try{return weekOf(nyToday()<W1?W1:nyToday())}catch(_){return 1}};
@@ -44,8 +47,8 @@ function vCoppa(){const n=wNow();try{fill()}catch(_){}
  const alive=(()=>{let L=TEAMS.map(t=>t.id);for(const r of COPPA){if(stato(r)!=="fin")break;const W=winners(r);if(W.length)L=W}return L})();
  const sec=r=>{const st=stato(r);let body;
   if(r.m.length)body=`<div class="cpgrid">${r.m.map(m=>card(r,m)).join("")}</div>`;
-  else{const prev=COPPA[COPPA.indexOf(r)-1],W=prev?winners(prev):[];body=`<div class="cpwait"><b>${W.length?"Sorteggio in arrivo":"In attesa del turno prima"}</b><small>${W.length?`Qualificate: ${W.map(nick).join(" · ")}`:`Si gioca nella settimana ${r.w}`}</small>${W.length?`<div class="cpq">${W.map(lg).join("")}</div>`:""}</div>`}
-  return `<section class="cpsec ${st}"><h3><span>${r.n}</span><em>settimana ${r.w}${st==="live"?" · in corso":st==="fin"?" · chiuso":""}</em></h3>${body}</section>`};
+  else{const prev=COPPA[COPPA.indexOf(r)-1],W=prev?(stato(prev)==="fin"?winners(prev):prev.m.flat().filter(t=>!t.startsWith("?"))):[];body=`<div class="cpwait"><b>${prev&&prev.m.length&&!prev.m.some(m=>m[0].startsWith("?"))?"Sorteggio a fine "+prev.n.toLowerCase():"In attesa del turno prima"}</b><small>${W.length?`${stato(prev)==="fin"?"Qualificate":"Ancora in corsa"}: ${W.map(nick).join(" · ")}`:`Si gioca nella settimana ${r.w}`}</small>${W.length?`<div class="cpq">${W.map(lg).join("")}</div>`:""}</div>`}
+  return `<section class="cpsec ${st}"><h3><span>${r.n}</span><em>${r.draw?"sorteggiate · ":""}settimana ${r.w}${st==="live"?" · in corso":st==="fin"?" · chiuso":""}</em></h3>${body}</section>`};
  return `<button class="gback" data-go="home">‹ Home</button>
  <div class="cphero"><img src="img/mcgee.png" alt="McGee Cup"><div><small>Fanta Due Palle · stagione 26/27</small><b>McGEE CUP</b><em>${alive.length===1?"Vincitrice: "+e(TM[alive[0]].nome):cur_.n+" · settimana "+cur_.w}</em></div></div>
  <div class="cptro">${window.mcgeeTrofeo?mcgeeTrofeo("cpt"):""}<div class="cptw">${alive.length===1?`<small>Campione</small>${lg(alive[0])}<b>${e(TM[alive[0]].nome)}</b>`:`<small>In palio</small><b>JaVale McGee Cup</b><em>${alive.length} squadre ancora in corsa</em>`}</div></div>
@@ -55,7 +58,7 @@ function vCoppa(){const n=wNow();try{fill()}catch(_){}
   <li>Coppa a eliminazione diretta: <b>ottavi</b> (settimana 2), <b>quarti</b> (settimana 4), <b>semifinali</b> (settimana 6) e <b>finale</b> (settimana 8). Una partita, dentro o fuori.</li>
   <li>Punteggio = punti fatti dalla squadra in quella settimana di campionato.</li>
   <li>Ottavi: sorteggio casuale con un solo vincolo, <b>Est contro Ovest</b> (8 squadre dell Est contro 8 dell Ovest).</li>
-  <li>Dai quarti: sorteggio libero, nessun vincolo di conference.</li>
+  <li>Dopo ogni turno <b>nuovo sorteggio</b> di tutti gli accoppiamenti del turno dopo, libero (Est–Est e Ovest–Ovest possibili), fino alla finale. In app il sorteggio si fa da solo appena finisce la settimana del turno.</li><li>Formazioni: la stessa formazione messa su ESPN il lunedì, valida sia per il campionato sia per la coppa.</li>
   <li>La coppa si gioca in parallelo al campionato e fuori da ESPN: risultati e passaggi del turno li ufficializzano gli admin.</li></ul></details>
  <p class="note">Tocca una sfida per vedere il tabellino della settimana (Dynasty TV). Turni chiusi: punteggi ufficiali degli admin; turno in corso: punteggi ESPN della settimana, aggiornati da soli.</p>`}
 window.SCAMBIV=window.SCAMBIV||{};SCAMBIV.coppa=vCoppa;
