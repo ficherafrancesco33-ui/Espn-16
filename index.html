@@ -112,7 +112,7 @@ td{font:600 14px Barlow;padding:7px 6px;border-bottom:1px solid var(--line);text
 const TEAMS=[
  {id:"DET",nome:"Detroit Pythons",gm:"Domenico Borracci",conf:"E",logo:"loghi/det.png"},
  {id:"CLE",nome:"Cleveland Cadavers",gm:"Andrea Ce",conf:"E",logo:"loghi/cle.png"},
- {id:"BOS",nome:"Boston TeaBags",gm:"G. Formica",conf:"E",logo:"loghi/bos.png"},
+ {id:"BOS",nome:"Boston TeaBags",gm:"Giuseppe Formica",conf:"E",logo:"loghi/bos.png"},
  {id:"NYS",nome:"NY samb",gm:"M. Di Fazi",conf:"E",logo:"loghi/nys.png"},
  {id:"QUE",nome:"Quebec Ducks",gm:"HC. Ducks",conf:"E",logo:"loghi/que.png"},
  {id:"CHA",nome:"Charlotte Cougars",gm:"A. Indovino",conf:"E",logo:"loghi/cha.png"},
@@ -129,12 +129,13 @@ const TEAMS=[
 ];
 const TM=Object.fromEntries(TEAMS.map(t=>[t.id,t]));
 /* vittorie/sconfitte dagli screenshot ESPN (finché la lega non è collegata). pf/pa = punti fatti/subiti, se noti */
-const REC={DET:{w:2,l:1,pf:0,pa:0},CLE:{w:2,l:1,pf:0,pa:0}};
+const REC={DET:{w:2,l:1,pf:0,pa:0},CLE:{w:2,l:1,pf:0,pa:0},BOS:{w:2,l:1,pf:0,pa:0}};
 /* ===== ROSE dagli screenshot ESPN. [nome completo come nei tabellini ESPN, squadra NBA, slot in formazione ESPN, ruoli ESPN]
    slot: PG SG SF PF C G F G/F UTIL = titolari; BE = panchina; IR = infortunati */
 const ROSE={
  DET:[["Ayo Dosunmu","MIN","PG","SG,PG"],["Kingston Flemings","ATL","SG","SG,PG"],["Paul George","BOS","SF","SF,PF"],["Giannis Antetokounmpo","MIA","PF","PF,C"],["Donovan Clingan","POR","C","C"],["Cedric Coward","MEM","G","SF,SG"],["Davion Mitchell","MIA","G","PG"],["Jerami Grant","MEM","F","PF"],["Spencer Jones","DEN","F","SF,PF"],["Zion Williamson","NO","G/F","PF,C"],["RJ Barrett","TOR","UTIL","SF,SG"],["Jakob Poeltl","TOR","UTIL","C"],["Anfernee Simons","PHI","UTIL","SG,PG"],["Kel'el Ware","MIL","UTIL","C"],["Cameron Carr","LAL","BE","SF,SG"],["Kasparas Jakucionis","MIL","BE","PG"],["Meleek Thomas","CLE","BE","SG"]],
- CLE:[["Immanuel Quickley","TOR","PG","PG,SG"],["Brayden Burries","MIL","SG","SG"],["Jonathan Kuminga","MIN","SF","PF,SF"],["Jarace Walker","IND","PF","PF,SF"],["Victor Wembanyama","SA","C","C"],["Damian Lillard","POR","G","PG"],["Dejounte Murray","NO","G","SG,PG"],["Tristan da Silva","ORL","F","SF,PF"],["LeBron James","PHI","F","SF,PF"],["Evan Mobley","CLE","G/F","PF,C"],["Zach Edey","MEM","UTIL","C"],["Jeremiah Fears","NO","UTIL","SG,PG"],["Daniel Gafford","DAL","UTIL","C"],["Morez Johnson Jr.","DAL","UTIL","PF,C"],["Christian Anderson","CHA","BE","PG"],["Quentin Grimes","LAL","BE","SG,SF"],["Hannes Steinbach","CHA","BE","PF"]]
+ CLE:[["Immanuel Quickley","TOR","PG","PG,SG"],["Brayden Burries","MIL","SG","SG"],["Jonathan Kuminga","MIN","SF","PF,SF"],["Jarace Walker","IND","PF","PF,SF"],["Victor Wembanyama","SA","C","C"],["Damian Lillard","POR","G","PG"],["Dejounte Murray","NO","G","SG,PG"],["Tristan da Silva","ORL","F","SF,PF"],["LeBron James","PHI","F","SF,PF"],["Evan Mobley","CLE","G/F","PF,C"],["Zach Edey","MEM","UTIL","C"],["Jeremiah Fears","NO","UTIL","SG,PG"],["Daniel Gafford","DAL","UTIL","C"],["Morez Johnson Jr.","DAL","UTIL","PF,C"],["Christian Anderson","CHA","BE","PG"],["Quentin Grimes","LAL","BE","SG,SF"],["Hannes Steinbach","CHA","BE","PF"]],
+ BOS:[["Shai Gilgeous-Alexander","OKC","PG","PG"],["Keaton Wagler","LAC","SG","PG,SG"],["Deni Avdija","POR","SF","SF,PF"],["Anthony Davis","WSH","PF","C,PF"],["Jarrett Allen","CLE","C","C"],["Andrew Nembhard","IND","G","PG,SG"],["Fred VanVleet","HOU","G","PG,SG"],["Jaime Jaquez Jr.","MIL","F","SF,SG"],["Bobby Portis","MIA","F","PF,C"],["Alex Sarr","WSH","G/F","C,PF"],["OG Anunoby","NY","UTIL","SF,PF"],["Hugo Gonzalez","BOS","UTIL","SF"],["Aaron Gordon","DEN","UTIL","PF"],["Derrick White","BOS","UTIL","SG,PG"],["Adem Bona","PHI","BE","C"],["Kawhi Leonard","TOR","BE","SF,PF"],["Karim Lopez","MEM","BE","SF"]]
 };
 
 /* ===== PUNTI FANTASY (FFPS), regola della lega. Riga del tabellino (vedi tools/espn.mjs):
