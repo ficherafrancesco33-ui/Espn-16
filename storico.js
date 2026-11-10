@@ -6,7 +6,7 @@
    LEGA.mov = firme e tagli di free agent («Movimenti»). Banner in Home per 24 ore dopo ogni scambio, come Dreamers (tocca → Storico trade). */
 const TRADES=[
  /* (44) primo scambio da quando è entrato Francesco (foto «ESPN Trade», 09/11/2026; ora dalla lega ESPN) */
- {data:"09/11/2026",ora:"21:15",titolo:"Scambio",lati:[["HON",["Rui Hachimura"]],["QUE",["Koa Peat","Scelta 2° giro 2027 (via Honolulu)","Scelta 3° giro 2029 (via Mavericks)"]]]}
+ {data:"09/11/2026",ora:"21:15",titolo:"Scambio",lati:[["HON",["Rui Hachimura"]],["QUE",["Koa Peat","Scelta 2° giro 2027 (via Honolulu)","Scelta 3° giro 2028 (via Mavericks)"]]]}
 ];
 (function(){
 const e=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
