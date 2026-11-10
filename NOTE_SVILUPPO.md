@@ -32,3 +32,5 @@
 (12) 10/11/2026 – nav.js: navigazione come Dreamers (pila delle pagine con stato di ogni modulo via window.NAVX; tasti «‹» con la scritta di dove portano; gesto indietro / tasto Android con history.pushState + popstate; swipe dal bordo sinistro; tornando indietro si ritrova l altezza e l elemento toccato evidenziato). Logo dell app (#lgreload) = aggiorna (update del service worker + ricarica); scritta ESPN 16 = Home. Cerca giocatore in Home come Dreamers (#hres: Squadre e Svincolati, tocca per il profilo). Loghi delle 15 squadre rifatti dai roster screenshot (106 px) con super-risoluzione EDSR x4 → 320 px, cerchio pulito.
 
 (13) 10/11/2026 – Loghi senza cerchio dello sfondo come in Dreamers (badge contain, trasparenti; Houston, Wichita e Fallon con lo sfondo tolto). Nuovo logo Quebec Ducks (dato da Francesco, sfondo nero tolto). Campo: riquadro Salary cap (libero, occupato 26/27 e 27/28, tagli) al posto della Cassa di Dreamers; tocco = Contratti e scelte.
+
+(14) 10/11/2026 – Logo Cleveland Cadavers creato (scudo bordeaux e oro, teschio con pallone), loghi/cle.png.
