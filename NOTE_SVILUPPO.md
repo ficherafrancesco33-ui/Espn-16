@@ -162,3 +162,4 @@
 (98) Dati ufficiali ESPN sempre dalle 07:30 italiane (con e senza ora legale): niente giri di notte; ogni 30 minuti dalle 07:30 alle 11:30, più 11:43 e 17:43; le corse prima delle 07:30 di Roma escono subito. Lunedì formazioni ogni 15 minuti dalle 07:00.
 (99) Dynasty TV come Dreamers: partite LIVE in cima, poi quelle in programma, in fondo le finite; pallino rosso lampeggiante (in campo adesso) nella colonna AVG, prima del numero, invece del pallino bianco accanto al nome.
 (100) Cambio giorno/notte: i due fogli di stile si scaricano subito (preload) e prima di cambiare si aspetta che quello della modalità nuova sia pronto; prima, su iPhone, per un attimo la pagina appariva senza grafica.
+(101) Cambio giorno/notte: a cambio finito il correttore di contrasto del giorno (parquet.js) riparte da zero, così non restano scritte scure e spesse scritte mentre la pagina era a metà cambio.
