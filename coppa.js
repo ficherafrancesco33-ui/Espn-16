@@ -33,7 +33,7 @@ const nick=t=>TM[t]?TM[t].nome.split(" ").slice(-1)[0]:t;
 const lg=t=>`<span class="cplg" style="--tc:${TCOL[t]||"#333"}"><span class="badge logo lg-${t}" role="img" aria-label="${e(TM[t]?TM[t].nome:t)}"></span></span>`;
 const wNow=()=>{try{return weekOf(nyToday()<W1?W1:nyToday())}catch(_){return 1}};
 /* punteggi di una sfida: ufficiali se scritti, altrimenti quelli della settimana */
-function score(r,m){if(m[2]!=null)return{a:m[2],b:m[3],off:1};try{const S=sfidaScores(r.w).S;return{a:S[m[0]],b:S[m[1]],off:0}}catch(_){return{a:null,b:null,off:0}}}
+function score(r,m){if(m[2]!=null)return{a:m[2],b:m[3],off:1};try{const S=sfidaScores(r.w,"sum").S;return{a:S[m[0]],b:S[m[1]],off:0}}catch(_){return{a:null,b:null,off:0}}}
 function stato(r){const n=wNow();return r.w<n?"fin":r.w===n?"live":"next"}
 /* vincitori del turno (solo se chiuso) */
 const winners=r=>stato(r)!=="fin"?[]:r.m.map(m=>{const s=score(r,m);return s.a==null||s.b==null?null:s.a>=s.b?m[0]:m[1]}).filter(Boolean);
@@ -79,5 +79,5 @@ function vCoppa(){const n=wNow();try{fill()}catch(_){}
 window.SCAMBIV=window.SCAMBIV||{};SCAMBIV.coppa=vCoppa;
 /* tocca una sfida → box score della settimana in Dynasty TV (stessa pagina delle sfide di campionato) */
 document.addEventListener("click",ev=>{if(typeof cur==="undefined"||cur!=="coppa")return;const b=ev.target.closest("[data-cpm]");if(!b)return;ev.preventDefault();
- try{const[A,B,w]=b.dataset.cpm.split(",");window.TVS.dr=A+","+B+","+w;window.TVS.drs="a";window.TVS.g=null;const[a]=weekRange(+w);if(!TVS.d||TVS.d<a)TVS.d=a}catch(_){}cur="tv";render();scrollTo(0,0)});
+ try{const[A,B,w]=b.dataset.cpm.split(",");window.TVS.dr=A+","+B+","+w+",c";/* (104) la coppa resta a somma */window.TVS.drs="a";window.TVS.g=null;const[a]=weekRange(+w);if(!TVS.d||TVS.d<a)TVS.d=a}catch(_){}cur="tv";render();scrollTo(0,0)});
 })();

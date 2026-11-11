@@ -51,7 +51,9 @@ function player(g,w){const nba=nbaOf(g),S=schedule(nba,w),B=base(),pg=perGame(g)
  else if(I&&(I.k==="dubbio"||I.k==="quest"||I.k==="dtd")){risk=true;const f=G.find(x=>x.play);if(f)f.risk=.75}
  const ESPNir=g[2]==="IR";
  let tot=0;for(const x of G)if(x.play){x.f=B.fac[x.opp]||1;x.p=pg.v*x.f*x.risk;tot+=x.p}
- const exp=G.filter(x=>x.play).length,fAvg=exp?G.filter(x=>x.play).reduce((a,x)=>a+x.f,0)/exp:1;
+ const exp=G.filter(x=>x.play).length;
+ /* (104) regola delle medie: il giocatore porta la MEDIA delle partite della settimana (0 se non ne gioca nessuna) */
+ tot=exp?tot/exp:0;const fAvg=exp?G.filter(x=>x.play).reduce((a,x)=>a+x.f,0)/exp:1;
  return{g,n:g[0],pos:g[3],nba,G,cal:S.length,exp,miss,days,out:out&&exp===0,outAny:out,risk,I,note,pg,tot,fAvg,u25:typeof u25==="function"?u25(g[0]):false,eta:typeof etaOf==="function"?etaOf(g[0]):null,ir:ESPNir}}
 /* slot: abbinamento titolari ↔ slot ESPN (cammini aumentanti) */
 function assign(L){const n=SLOTS.length,m=new Array(n).fill(-1);
@@ -72,7 +74,7 @@ function vFcons(){const t=FC.t&&TM[FC.t]?FC.t:"QUE",T=TM[t],wNow=weekOf(nyToday(
  /* formazione ESPN attuale (quella della settimana se c è, altrimenti gli slot di oggi) */
  let curSet=null;try{const L=(LEGA.line||{})[w]&&LEGA.line[w][t];curSet=new Set((L||R0.filter(g=>g[2]!=="BE"&&g[2]!=="IR").map(g=>g[0])).map(K))}catch(_){curSet=new Set(R0.filter(g=>g[2]!=="BE"&&g[2]!=="IR").map(g=>K(g[0])))}
  const curTot=P.filter(p=>curSet.has(K(p.n))).reduce((a,p)=>a+p.tot,0);
- const pill=v=>v>=150?"v":v>=100?"g":v>=60?"y":"r";
+ const pill=v=>v>=40?"v":v>=30?"g":v>=20?"y":"r";/* (104) soglie per la media a partita */
  const injB=p=>p.outAny?`<span class="fcinj out">OUT${p.days!=null?` · ${p.days} ${p.days===1?"giorno":"giorni"}`:""} · ${p.miss?`salta ${p.miss} ${p.miss===1?"partita":"partite"}`:"rientra prima delle partite"}</span>`:p.risk?`<span class="fcinj q">In dubbio · 1ª partita al 75%</span>`:p.ir?`<span class="fcinj q">IR su ESPN</span>`:"";
  const chips=p=>p.G.length?p.G.map(x=>`<span class="fcg${x.play?"":" no"}" title="${x.away?"in trasferta":"in casa"}${x.play&&x.f?` · avversario ${x.f>=1?"+":""}${Math.round((x.f-1)*100)}%`:""}"><i>${GG[new Date(x.d+"T12:00:00Z").getUTCDay()]}</i>${x.away?"@":""}${x.opp}${x.play&&x.f&&Math.abs(x.f-1)>=.04?`<b class="${x.f>1?"su":"giu"}">${x.f>1?"▲":"▼"}</b>`:""}</span>`).join(""):`<span class="fcg no"><i>—</i>nessuna partita</span>`;
  const card=(p,slot)=>`<div class="fccard${p.outAny?" inj":""}" data-pl="${e(p.n)}" role="link" tabindex="0"><span class="fcslot">${slot}</span><span class="fcj">${jer(p.n)}</span>
@@ -86,8 +88,8 @@ function vFcons(){const t=FC.t&&TM[FC.t]?FC.t:"QUE",T=TM[t],wNow=weekOf(nyToday(
   for(const p of best.ex){const why=p.out||p.outAny&&p.exp===0?`infortunato (${p.I?e(String(p.I.txt||p.I.lab).replace(/\s*\(not specified\)/i,"")):"out"}${p.note?", "+p.note:""}): non gioca questa settimana`:`${p.exp} ${p.exp===1?"partita":"partite"} previste, previsione ${f1(p.tot)}`;M.push(`<li><b>${e(p.n)}</b> in tribuna: ${why}${p.u25?" · under 25 ✓":p.outAny?" · infortunato, può stare in tribuna al posto di un under 25":" · ⚠ non under 25"}.</li>`)}
   const exMax=Math.max(0,...best.ex.map(p=>p.tot));
   const st=best.st.slice().sort((a,b)=>a.tot-b.tot);
-  if(st[0]&&best.ex.length)M.push(`<li><b>${e(st[0].n)}</b> è l ultimo dei titolari: previsione ${f1(st[0].tot)} (${st[0].exp} ${st[0].exp===1?"partita":"partite"}) contro ${f1(exMax)} del migliore in tribuna.</li>`);
-  for(const p of best.st.filter(p=>p.exp>=4).sort((a,b)=>b.tot-a.tot).slice(0,3))M.push(`<li><b>${e(p.n)}</b>: ${p.exp} partite in settimana${Math.abs(p.fAvg-1)>=.04?`, contro difese ${p.fAvg>1?"deboli":"forti"} (${p.fAvg>1?"+":""}${Math.round((p.fAvg-1)*100)}%)`:""}: previsione ${f1(p.tot)}.</li>`);
+  if(st[0]&&best.ex.length)M.push(`<li><b>${e(st[0].n)}</b> è l ultimo dei titolari: media prevista ${f1(st[0].tot)} (${st[0].exp} ${st[0].exp===1?"partita":"partite"}) contro ${f1(exMax)} del migliore in tribuna.</li>`);
+  for(const p of best.st.slice().sort((a,b)=>b.tot-a.tot).slice(0,3))M.push(`<li><b>${e(p.n)}</b>: ${p.exp} ${p.exp===1?"partita":"partite"} in settimana${Math.abs(p.fAvg-1)>=.04?`, contro difese ${p.fAvg>1?"deboli":"forti"} (${p.fAvg>1?"+":""}${Math.round((p.fAvg-1)*100)}%)`:""}: previsione ${f1(p.tot)}.</li>`);
   for(const p of best.st.filter(p=>p.outAny&&p.exp>0))M.push(`<li><b>${e(p.n)}</b> titolare anche se infortunato: ${p.note}, salta ${p.miss} ${p.miss===1?"partita":"partite"} ma ne gioca ${p.exp}.</li>`);
   for(const p of best.st.filter(p=>p.risk))M.push(`<li><b>${e(p.n)}</b> è in dubbio: la sua prima partita conta il 75% nella previsione.</li>`);
   if(best.relaxed)M.unshift(`<li>⚠ Con i giocatori di adesso non c è una tribuna di soli under 25 (o infortunati): ho allentato la regola. Controlla la rosa.</li>`);
@@ -97,13 +99,13 @@ function vFcons(){const t=FC.t&&TM[FC.t]?FC.t:"QUE",T=TM[t],wNow=weekOf(nyToday(
   <h2><span class="t"><span>Tribuna</span></span><em>3 · under 25 o infortunati</em></h2><div class="fclist trib">${best.ex.map(p=>card(p,p.outAny&&p.exp===0?"INF":p.u25?"U25":"TRIB")).join("")}</div>
   <h2><span class="t"><span>Motivazioni</span></span><em>perché questa formazione</em></h2><ul class="fcwhy">${M.join("")}</ul>
   <h2><span class="t"><span>Tutti i giocatori</span></span><em>settimana ${w}</em></h2>
-  <div class="tbl-wrap"><table class="fctab"><thead><tr><th>Giocatore</th><th>Cal.</th><th>Prev.</th><th>Infortunio</th><th>AVG</th><th>Prev./p</th><th>Totale</th></tr></thead><tbody>${P.slice().sort((a,b)=>b.tot-a.tot).map(p=>`<tr class="${best.ex.includes(p)?"ex":""}" data-pl="${e(p.n)}"><td><b>${e(p.n)}</b><small>${best.ex.includes(p)?"tribuna":"titolare"}${p.u25?" · U25":""}</small></td><td>${p.cal}</td><td>${p.exp}</td><td>${p.outAny?`OUT${p.days!=null?" "+p.days+"g":""}${p.miss?" · −"+p.miss:""}`:p.risk?"dubbio":"—"}</td><td>${p.pg.s!=null?f1(p.pg.s):"–"}</td><td>${f1(p.pg.v)}</td><td><b>${f1(p.tot)}</b></td></tr>`).join("")}</tbody></table></div>`}
+  <div class="tbl-wrap"><table class="fctab"><thead><tr><th>Giocatore</th><th>Cal.</th><th>Prev.</th><th>Infortunio</th><th>AVG</th><th>Prev./p</th><th>Media</th></tr></thead><tbody>${P.slice().sort((a,b)=>b.tot-a.tot).map(p=>`<tr class="${best.ex.includes(p)?"ex":""}" data-pl="${e(p.n)}"><td><b>${e(p.n)}</b><small>${best.ex.includes(p)?"tribuna":"titolare"}${p.u25?" · U25":""}</small></td><td>${p.cal}</td><td>${p.exp}</td><td>${p.outAny?`OUT${p.days!=null?" "+p.days+"g":""}${p.miss?" · −"+p.miss:""}`:p.risk?"dubbio":"—"}</td><td>${p.pg.s!=null?f1(p.pg.s):"–"}</td><td>${f1(p.pg.v)}</td><td><b>${f1(p.tot)}</b></td></tr>`).join("")}</tbody></table></div>`}
  return `<div class="fcpg"><button class="gback" data-go="campo">‹ Campo ${e(nick)}</button>
  <div class="fchd" style="--tc:${TCOL[t]}"><span class="badge logo lg-${t}"></span><div><small>Formazione consigliata · per lunedì</small><b>${e(T.nome)}</b><em>Settimana ${w} · ${dIt(wa)} → ${dIt(wb)}</em></div></div>
  <div class="fcnav"><button data-fcw="${w-1}" ${w>wNow?"":"disabled"}>‹</button><span>${w===wNow?"Settimana in corso":w===wNow+1?"Prossima settimana":"Settimana "+w}</span><button data-fcw="${w+1}" ${w<maxW?"":"disabled"}>›</button></div>
  <div class="chips fcteams">${TEAMS.map(x=>`<button class="chip" data-fct="${x.id}" aria-pressed="${x.id===t}"><span class="badge logo lg-${x.id}"></span>${e(x.nome.split(" ").slice(-1)[0])}</button>`).join("")}</div>
  ${body}
- <p class="note">Come si calcola: previsione a partita = 60% media AVG della stagione + 40% media delle ultime 5 partite (con meno di 5 partite la media della stagione), per il fattore avversario (AVG concessi a partita da quella squadra NBA rispetto alla media, tra −12% e +12%). Totale = somma sulle partite che dovrebbe giocare: calendario NBA meno quelle saltate per infortunio (Centro Medico ESPN: Out fino alla data di rientro; senza data fuori tutta la settimana; in dubbio = prima partita al 75%). Si schierano i 14 con la previsione più alta che entrano negli slot ESPN; in tribuna solo under 25, tranne gli infortunati.</p></div>`}
+ <p class="note">Come si calcola: previsione a partita = 60% media AVG della stagione + 40% media delle ultime 5 partite (con meno di 5 partite la media della stagione), per il fattore avversario (AVG concessi a partita da quella squadra NBA rispetto alla media, tra −12% e +12%). Previsione della settimana = MEDIA delle partite che dovrebbe giocare (regola delle medie: conta la media, non il numero di partite; 0 se non ne gioca nessuna): calendario NBA meno quelle saltate per infortunio (Centro Medico ESPN: Out fino alla data di rientro; senza data fuori tutta la settimana; in dubbio = prima partita al 75%). Si schierano i 14 con la previsione più alta che entrano negli slot ESPN; in tribuna solo under 25, tranne gli infortunati.</p></div>`}
 window.SCAMBIV=window.SCAMBIV||{};SCAMBIV.fcons=vFcons;
 /* tasto nel campo, tra la tribuna e «Live stanotte» */
 window.e16FconsBtn=id=>{const wNow=weekOf(nyToday()<W1?W1:nyToday());return `<button class="fcbtn" data-fcopen="${id}"><span class="fci">🧠</span><span><b>Formazione consigliata</b><small>per lunedì · settimana ${wNow+1} · partite, infortuni e previsioni</small></span><i>›</i></button>`};

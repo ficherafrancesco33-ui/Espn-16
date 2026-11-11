@@ -784,14 +784,12 @@ const MATCHUPS={"1": [["QUE", "CAN"], ["FAL", "SRO"], ["CLE", "HOU"], ["LVA", "A
 const SCORES={"1": {"CAN": 671, "SRO": 725, "CLE": 1171.5, "LVA": 1357.5, "QUE": 894, "FAL": 902.5, "HON": 1312, "WIC": 1076.5, "ALB": 1120, "CHA": 1110.5, "DET": 1097, "NYS": 1019.5, "ALA": 1190.5, "BOS": 1309.5, "HOU": 1278.5, "NYP": 1187}, "2": {"CAN": 653.5, "SRO": 747, "CLE": 1407, "LVA": 1526, "QUE": 1107.5, "FAL": 1064, "HON": 1364, "WIC": 1022, "ALB": 1376, "CHA": 1323.5, "DET": 1631, "NYS": 965, "ALA": 1309.5, "BOS": 1421.5, "HOU": 1741.5, "NYP": 1301}, "3": {"CAN": 605.5, "SRO": 1048, "CLE": 1722, "LVA": 1491.5, "QUE": 746.5, "FAL": 1100, "HON": 1679.5, "WIC": 1346.5, "ALB": 1362, "CHA": 1606.5, "DET": 1604, "NYS": 1301, "ALA": 1358, "BOS": 1361, "HOU": 1660, "NYP": 1392}};
 /* (44) calendario e punteggi ufficiali dalla lega ESPN: LEGA.match (tutte le settimane) e LEGA.score (settimane finite, punteggio ufficiale ESPN con le formazioni dei GM) */
 try{if(typeof LEGA!=="undefined"){if(LEGA.match)for(const w in LEGA.match)if(LEGA.match[w].length)MATCHUPS[w]=LEGA.match[w];if(LEGA.score)for(const w in LEGA.score)SCORES[w]={...(SCORES[w]||{}),...LEGA.score[w]}}}catch(e){}
-/* (23) record, punti fatti e subiti dai punteggi ufficiali (SCORES) delle settimane finite */
-for(const id in REC){REC[id].w=0;REC[id].l=0;REC[id].pf=0;REC[id].pa=0}
-/* (56) regolamento 26/27: le settimane 8 e 9 sono UNA sola sfida (stesso avversario), si sommano i punti e V/P arriva solo a fine settimana 9 → 15 partite in tutto */
-for(const w in SCORES){if(+w===8)continue;for(const[A,B]of(MATCHUPS[w]||[])){const two=+w===9,S8=SCORES[8]||{};if(two&&(S8[A]==null||S8[B]==null))continue;const a=SCORES[w][A]+(two?S8[A]:0),b=SCORES[w][B]+(two?S8[B]:0);if(a==null||isNaN(a)||b==null)continue;for(const[t,x,y]of[[A,a,b],[B,b,a]]){const r=REC[t]||(REC[t]={w:0,l:0,pf:0,pa:0});r.pf+=x;r.pa+=y;if(x>y)r.w++;else if(x<y)r.l++}}}
+/* (104) record, punti fatti e subiti: calcolati dall app con la regola delle MEDIE (vedi e16Rec, dopo weekScores) */
+for(const id in REC){REC[id].w=0;REC[id].l=0;REC[id].t=0;REC[id].pf=0;REC[id].pa=0}
 /* (23) PLAYOFF come ESPN: 10 squadre su 16. Teste di serie 1 e 2 = prime di ciascuna conference (la migliore delle due è la 1),
    poi tutte le altre per vittorie e punti fatti. 1-6 saltano il primo turno.
    Turno 1 (8-14 feb): 7ª-10ª, 8ª-9ª · Turno 2 (15 feb-7 mar): 1ª-vinc. 8/9, 4ª-5ª, 3ª-6ª, 2ª-vinc. 7/10 · Turno 3 (8-21 mar): semifinali · poi finale. */
-function seeds(){const by=(a,b)=>(b.w-a.w)||(a.l-b.l)||(b.pf-a.pf);const all=TEAMS.map(t=>({...t,...(REC[t.id]||{w:0,l:0,pf:0,pa:0})}));
+function seeds(){const by=(a,b)=>((b.w+(b.t||0)/2)-(a.w+(a.t||0)/2))||(a.l-b.l)||(b.pf-a.pf);const all=TEAMS.map(t=>({...t,...(REC[t.id]||{w:0,l:0,pf:0,pa:0})}));
  const top=["E","W"].map(c=>all.filter(t=>t.conf===c).sort(by)[0]).sort(by);const rest=all.filter(t=>!top.includes(t)).sort(by);return[...top,...rest]}
 /* (24) PARTITE DELLA SETTIMANA (regola ESPN 16): ogni giocatore porta la SOMMA dell AVG di tutte le sue partite della settimana;
    (44) FORMAZIONE ESPN: contano i 14 titolari messi dal GM il lunedì su ESPN (LEGA.line[settimana][squadra], bloccata fino al lunedì dopo);
@@ -799,7 +797,7 @@ function seeds(){const by=(a,b)=>(b.w-a.w)||(a.l-b.l)||(b.pf-a.pf);const all=TEA
    wkTeam(t,w) → elenco dei 17 ordinati per punteggio della settimana, con le caselle partita (giocata / NG / da giocare) e la proiezione. */
 const WKD=["DO","LU","MA","ME","GI","VE","SA"];
 const lineOf=(t,w)=>{try{const L=LEGA.line[w][t];return L&&L.length?L:null}catch(e){return null}};
-function wkTeam(t,w){const[a,b]=weekRange(w),P=pstats(),LN=lineOf(t,w),R0=(ROSE[t]||[]).slice(),own={};
+function wkTeam(t,w,mode){const SUM=mode==="sum";const[a,b]=weekRange(w),P=pstats(),LN=lineOf(t,w),R0=(ROSE[t]||[]).slice(),own={};
  /* chi era titolare nella formazione del lunedì ma oggi non è più in rosa (ceduto/tagliato) entra lo stesso, con la sua squadra NBA dai tabellini */
  if(LN){const have=new Set(R0.map(g=>__ownKey(g[0])));for(const n of LN)if(!have.has(__ownKey(n)))R0.push([n,"","ESPN",""])}
  R0.forEach(g=>own[__ownKey(g[0])]=g);
@@ -812,22 +810,36 @@ function wkTeam(t,w){const[a,b]=weekRange(w),P=pstats(),LN=lineOf(t,w),R0=(ROSE[
  for(const k in L){const x=L[k],seen=new Set(x.G.map(y=>y.id));
   for(const d of days)for(const id of ESPN.days[d]){const gm=ESPN.games[id];if(!gm||seen.has(id)||(gm[0]!==x.team&&gm[1]!==x.team))continue;const opp=(gm[0]===x.team?"@":"")+(gm[0]===x.team?gm[1]:gm[0]);
    if(ESPN.box[id]&&gm[4]!=="S")x.G.push({d,id,f:null,opp,ng:gm[4]==="F",lv:gm[4]==="L"});else{x.G.push({d,id,f:null,opp,up:1});x.rem++}}
-  x.G.sort((p,q)=>p.d<q.d?-1:p.d>q.d?1:0);const p=P[k];x.avg=p?p.ff/p.gp:0;x.proj=x.tot+x.avg*x.rem}
+  x.G.sort((p,q)=>p.d<q.d?-1:p.d>q.d?1:0);const p=P[k];x.avg=p?p.ff/p.gp:0;x.sum=x.tot;x.proj=x.tot+x.avg*x.rem;
+  /* (104) regola delle MEDIE: il giocatore porta la media AVG delle sue partite della settimana (0 se non ne ha giocata nessuna); proiezione = media prevista con le partite che restano */
+  if(!SUM){x.tot=x.n?x.sum/x.n:0;x.proj=(x.n+x.rem)?(x.sum+x.avg*x.rem)/(x.n+x.rem):0}x.pg=x.n?x.sum/x.n:0}
  const all=Object.values(L).sort((p,q)=>q.tot-p.tot||q.proj-p.proj);
  /* formazione migliore possibile della settimana (i 14 con più punti) per «lasciati in panchina» */
  const BEST=all.slice(0,14).reduce((s,x)=>s+x.tot,0);
  let out;if(LN){const ST=new Set(LN.map(__ownKey));all.forEach(x=>x.on=ST.has(__ownKey(x.g[0])));out=[...all.filter(x=>x.on),...all.filter(x=>!x.on&&x.g[2]!=="ESPN")]}
  else{out=all.filter(x=>x.g[2]!=="ESPN");out.forEach((x,i)=>x.on=i<14)}
  const ON=out.filter(x=>x.on),S=ON.reduce((s,x)=>s+x.tot,0),PR=ON.reduce((s,x)=>s+x.proj,0);
- return{L:out,S,PR,nOn:ON.length,G:ON.reduce((s,x)=>s+x.n,0),rem:ON.reduce((s,x)=>s+x.rem,0),best:BEST,espn:!!LN}}
-let WK=null;function weekScores(w){if(SCORES[w]){const G={};TEAMS.forEach(t=>G[t.id]=0);return{S:{...SCORES[w]},G,off:1}}const S={},G={};TEAMS.forEach(t=>{const T=wkTeam(t.id,w);S[t.id]=T.S;G[t.id]=T.G});
+ return{L:out,S,PR,sum:SUM,nOn:ON.length,G:ON.reduce((s,x)=>s+x.n,0),rem:ON.reduce((s,x)=>s+x.rem,0),best:BEST,espn:!!LN}}
+/* (104) REGOLA DELLE MEDIE (dal 11/11/2026, vale per tutto il campionato, anche le settimane 1-3 ricalcolate):
+   punteggio squadra = somma delle MEDIE dei 14 titolari ESPN del lunedì; risultati, classifica e playoff li calcola l app (non più ESPN).
+   weekScores(w) = regola delle medie (campionato). weekScores(w,"sum") = vecchia regola a somma con i punteggi ESPN: la usa solo la McGee Cup. */
+let WK=null;function weekScores(w,mode){if(mode!=="sum"){const S={},G={};TEAMS.forEach(t=>{const T=wkTeam(t.id,w);S[t.id]=T.S;G[t.id]=T.G});return{S,G,avg:1}}
+ if(SCORES[w]){const G={};TEAMS.forEach(t=>G[t.id]=0);return{S:{...SCORES[w]},G,off:1}}const S={},G={};TEAMS.forEach(t=>{const T=wkTeam(t.id,w,"sum");S[t.id]=T.S;G[t.id]=T.G});
  /* (91) settimana in corso: se nessuna partita è in corso e l ultimo scaricamento ESPN è arrivato dopo la fine delle partite già iniziate, vale il punteggio di ESPN (ufficiale, come il report Dunkest su Dreamers); durante le partite resta il calcolo live dell app */
  try{const L=typeof LEGA!=="undefined"&&LEGA.live&&LEGA.live[w];if(L&&TEAMS.every(t=>L[t.id]!=null)){const[a,b]=weekRange(w);let lv=false,last=0;for(const d of Object.keys(ESPN.days))if(d>=a&&d<=b)for(const id of ESPN.days[d]){const g=ESPN.games[id];if(!g||g[4]==="S")continue;if(g[4]==="L")lv=true;const t0=new Date(g[5]).getTime();if(t0>last)last=t0}
   if(!lv&&(!last||LEGA.liveTs>last+3.5*36e5)){TEAMS.forEach(t=>S[t.id]=L[t.id]);return{S,G,esp:1,ts:LEGA.liveTs}}}}catch(_){}
  return{S,G}}
 /* (56) settimane 8–9 = sfida unica: is89(w), etichetta «8–9», punteggio della sfida (alla 9 si somma la 8), sfida finita solo dopo la 9 */
 const is89=w=>+w===8||+w===9;const wkLab=w=>is89(w)?"8–9":String(w);const sfFin=(w,wNow)=>(+w===8?9:+w)<wNow;
-function sfidaScores(w){const WS=weekScores(w);if(+w!==9)return WS;const W8=weekScores(8),S={},Gm={};TEAMS.forEach(t=>{S[t.id]=(W8.S[t.id]||0)+(WS.S[t.id]||0);Gm[t.id]=(W8.G[t.id]||0)+(WS.G[t.id]||0)});return{S,G:Gm,off:WS.off&&W8.off,s8:W8.S,s9:WS.S}}
+function sfidaScores(w,mode){const WS=weekScores(w,mode);if(+w!==9)return WS;const W8=weekScores(8,mode),S={},Gm={};TEAMS.forEach(t=>{S[t.id]=(W8.S[t.id]||0)+(WS.S[t.id]||0);Gm[t.id]=(W8.G[t.id]||0)+(WS.G[t.id]||0)});return{S,G:Gm,off:WS.off&&W8.off,s8:W8.S,s9:WS.S}}
+/* (104) settimana finita = giorni passati (New York) e tutte le partite della settimana chiuse */
+function wkDone(w){const[a,b]=weekRange(w);if(b>=nyToday())return false;for(const d of Object.keys(ESPN.days))if(d>=a&&d<=b)for(const id of ESPN.days[d]){const g=ESPN.games[id];if(g&&g[4]!=="F")return false}return true}
+/* (104) record V-P(-pareggi), punti fatti e subiti con la regola delle medie, per le sfide finite (8 e 9 = una sola sfida: media sett. 8 + media sett. 9).
+   Vince chi ha di più considerando tutte le cifre decimali; pareggio solo se identici. */
+function e16Rec(){for(const id in REC){REC[id].w=0;REC[id].l=0;REC[id].t=0;REC[id].pf=0;REC[id].pa=0}
+ for(const w of Object.keys(MATCHUPS).map(Number).sort((a,b)=>a-b)){if(w===8||!wkDone(w))continue;if(w===9&&!wkDone(8))continue;const WS=sfidaScores(w);
+  for(const[A,B]of(MATCHUPS[w]||[])){const a=WS.S[A],b=WS.S[B];if(a==null||b==null||isNaN(a)||isNaN(b))continue;
+   for(const[t,x,y]of[[A,a,b],[B,b,a]]){const r=REC[t]||(REC[t]={w:0,l:0,t:0,pf:0,pa:0});r.pf+=x;r.pa+=y;if(x>y)r.w++;else if(x<y)r.l++;else r.t++}}}}
 const sf89Note=w=>+w===8?"sfida unica 8–9 · 1ª settimana, si sommano con la 9":+w===9?"sfida unica 8–9 · totale delle due settimane":"";
 let HSL=null,HWK=null;/* casella della Home: pagina scelta e settimana */
 try{HSL=+localStorage.getItem("e16_hsl")||0}catch(e){}
@@ -917,7 +929,7 @@ function vCapAll(){
   `<div class="note" style="color:#fff">Cap ${CAP_TOT} per squadra. Tocca una squadra per vedere contratti e scelte.</div>`+(window.e16CapLeague?e16CapLeague():"")}
 
 /* ===== LEGA: classifica, scontri diretti, playoff ===== */
-function standings(conf){return TEAMS.filter(t=>t.conf===conf).map((t,i)=>{const r=REC[t.id]||{w:0,l:0,pf:0,pa:0};return{...t,...r,ord:i}}).sort((a,b)=>(b.w-a.w)||(a.l-b.l)||(b.pf-a.pf)||(a.ord-b.ord))}
+function standings(conf){return TEAMS.filter(t=>t.conf===conf).map((t,i)=>{const r=REC[t.id]||{w:0,l:0,pf:0,pa:0};return{...t,...r,ord:i}}).sort((a,b)=>((b.w+(b.t||0)/2)-(a.w+(a.t||0)/2))||(a.l-b.l)||(b.pf-a.pf)||(a.ord-b.ord))}
 function vLega(){
  const seg=`<div class="seg">${[["cls","CLASSIFICA"],["sfide","SCONTRI DIRETTI"],["po","PLAYOFF"]].map(([k,l])=>`<button class="${lgTab===k?"on":""}" data-lg="${k}">${l}</button>`).join("")}</div>`;
  const tm=t=>`<div class="tm" data-team="${t.id}"><img src="${t.logo}" alt=""><span>${esc(t.nome)}<small>${esc(t.gm)}</small></span></div>`;
@@ -958,7 +970,7 @@ render();
 <script src="nav.js"></script>
 <script src="live.js"></script><script src="formazioni-live.js"></script><!-- (92) formazioni del lunedì in diretta da ESPN -->
 <script src="parquet.js"></script>
-<script>render();
+<script>try{e16Rec()}catch(err){console.error("e16Rec",err)}/* (104) classifica con la regola delle medie */render();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 <script>/* (54) ORDINA LE TABELLE: toccando l intestazione di una colonna (tabelle complete: Live stanotte del campo, Osservatorio, partite del profilo, tabella della formazione consigliata)

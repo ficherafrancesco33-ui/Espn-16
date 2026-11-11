@@ -51,7 +51,7 @@ const gcol=v=>v>=50?"#7c3aed":v>=35?"#3ba764":v>=20?"#f5b400":"#dc2626";
 const last=n=>{const p=String(n).replace(/\s+(Jr\.?|Sr\.?|II|III|IV)$/i,"").split(" ");return p.slice(1).join(" ")||p[0]};
 function card(t,g,P,W){const p=P[g[0]],avg=p?p.ff/p.gp:null,w=W[g[0]];
  return `<span class="pj">${jersey(t.id,numOf(g[0]),t.nome.split(" ").slice(-1)[0],g[0])}</span><span class="pnm ${RL(g[3])}"><i>${RLi[RL(g[3])]}</i><b class="pn">${e(last(g[0]))}</b></span>
- <span class="gw"><span class="pcs"><span class="pcd ${avg!=null?pcls(avg):""}"><b>${avg!=null?f1(avg):"–"}</b></span></span><span class="gd gbar">${w?`<i class="ok" style="--gc:${gcol(w.f/w.n)}">${f1(w.f)}</i><i>${w.n}P</i>`:`<i>SETT. 0</i>`}</span></span>`}
+ <span class="gw"><span class="pcs"><span class="pcd ${avg!=null?pcls(avg):""}"><b>${avg!=null?f1(avg):"–"}</b></span></span><span class="gd gbar">${w?`<i class="ok" style="--gc:${gcol(w.f/w.n)}">${f1(w.f/w.n)}</i><i>${w.n}P</i>`:`<i>SETT. 0</i>`}</span></span>`}
 window.e16Jersey=(t,n,nk,pl)=>jersey(t,n,nk,pl);window.e16Num=n=>numOf(n);
 let NUMS=null;function numOf(n){if(!NUMS){NUMS={};/* numero di maglia NBA: dalle rose ESPN non lo abbiamo; si usa un numero stabile dal nome */}
  if(NUMS[n]!=null)return NUMS[n];let h=0;for(const ch of n)h=(h*31+ch.charCodeAt(0))%97;return NUMS[n]=h%55}
@@ -67,14 +67,15 @@ function lbm(id,w,wCur){const m=(MATCHUPS[w]||[]).find(x=>x.includes(id));if(!m)
  return `<h2 class="lbmh">${window.E16KIT?(window.e16FxWrap?e16FxWrap(id,E16KIT.kitBtn(id)):E16KIT.kitBtn(id)):"<span></span>"}<span class="lbmw"><button class="lbma" type="button" data-cwk="${w-1}" aria-label="Settimana precedente" ${has(w-1)?"":"disabled"}>${svgL}</button><span class="lbm${live?" run":""} pqw" style="--sc:color-mix(in srgb,${TCOL[id]} 62%,#fff)" data-du="${m[0]},${m[1]}" data-duw="${w}" role="button" tabindex="0" aria-label="${e(TM[id].nome)} ${f1(sa)} contro ${e(TM[o].nome)} ${f1(sb)}"><span class="lbml"><span class="badge logo lg-${id}"></span></span><span class="lbmg" title="Sopra: partite giocate sul totale (migliori 14). Sotto: senza gli infortunati"><i>${a1}</i><b>${a2}</b></span><span class="lbmn${sa>=sb?"":" dim"}">${f1(sa)}</span><span class="lbmx"></span><span class="lbmn${sb>sa?"":" dim"}">${f1(sb)}</span><span class="lbmg"><i>${b1}</i><b>${b2}</b></span><span class="lbml"><span class="badge logo lg-${o}"></span></span></span><button class="lbma" type="button" data-cwk="${w+1}" aria-label="Settimana successiva" ${w<wCur&&has(w+1)?"":"disabled"}>${svgR}</button></span>${window.e16DrmBtn?e16DrmBtn(id):"<span></span>"}</h2>`}/* (67) a destra il tasto viola «D» della modalità Dream (dream-e16.js), specchio del tasto maglia */
 document.addEventListener("click",ev=>{const b=ev.target.closest("[data-cwk]");if(!b||b.disabled)return;ev.stopPropagation();CW=+b.dataset.cwk;render()},true);
 window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P=pstats();
- /* punteggio della settimana in corso di ogni giocatore (somma AVG e partite) */
+ /* punteggio della settimana in corso di ogni giocatore: (104) si mostra la media AVG delle sue partite (W[k].f = somma, W[k].n = partite) */
  const wCur=weekOf(nyToday()<W1?W1:nyToday()),wNow=CW&&CW<=wCur?CW:wCur,[wa,wb]=weekRange(wNow),W={};
  for(const d of Object.keys(ESPN.days)){if(d<wa||d>wb)continue;for(const x of rowsOf(d)){const k=x.r[0];(W[k]=W[k]||{f:0,n:0}).f+=x.f;W[k].n++}}
  /* (16) in campo i 5 titolari con l AVG medio più alto; posizioni: centri in alto, ali in mezzo, guardie in basso */
  const avgOf=g=>{const p=P[g[0]];return p?p.ff/p.gp:-1},tit=R0.filter(g=>g[2]!=="BE"&&g[2]!=="IR").sort((a,b)=>avgOf(b)-avgOf(a));
  const RK={C:0,F:1,G:2},POS=["C","SF","PF","PG","SG"];
  const five=tit.slice(0,5).sort((a,b)=>RK[RL(a[3])]-RK[RL(b[3])]).map((g,i)=>[g[0],g[1],POS[i],g[3]]),rest=tit.slice(5),trib=R0.filter(g=>g[2]==="BE"||g[2]==="IR");
- const tot=[...five,...rest].reduce((a,g)=>a+(W[g[0]]?W[g[0]].f:0),0),r=REC[id];
+ /* (104) punteggio della settimana = regola delle medie (somma delle medie dei 14 titolari ESPN), uguale a Lega e duello */
+ let tot=0;try{tot=weekScores(wNow).S[id]||0}catch(_){}const r=REC[id];
  const name=t.nome.split(" ").slice(-1)[0];
  return `<div class="e16campo">
  <div class="teamhead" style="background:linear-gradient(115deg,${TCOL[id]} 0%,color-mix(in srgb,${TCOL[id]} 55%,#000) 100%);color:#fff;border-bottom:4px solid #0b0b0b"><img class="hlogo" src="${t.logo}" alt=""><div><h3>${e(name)}</h3><p>${e(t.nome.split(" ").slice(0,-1).join(" "))}</p></div><div class="hstats"><div class="rec">${r?r.w+"-"+r.l:"–"}<small>RECORD</small></div><div class="rec">${f1(tot)}<small>SETT. ${wNow}</small></div></div></div>
@@ -86,7 +87,7 @@ window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P
   <div class="court" style="--tc:${TCOL[id]};border-left:0;border-right:0;border-top:4px solid ${id==="QUE"?(E16N?"#5b21b6":"#ffffff"):(COL[id]||COL.FAL).fr}!important;margin-top:10px">${court(t)}
  ${five.map(g=>{const[x,y]=SLOT5[g[2]];return `<button class="cpl dr" data-ist="${g[2]==="IR"?"out":"ok"}" data-pl="${e(g[0])}" style="left:${x}%;top:${y}%;--k:1">${card(t,g,P,W)}</button>`}).join("")}</div>
  <h2><span class="t"><span>Titolari</span></span><em>altri ${rest.length} · 100% AVG</em></h2>
- <div class="bench dptrib e16tit">${rest.map(g=>{const p=P[g[0]],v=p?p.ff/p.gp:null,w=W[g[0]];return `<button class="bpl" data-pl="${e(g[0])}">${jersey(id,numOf(g[0]),name,g[0])}<span class="bnm"><i class="rtr ${RL(g[3])}"></i>${e(g[0])}<small>${({G:"Guardia",F:"Ala",C:"Centro"})[RL(g[3])]} · ${g[1]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${w?` · sett. ${f1(w.f)} (${w.n}P)`:""}</small></span><span class="trlk"></span><span class="bev"><span class="cev ${v!=null?pcls(v):"wait"}">${v!=null?f1(v):"–"}</span></span></button>`}).join("")}</div>
+ <div class="bench dptrib e16tit">${rest.map(g=>{const p=P[g[0]],v=p?p.ff/p.gp:null,w=W[g[0]];return `<button class="bpl" data-pl="${e(g[0])}">${jersey(id,numOf(g[0]),name,g[0])}<span class="bnm"><i class="rtr ${RL(g[3])}"></i>${e(g[0])}<small>${({G:"Guardia",F:"Ala",C:"Centro"})[RL(g[3])]} · ${g[1]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${w?` · sett. ${f1(w.f/w.n)} (${w.n}P)`:""}</small></span><span class="trlk"></span><span class="bev"><span class="cev ${v!=null?pcls(v):"wait"}">${v!=null?f1(v):"–"}</span></span></button>`}).join("")}</div>
  <h2><span class="t"><span>Tribuna</span></span><em>panchina e IR della formazione ESPN · non contano</em></h2>
  <div class="bench dptrib">${trib.map(g=>{const p=P[g[0]],v=p?p.ff/p.gp:null;return `<button class="bpl" data-pl="${e(g[0])}">${jersey(id,numOf(g[0]),name,g[0])}<span class="bnm"><i class="rtr ${RL(g[3])}"></i>${e(g[0])}<small>${g[2]==="IR"?"Infortunato · ":""}${g[1]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${g[2]==="IR"?"":u25(g[0])?" · under 25 ✓":etaOf(g[0])!=null?" · ⚠️ non under 25":""}</small></span><span class="trlk"></span><span class="bev"><span class="cev ${v!=null?pcls(v):"wait"}">${v!=null?f1(v):"–"}</span></span></button>`}).join("")}</div>
  ${window.e16FconsBtn?e16FconsBtn(id):""}
