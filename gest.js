@@ -9,7 +9,7 @@ const city=t=>t.nome.split(" ").slice(0,-1).join(" ");
 const tint=id=>`--tc:${TCOL[id]};--tf:#fff`;
 const xc=v=>v>=50?"v":v>=35?"g":v>=20?"y":"r";
 const own=n=>{try{return OWNH[__ownKey(n)]||""}catch(_){return""}};
-const G={tab:"turno",wk:null,rt:"QUE",it:null,du:null};
+const G={tab:"turno",wk:null,rt:"QUE",it:null,du:null,tm:null,tf:null,tt:null};
 try{Object.assign(G,JSON.parse(localStorage.getItem("e16_gest")||"{}"))}catch(_){}
 const save=()=>{try{localStorage.setItem("e16_gest",JSON.stringify({tab:G.tab,rt:G.rt}))}catch(_){}};
 /* ---------- LEGA ---------- */
@@ -18,7 +18,8 @@ function vLega(){
  const tabs=`<div class="drtabs">${[["turno","Settimana"],["cal","Calendario"],["cla","Classifica"],["po","Playoff"]].map(([k,l])=>`<button data-lg2="${k}" aria-pressed="${G.tab===k}">${l}</button>`).join("")}</div>`;
  const head=`<div class="drroom" data-th="3"><button class="drexit" data-go="home">‹ Torna all'app</button><div class="drhd"><span class="drlogo">ESPN 16</span><small>FantaBasket USA · AVG · stagione 26/27</small></div>${tabs}`;
  let body="";
- if(G.tab==="turno"&&G.du)body=vDuel(w,wNow);
+ if(G.tm&&TM[G.tm]){}
+ else if(G.tab==="turno"&&G.du)body=vDuel(w,wNow);
  else if(G.tab==="turno"){const WS=sfidaScores(w),M=MATCHUPS[w]||[],fin=sfFin(w,wNow),live=w===wNow||(w===8&&wNow===9);
   body=`<div class="drnav"><button data-lgw="${w-1}" ${w>1?"":"disabled"}>‹</button><div><b>Settimana ${w}</b><small>${dIt(wa)} → ${dIt(wb)}${fin?" · finita":live?" · in corso":""}</small>${is89(w)?`<small class="dr89">Settimana 8–9 · sfida unica, si sommano${w===9?" (qui il totale 8+9)":""}</small>`:""}</div><button data-lgw="${w+1}" ${w<wNow?"":"disabled"}>›</button></div>`;
   if(M.length)body+=`<div class="drms">${M.map(([A,B])=>{const a=WS.S[A],b=WS.S[B],la=a>=b;const r=(id,v,l)=>`<div class="drr tint ${l?"slead":"strail"}" style="${tint(id)}"><span class="drlg" style="--tc:${TCOL[id]}"><span class="badge logo lg-${id}"></span></span><span class="drn"><b>${e(TM[id].nome)}</b><small>${w===9?`sett. 8 ${f1(WS.s8[id])} + sett. 9 ${f1(WS.s9[id])}`:WS.off?"punteggio ufficiale ESPN":WS.esp?"punteggio ESPN · "+new Date(WS.ts).toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}):WS.G[id]+" partite · formazione ESPN"}</small></span><em>${f1(v)}</em></div>`;
@@ -30,8 +31,8 @@ function vLega(){
   for(let k=1;k<=last;k++){const[a,b]=weekRange(k),M=MATCHUPS[k]||[],WS=k<=wNow?sfidaScores(k):null,fin=sfFin(k,wNow);
    h+=`<button class="drcal${k===wNow?" cur":""}" data-lgw="${k}" data-lg2="turno"><span class="drck"><b>${k}</b><small>${dIt(a).slice(0,5)}–${dIt(b).slice(0,5)}</small>${is89(k)?`<small class="dr89">${k===8?"sfida unica con la 9":"totale 8+9"}</small>`:""}</span><span class="drcp">${M.map(([A,B])=>{const x=WS?WS.S[A]:null,y=WS?WS.S[B]:null;
     return `<i class="drcm">${side(A,"h",fin&&x>y)}<em>${WS?`${f1(x)}–${f1(y)}`:"vs"}</em>${side(B,"a",fin&&y>x)}</i>`}).join("")}</span></button>`}
-  body=`<div class="drcals">${h}</div><p class="note">Squadra in casa a sinistra. Punteggio = ufficiale ESPN per le settimane finite; per quella in corso la somma dei 14 titolari della formazione ESPN del lunedì; in grassetto chi ha vinto. Settimana 8–9 · sfida unica, si sommano: stesso avversario per due settimane, vittoria o sconfitta solo a fine settimana 9 (15 partite in tutto). Tocca una settimana per vedere le sfide.</p>`}
- if(G.tab==="cla"){const WS=weekScores(wNow);body=["E","W"].map(c=>{const L=standings(c);return `<h4 class="drplh drplsh">${c==="E"?"Eastern":"Western"} Conference<span></span></h4><div class="drcla">${L.map((t,k)=>`<div class="drcr tint ${k===0?"lead":""}" data-team="${t.id}" style="${tint(t.id)}"><span class="drpos">${k+1}</span><span class="drlg l" style="--tc:${TCOL[t.id]}"><span class="badge logo lg-${t.id}"></span></span><div class="drci"><b>${e(t.nome)}</b><small>${e(t.gm)}${k<3?" · playoff":k<5?" · play-in":" · consolation"}</small></div><div class="drcwl"><b>${t.w}<small>V</small></b><b class="l">${t.l}<small>P</small></b><b class="avg">${f1(WS.S[t.id])}<small>SETT.</small></b></div></div>`).join("")}</div>`}).join("")+`<p class="note">V-P calcolati dall app con la regola delle medie: ogni titolare porta la media AVG delle sue partite della settimana, la squadra la somma delle 14 medie (15 partite: le settimane 8 e 9 contano come una sola, media sett. 8 + media sett. 9). A parità di record decidono i punti fatti. SETT. = punteggio della settimana in corso. Le prime 3 di ogni conference vanno dirette ai playoff, 4ª e 5ª giocano il play-in.</p>`}
+  body=`<div class="drcals">${h}</div><p class="note">Squadra in casa a sinistra. Punteggio = regola delle medie: somma delle medie AVG dei 14 titolari della formazione ESPN del lunedì (calcolato dall app); in grassetto chi ha vinto. Settimana 8–9 · sfida unica, si sommano: stesso avversario per due settimane, vittoria o sconfitta solo a fine settimana 9 (15 partite in tutto). Tocca una settimana per vedere le sfide.</p>`}
+ if(G.tab==="cla"){const WS=weekScores(wNow);body=["E","W"].map(c=>{const L=standings(c);return `<h4 class="drplh drplsh">${c==="E"?"Eastern":"Western"} Conference<span></span></h4><div class="drcla">${L.map((t,k)=>`<div class="drcr tint ${k===0?"lead":""}" data-lgteam="${t.id}" role="button" tabindex="0" style="${tint(t.id)}"><span class="drpos">${k+1}</span><span class="drlg l" style="--tc:${TCOL[t.id]}"><span class="badge logo lg-${t.id}"></span></span><div class="drci"><b>${e(t.nome)}</b><small>${e(t.gm)}${k<3?" · playoff":k<5?" · play-in":" · consolation"}</small></div><div class="drcwl"><b>${t.w}<small>V</small></b><b class="l">${t.l}<small>P</small></b><b class="avg">${f1(WS.S[t.id])}<small>SETT.</small></b></div></div>`).join("")}</div>`}).join("")+`<p class="note">V-P calcolati dall app con la regola delle medie: ogni titolare porta la media AVG delle sue partite della settimana, la squadra la somma delle 14 medie (15 partite: le settimane 8 e 9 contano come una sola, media sett. 8 + media sett. 9). A parità di record decidono i punti fatti. SETT. = punteggio della settimana in corso. Le prime 3 di ogni conference vanno dirette ai playoff, 4ª e 5ª giocano il play-in.</p>`}
  if(G.tab==="po"){/* (56) PLAYOFF 26/27 (regolamento + annuncio della lega, impostazioni ESPN): per ogni conference passano le prime 5.
    Play-in (periodo 17, una settimana): 4ª contro 5ª. Semifinali di conference (18–19, due settimane sommate): 1ª contro vincente play-in, 2ª contro 3ª.
    Finali di conference (20–21), finale di lega East contro West (22–23). Le altre 8 (6ª–8ª di ogni conference + perdenti del play-in) giocano la consolation ladder:
@@ -56,6 +57,7 @@ function vLega(){
   <section class="pob a po56cons"><div class="pobh"><span><b>Per le 8 fuori dai playoff</b><small>stessi periodi dei playoff · tabellone ESPN</small></span></div>
   <div class="e16po">${["E","W"].map(c=>`<div class="bkm"><span class="bklab">${c==="E"?"East":"West"}</span>${out(c).map((t,i)=>tm(t,i+6)).join("")}${tbd("Perdente play-in "+(c==="E"?"East":"West"))}</div>`).join("")}</div></section>
   <p class="note">🎱 Chi vince la consolation ladder ha <b>10 numeri in più</b> nella lottery del draft (su 1000). Le 8 squadre fuori dai playoff partecipano alla lottery per le prime 3 scelte: 161 · 161 · 161 · 143 · 120 · 103 · 85 · 66 numeri dalla peggiore alla migliore; dalla 4ª scelta in poi si va in ordine inverso di classifica.</p>`}
+ if(G.tm&&TM[G.tm])body=vTeamStats(G.tm,wNow);/* (106) */
  return head+body+`</div>`}
 /* ---------- (24) SFIDA: duello come quello di Dreamers ----------
    Due colonne affiancate: i 17 di ogni squadra in ordine di punteggio della settimana (somma di TUTTE le partite).
@@ -78,6 +80,62 @@ function duCard(t,x,zone){const g=x.g,rl=RLd(g[3]),fin=x.rem===0&&!x.G.some(y=>y
  return `<div class="du ${cls} ru-${rl}${fin?" fin":""}" data-rn="${RN[rl]}"><div class="duh"><div class="dul"><span class="duj" data-pl="${e(g[0])}" role="link" tabindex="0" style="cursor:pointer" aria-label="Apri il profilo di ${e(g[0])}">${window.e16Jersey?e16Jersey(t,e16Num(g[0]),nk):""}</span><span class="dufl"></span></div><div class="dur"><div class="dun"><b title="${e(g[0])}">${shortN(g[0])}</b><small>${RI[rl]} · ${x.team}</small></div>
   <div class="dus">${fin&&x.G.length?`<i class="fin-b" title="Punteggio definitivo"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></i>`:""}${sc}</div></div></div>
   <div class="duwk">${x.G.map(chip).join("")||`<span class="duw duu"><i>—</i><b>riposo</b></span>`}</div><div class="duf">${x.G.filter(y=>!y.up).length}/${x.G.length} partite giocate</div></div>`}
+/* (106) STATISTICHE SQUADRA (dalla Classifica, come la pagina squadra di Dreamers): bilancio, AVG fatti e subiti, record in una settimana,
+   miglior giocatore (settimana e partita singola), trascinatore della stagione, scontri diretti, trend AVG fatti/subiti con periodo scelto.
+   Punteggi = regola delle medie (sfidaScores); 8–9 = una sola sfida. Pallino vuoto = settimana in corso. */
+const lg=id=>`<span class="drlg " style="--tc:${TCOL[id]}"><span class="badge logo lg-${id}" role="img" aria-label="${e(nick(TM[id]))}"></span></span>`;
+function teamStatsData(t){const today=nyToday(),maxW=Math.max(...Object.keys(MATCHUPS).map(Number)),S=[],P=[],TOT={};
+ const started=k=>weekRange(k)[0]<=today;
+ for(let k=1;k<=maxW;k++){if(k===8||!started(k===9?8:k))continue;const m=(MATCHUPS[k]||[]).find(x=>x.includes(t));if(!m)continue;const o=m[0]===t?m[1]:m[0],SF=sfidaScores(k),pf=SF.S[t],pa=SF.S[o];if(pf==null||pa==null)continue;
+  const done=k===9?wkDone(8)&&wkDone(9):wkDone(k);S.push({k,lab:k===9?"8–9":String(k),o,pf,pa,res:done?(pf>pa?"V":pf<pa?"P":"N"):null,live:!done})}
+ for(let k=1;k<=maxW;k++){if(!started(k))continue;let T;try{T=wkTeam(t,k)}catch(_){continue}const live=!wkDone(k);
+  for(const x of T.L){if(!x.on||!x.n)continue;const n=x.g[0];P.push({n,v:x.tot,g:x.n,k,live});const q=TOT[n]||(TOT[n]={n,s:0,w:0,g:0});q.s+=x.tot;q.w++;q.g+=x.n;
+   for(const y of x.G)if(y.f!=null&&(!P.best1||y.f>P.best1.f))P.best1={n,f:y.f,d:y.d,opp:y.opp,k,live:y.lv}}}
+ const pick=(L,key)=>{const D=L.filter(x=>!x.live);return(D.length?D:L).reduce((m,x)=>!m||x[key]>m[key]?x:m,null)};
+ const real=S.filter(x=>x.res),rec=real.reduce((m,x)=>!m||x.pf>m.pf?x:m,null),low=real.reduce((m,x)=>!m||x.pf<m.pf?x:m,null);
+ const mvp=Object.values(TOT).sort((a,b)=>b.s-a.s)[0]||null;
+ return{S,real,rec,low,bestW:pick(P,"v"),best1:P.best1||null,mvp}}
+function vTeamStats(t,wNow){const D=teamStatsData(t),T=TM[t],r=REC[t]||{w:0,l:0,t:0,pf:0,pa:0},n=r.w+r.l+(r.t||0),c=T.conf,L=standings(c),pos=L.findIndex(x=>x.id===t)+1,fx=v=>v==null?"—":f1(v);
+ const card=(l,v,sub,cls)=>`<div class="dtc ${cls||""}"><small>${l}</small><b>${v}</b>${sub?`<em>${sub}</em>`:""}</div>`;
+ const jer=nm=>window.e16Jersey?e16Jersey(t,window.e16Num?e16Num(nm):"",nick(T),nm):"";
+ const wk=x=>x.k===8||x.k===9?`sett. ${x.k}`:`sett. ${x.k}`;
+ const pl=(lab,nm,big,sub)=>`<div class="dtcap"><span class="dtj" data-pl="${e(nm)}" role="link" tabindex="0">${jer(nm)}</span><div><small>${lab}</small><b data-pl="${e(nm)}" role="link" tabindex="0">${e(nm)}</b><em>${big} · ${sub}</em></div></div>`;
+ /* scontri diretti */
+ const O=TEAMS.filter(x=>x.id!==t).map(x=>{const gs=D.real.filter(y=>y.o===x.id);return{o:x.id,w:gs.filter(y=>y.res==="V").length,l:gs.filter(y=>y.res==="P").length,n:gs.length,pf:gs.length?gs.reduce((a,y)=>a+y.pf,0):null,pa:gs.length?gs.reduce((a,y)=>a+y.pa,0):null,next:!gs.length&&D.S.some(y=>y.o===x.id)}}).sort((a,b)=>b.n-a.n||(b.w-a.w));
+ const h2h=`<div class="dtsec"><h4>Scontri diretti<small>vittorie e sconfitte contro ogni avversario</small></h4><div class="dth">${O.map(x=>`<div class="dthr"><span class="dtl">${lg(x.o)}<b>${e(nick(TM[x.o]))}</b></span><span class="dtwl ${x.n?(x.w>x.l?"g":x.w<x.l?"r":""):"z"}">${x.n?`${x.w}–${x.l}`:"—"}</span><span class="dtp"><small>Fatti</small>${fx(x.pf)}</span><span class="dtp"><small>Subiti</small>${fx(x.pa)}</span></div>`).join("")}</div></div>`;
+ /* trend */
+ const all=D.S,gmin=all.length?all[0].k:1,gmax=all.length?all[all.length-1].k:1;let a=G.tf==null?gmin:Math.max(gmin,Math.min(gmax,G.tf)),b=G.tt==null?gmax:Math.max(gmin,Math.min(gmax,G.tt));if(a>b)[a,b]=[b,a];
+ const sel=all.filter(x=>x.k>=a&&x.k<=b),opts=v=>all.map(x=>`<option value="${x.k}"${x.k===v?" selected":""}>Settimana ${x.lab}</option>`).join("");
+ /* la sfida 8–9 vale due settimane: nel grafico si mostra a metà (media per settimana) per non fare un picco */
+ const pt=x=>x.k===9?{...x,pf:x.pf/2,pa:x.pa/2}:x,ss=sel.map(pt);
+ let chart='<p class="note">Nessun punteggio nel periodo scelto.</p>';
+ if(ss.length){const W=340,H=190,pl0=34,pr=12,ptp=14,pb=26,vs=ss.flatMap(x=>[x.pf,x.pa]),lo=Math.max(0,Math.floor(Math.min(...vs)/20)*20-10),hi=Math.ceil(Math.max(...vs)/20)*20+10,xs=i=>ss.length===1?(pl0+W-pr)/2:pl0+(W-pl0-pr)*i/(ss.length-1),ys=v=>ptp+(H-ptp-pb)*(1-(v-lo)/(hi-lo||1));
+  const ln=(k,col,dash)=>`<polyline fill="none" stroke="${col}" stroke-width="2.4" ${dash?'stroke-dasharray="5 4"':""} stroke-linejoin="round" points="${ss.map((x,i)=>xs(i).toFixed(1)+","+ys(x[k]).toFixed(1)).join(" ")}"/>`;
+  const dots=(k,col)=>ss.map((x,i)=>`<circle cx="${xs(i).toFixed(1)}" cy="${ys(x[k]).toFixed(1)}" r="4.2" fill="${x.live?"#0d1530":col}" stroke="${col}" stroke-width="2"/>`).join("");
+  const gl=[0,1,2,3].map(i=>{const v=lo+(hi-lo)*i/3;return`<line x1="${pl0}" x2="${W-pr}" y1="${ys(v).toFixed(1)}" y2="${ys(v).toFixed(1)}" stroke="rgba(150,150,180,.25)"/><text x="${pl0-5}" y="${(ys(v)+3).toFixed(1)}" text-anchor="end" fill="#9aa3c7" font-size="10">${Math.round(v)}</text>`}).join("");
+  const xl=ss.map((x,i)=>`<text x="${xs(i).toFixed(1)}" y="${H-8}" text-anchor="middle" fill="#9aa3c7" font-size="10">${x.lab}</text>`).join("");
+  const mf=ss.reduce((q,x)=>q+x.pf,0)/ss.length,ma=ss.reduce((q,x)=>q+x.pa,0)/ss.length;
+  /* retta di tendenza dei fatti (minimi quadrati) e variazione dal primo all ultimo punto */
+  let tr="";if(ss.length>=3){const N=ss.length,mx=(N-1)/2,my=mf;let sxy=0,sxx=0;ss.forEach((x,i)=>{sxy+=(i-mx)*(x.pf-my);sxx+=(i-mx)*(i-mx)});const sl=sxx?sxy/sxx:0,y0=my-sl*mx,y1=my+sl*(N-1-mx),pc=y0?Math.round((y1-y0)/Math.abs(y0)*100):0;
+   tr=`<line x1="${xs(0).toFixed(1)}" y1="${ys(y0).toFixed(1)}" x2="${xs(N-1).toFixed(1)}" y2="${ys(y1).toFixed(1)}" stroke="#fbbf24" stroke-width="1.6" stroke-dasharray="2 4"/>`;tr={svg:tr,pc}}
+  chart=`<svg class="dtchart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Andamento AVG fatti e subiti">${gl}${tr.svg||""}${ln("pa","#f87171",1)}${ln("pf","#a78bfa",0)}${dots("pa","#f87171")}${dots("pf","#a78bfa")}${xl}</svg>
+  <div class="dtleg"><span><i class="f"></i>AVG fatti · media ${f1(mf)}</span><span><i class="s"></i>AVG subiti · media ${f1(ma)}</span>${tr.svg?`<span><i class="t"></i>Trend fatti ${tr.pc>=0?"+":""}${tr.pc}%</span>`:""}</div>`}
+ const trend=`<div class="dtsec"><h4>Trend AVG squadra<small>scegli il periodo della stagione</small></h4><div class="dtrng"><label>Dal<select data-tmsel="tf">${opts(a)}</select></label><label>Al<select data-tmsel="tt">${opts(b)}</select></label></div>${chart}<p class="note">Pallino vuoto = settimana in corso. La sfida 8–9 vale due settimane: nel grafico è mostrata come media per settimana.</p></div>`;
+ /* ultime sfide */
+ const last=D.S.slice().reverse().slice(0,6).map(x=>`<button class="dthr dtlast" data-du="${t},${x.o}" data-duw="${x.k}"><span class="dtl"><i class="dtres ${x.res==="V"?"g":x.res==="P"?"r":"z"}">${x.res||"•"}</i>${lg(x.o)}<b>${e(nick(TM[x.o]))}</b></span><span class="dtwl z">${x.lab}</span><span class="dtp"><small>Fatti</small>${f1(x.pf)}</span><span class="dtp"><small>Subiti</small>${f1(x.pa)}</span></button>`).join("");
+ const nG=D.S.length,avgF=nG?D.S.reduce((q,x)=>q+x.pf,0)/nG:null,avgA=nG?D.S.reduce((q,x)=>q+x.pa,0)/nG:null;
+ return`<button class="gback" data-lgteam="close">‹ Classifica</button>
+ <div class="dthead tint" style="--tc:${TCOL[t]}">${lg(t).replace('class="drlg ','class="drlg l ')}<div><h3>${e(T.nome)}</h3><p>${pos}º ${c==="E"?"Eastern":"Western"} Conference · ${n} ${n===1?"sfida":"sfide"} giocate · ${e(T.gm||"")}</p></div></div>
+ <div class="dtsec"><h4>Bilancio<small>vittorie e sconfitte</small></h4><div class="dtg ${r.t?"":"dtg2"}">${card("Vittorie",r.w,"","g")}${card("Sconfitte",r.l,"","r")}${r.t?card("Pareggi",r.t):""}</div></div>
+ <div class="dtsec"><h4>AVG fatti<small>somma delle medie dei 14 titolari</small></h4><div class="dtg">${card("Totale",f1(r.pf),"sfide finite")}${card("Media a sfida",fx(avgF),"anche quella in corso")}${card("Record in una sfida",D.rec?f1(D.rec.pf):"—",D.rec?`sett. ${D.rec.lab} · vs ${e(nick(TM[D.rec.o]))}`:"nessuna sfida finita")}</div>
+  ${D.bestW?pl("Miglior giocatore in una settimana"+(D.bestW.live?" (in corso)":""),D.bestW.n,`media ${f1(D.bestW.v)}`,`${D.bestW.g} ${D.bestW.g===1?"partita":"partite"} · sett. ${D.bestW.k}`):""}
+  ${D.best1?pl("Record in una partita"+(D.best1.live?" (in corso)":""),D.best1.n,`${f1(D.best1.f)} AVG`,`${D.best1.opp} · ${D.best1.d.slice(8,10)}/${D.best1.d.slice(5,7)} · sett. ${D.best1.k}`):""}
+  ${D.mvp?pl("Trascinatore della stagione",D.mvp.n,`${f1(D.mvp.s)} AVG portati`,`${D.mvp.w} ${D.mvp.w===1?"settimana":"settimane"} da titolare · ${D.mvp.g} partite`):""}</div>
+ <div class="dtsec"><h4>AVG subiti<small>punti fatti dagli avversari contro di te</small></h4><div class="dtg">${card("Totale",f1(r.pa),"sfide finite")}${card("Media a sfida",fx(avgA))}${card("Peggior sfida",D.low?f1(D.low.pf):"—",D.low?`sett. ${D.low.lab} · vs ${e(nick(TM[D.low.o]))}`:"")}</div></div>
+ ${last?`<div class="dtsec"><h4>Ultime sfide<small>tocca per aprire il duello</small></h4><div class="dth">${last}</div></div>`:""}
+ ${trend}${h2h}
+ <button class="advbtn" data-team="${t}">Apri il Campo ${e(nick(T))} ›</button>
+ <p class="note">Regola delle medie: ogni titolare ESPN del lunedì porta la media AVG delle sue partite della settimana, la squadra la somma delle 14 medie. Totali e scontri diretti usano le sfide finite; la sfida 8–9 conta una volta sola (media sett. 8 + media sett. 9).</p>`}
 function vDuel(w,wNow){const[A,B]=G.du,M=MATCHUPS[w]||[],WS=weekScores(w),TA=wkTeam(A,w),TB=wkTeam(B,w);
  /* (56) settimana 9: in alto il totale della sfida unica 8+9 (la settimana 8 si aggiunge al punteggio e alla proiezione) */
  const SF=sfidaScores(w),W8=w===9?weekScores(8):null,a8=W8?W8.S[A]||0:0,b8=W8?W8.S[B]||0:0;
@@ -213,7 +271,8 @@ function vReg(){let N=0;const art=(t,b,up)=>{const n=++N;return `<details class=
  <p class="note">Buon FantaNBA a tutti! Il regolamento migliora ogni stagione: per dubbi o proposte scrivete agli Admin.</p>`}
 window.GESTV={lega:vLega,roster:vRoster,inf:vInf,reg:vReg};
 window.e16Roster=t=>{G.rt=t;save()};window.e16RT=()=>G.rt;
-(window.NAVX=window.NAVX||[]).push({k:"g",get:()=>({tab:G.tab,rt:G.rt,it:G.it,wk:G.wk,du:G.du}),set:o=>Object.assign(G,o)});
+document.addEventListener("change",ev=>{const k=ev.target.dataset&&ev.target.dataset.tmsel;if(!k||!G.tm)return;G[k]=+ev.target.value;const y=scrollY;render();scrollTo(0,y)});
+(window.NAVX=window.NAVX||[]).push({k:"g",get:()=>({tab:G.tab,rt:G.rt,it:G.it,wk:G.wk,du:G.du,tm:G.tm,tf:G.tf,tt:G.tt}),set:o=>Object.assign(G,o)});
 /* (72) duello: i cognomi lunghi (S. Mamukelashvili, G. Antetokounmpo) non si possono andare a capo e uscivano dalla scheda, fin sotto la maglia
    della scheda accanto. Dopo ogni disegno la scritta si rimpicciolisce finché ci sta (da 19px fino a 12px); se non basta, puntini (classe dufit). */
 function fitDu(){document.querySelectorAll("#main .du .dun b").forEach(b=>{b.style.fontSize="";b.classList.remove("dufit");if(b.scrollWidth<=b.clientWidth+1)return;
@@ -221,7 +280,10 @@ function fitDu(){document.querySelectorAll("#main .du .dun b").forEach(b=>{b.sty
 {const r0=render;render=function(){const o=r0.apply(this,arguments);try{fitDu()}catch(_){}return o}}
 try{document.fonts&&document.fonts.ready.then(fitDu);document.fonts&&document.fonts.addEventListener("loadingdone",fitDu)}catch(_){}
 addEventListener("resize",()=>{try{fitDu()}catch(_){}});
-document.addEventListener("click",ev=>{const c=ev.target.closest("[data-lg2],[data-lgw],[data-rt],[data-it],[data-du],[data-duk]");if(!c)return;const d=c.dataset;
+document.addEventListener("click",ev=>{const c=ev.target.closest("[data-lgteam],[data-lg2],[data-lgw],[data-rt],[data-it],[data-du],[data-duk]");if(!c)return;const d=c.dataset;
+ /* (106) squadra toccata in Classifica → statistiche squadra */
+ if(d.lgteam){ev.stopPropagation();G.tm=d.lgteam==="close"?null:d.lgteam;G.tf=null;G.tt=null;G.du=null;render();scrollTo(0,0);return}
+ if(G.tm&&(d.lg2||d.lgw||d.du))G.tm=null;
  /* (26) sfida toccata da qualunque pagina (Lega, Home, banner, tabellone del campo) → duello stile Sleeper */
  if(d.du){ev.stopPropagation();if(d.du==="close")G.du=null;else{G.du=d.du.split(",");G.tab="turno";if(d.duw)G.wk=+d.duw;cur="lega";curTeam=null}render();scrollTo(0,0);setTimeout(()=>{const o=document.querySelector(".dumini.on"),st=o&&o.parentElement;if(st)st.scrollLeft=o.offsetLeft-(st.clientWidth-o.offsetWidth)/2},30);return}
  if(d.duk){const wNow=weekOf(nyToday()<W1?W1:nyToday()),w=(G.wk||wNow)+ +d.duk,m=(MATCHUPS[w]||[]).find(x=>x.includes(G.du[0]));if(!m)return;G.wk=w;G.du=m[0]===G.du[0]?m:[m[1],m[0]];render();return}

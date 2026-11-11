@@ -616,6 +616,42 @@ html.notte .st-tm{background:#18102e;color:#fff;border-color:rgba(167,139,250,.2
 html body .dustrip:not(#a){justify-content:flex-start;padding-left:2px;padding-right:2px}html body .dustrip>.dumini:first-child{margin-left:auto}html body .dustrip>.dumini:last-child{margin-right:auto}
 html body .dumini:not(#a){flex:0 0 auto;min-width:96px}html body .dumini>span{white-space:nowrap}html body .dumini b{padding-left:4px}
 html body .duw b.d3:not(#a){font-size:9px;letter-spacing:-.06em;padding:0}</style>
+<style>/* (106) statistiche squadra (dalla Classifica): stili della pagina squadra di Dreamers (dthead, dtsec, dtc, dtcap, dth, dtrng, dtchart, dtleg); di giorno le regole data-th="3" di skin-giorno.css */
+.dthead{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;margin:8px 0 12px;background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 30%,rgba(12,8,32,.9)),rgba(12,8,32,.9))}
+.dthead .drlg{width:58px!important;height:58px!important;flex:none}.dthead .drlg .badge{width:58px!important;height:58px!important}
+.dthead h3{margin:0;font:800 22px var(--display);font-style:italic;text-transform:uppercase;color:#fff}.dthead p{margin:2px 0 0;color:#c4b5fd;font-size:13px}
+.dtsec{margin:14px 0;padding:12px;border-radius:16px;background:rgba(20,12,50,.7);border:1px solid rgba(196,181,253,.2)}
+.dtsec h4{margin:0 0 10px;font:800 16px var(--display);font-style:italic;letter-spacing:.06em;text-transform:uppercase;color:#e9d5ff;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.dtsec h4 small{font:500 11px var(--body,Arial);text-transform:none;letter-spacing:0;color:#9aa3c7;font-style:normal;text-align:right}
+.dtg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.dtg2{grid-template-columns:repeat(2,1fr)}
+.dtc{padding:10px;border-radius:12px;background:rgba(255,255,255,.06);min-width:0}
+.dtc small{display:block;color:#9aa3c7;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.dtc b{display:block;font:800 24px var(--display);font-style:italic;color:#fff;margin-top:2px;white-space:nowrap}
+.dtc em{display:block;font-style:normal;color:#c4b5fd;font-size:11px;margin-top:2px}
+.dtc.g b{color:#4ade80}.dtc.r b{color:#f87171}
+.dtcap{display:flex;align-items:center;gap:12px;margin-top:10px;padding:10px;border-radius:12px;background:linear-gradient(90deg,rgba(245,180,0,.18),rgba(255,255,255,.05))}
+.dtcap small{display:block;color:#fcd34d;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.dtcap b{display:block;font:800 20px var(--display);font-style:italic;color:#fff;cursor:pointer}.dtcap em{font-style:normal;color:#e2e8f0;font-size:12px}
+.dtj{flex:none;width:52px;cursor:pointer}.dtj svg{width:52px!important;height:62px!important}
+.dth{display:grid;gap:6px}
+.dthr{display:grid;grid-template-columns:1fr 54px 62px 62px;align-items:center;gap:6px;padding:6px 8px;border-radius:10px;background:rgba(255,255,255,.05);border:0;color:inherit;font:inherit;text-align:left;width:100%}
+.dtlast{cursor:pointer}
+.dtl{display:flex;align-items:center;gap:8px;min-width:0}
+.dtl b{font:800 15px var(--display);font-style:italic;text-transform:uppercase;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dtl .drlg{width:30px!important;height:30px!important;flex:none}.dtl .drlg .badge{width:30px!important;height:30px!important}
+.dtres{flex:none;width:20px;height:20px;border-radius:6px;display:grid;place-items:center;font:800 12px var(--display);font-style:normal;color:#fff;background:#64748b}.dtres.g{background:#16a34a}.dtres.r{background:#dc2626}
+.dtwl{text-align:center;font:800 18px var(--display);font-style:italic;color:#e2e8f0}.dtwl.g{color:#4ade80}.dtwl.r{color:#f87171}.dtwl.z{color:#64748b;font-size:14px}
+.dtp{text-align:right;font:700 14px var(--display);font-style:italic;color:#fff;white-space:nowrap}
+.dtp small{display:block;color:#9aa3c7;font:500 9px var(--body,Arial);text-transform:uppercase;font-style:normal}
+.dtrng{display:flex;gap:10px;margin-bottom:8px}.dtrng label{flex:1;display:grid;gap:3px;color:#9aa3c7;font-size:11px;text-transform:uppercase}
+.dtrng select{background:#0f1938;color:#fff;border:1px solid rgba(196,181,253,.35);border-radius:10px;padding:8px;font:700 14px var(--display)}
+.dtchart{width:100%;height:auto}
+.dtleg{display:flex;gap:14px;flex-wrap:wrap;color:#e2e8f0;font-size:12px}
+.dtleg i{display:inline-block;width:18px;height:3px;margin-right:6px;vertical-align:middle;background:#a78bfa}
+.dtleg i.s{background:repeating-linear-gradient(90deg,#f87171 0 5px,transparent 5px 9px)}.dtleg i.t{background:repeating-linear-gradient(90deg,#fbbf24 0 2px,transparent 2px 6px)}
+html:not(.notte) .drroom .dtleg,html:not(.notte) .drroom .dtres{color:#2b1608}html:not(.notte) .drroom .dtres{color:#fff}
+.drcr[data-lgteam]{cursor:pointer}
+@media (max-width:370px){.dtc b{font-size:20px}.dthr{grid-template-columns:1fr 44px 56px 56px}}</style>
 </head>
 <body>
 <div id="sbar" aria-hidden="true"></div>
