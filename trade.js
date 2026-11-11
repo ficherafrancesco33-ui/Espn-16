@@ -51,7 +51,7 @@ const PKRULE={
  "NYS|2029|1|NYS":{f:S=>{const m=rk(S,["CAN","ALA","NYS"],0);return m===S.NYS?S.CAN:S.NYS},t:"Swap con i Mayans: se la scelta dei Samb è la migliore delle tre (Mayans, Whales, Samb), i Mayans la prendono e ai Samb va quella dei Mayans."},
  "ALB|2029|1|BOS":{f:S=>S.BOS>3?S.BOS:null,t:"Protetta TOP 3: se la scelta dei TeaBags finisce tra le prime 3 resta ai TeaBags, altrimenti arriva ai Bluesky."},
  "BOS|2029|1|BOS":{f:S=>S.BOS<=3?S.BOS:null,t:"Riserva TOP 3: i TeaBags la tengono solo se finisce tra le prime 3, altrimenti va ai Bluesky."},
- "CAN|2030|1|CAN":{f:S=>rk(S,["CAN","ALB","LVA"],0),t:"Swap a 3: i Mayans prendono la migliore tra Mayans, Bluesky e Aliens."},
+ "QUE|2030|1|CAN":{f:S=>rk(S,["CAN","ALB","LVA"],0),t:"Scelta dei Mayans con il loro swap a 3 (scambio dell 11/11): i Ducks prendono la migliore tra Mayans, Bluesky e Aliens."},
  "ALB|2030|1|ALB":{f:S=>rk(S,["CAN","ALB","LVA"],1),t:"Swap a 3: i Mayans prendono la migliore, i Bluesky la migliore tra le due che restano (meglio degli Aliens)."},
  "LVA|2030|1|LVA":{f:S=>rk(S,["CAN","ALB","LVA"],2),t:"Swap a 3 con Mayans e Bluesky: agli Aliens resta la peggiore delle tre."},
  "QUE|2030|1|ALA":{f:S=>rk(S,["ALA","CAN"],1),t:"Scelta dei Whales con swap messo dai Mayans: ai Ducks arriva la peggiore tra quella dei Whales e quella dei Mayans."},
