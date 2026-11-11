@@ -1,16 +1,15 @@
 # ESPN 16: scarica i tabellini NBA da ESPN e aggiorna espn-data.js (tecnici e flagranti dalla cronaca).
-# Gira da solo: ogni 30 minuti durante la notte NBA (ora UTC 23-07), alle 8:07 italiane (chiusura della notte) e due volte di giorno.
+# (98) Gira da solo: niente di notte (vale il live sul telefono); i dati diventano ufficiali dalle 07:30 italiane, poi un giro ogni 30 minuti fino alle 11:30 e due volte di giorno.
 # (91) Se una squadra non viene riconosciuta o manca una formazione, tools/lega.mjs si ferma con errore: GitHub manda la mail e i dati vecchi restano. Nessuno deve lanciare niente a mano.
 name: espn-dati
 on:
   schedule:
-    - cron: "*/30 0-7 * * *"
-    - cron: "17 23 * * *"
+    # (98) dati ufficiali SEMPRE dalle 07:30 italiane (con e senza ora legale): ogni 30 minuti dalle 05:00 alle 09:30 UTC, le corse prima delle 07:30 di Roma non fanno niente
+    - cron: "0,30 5-9 * * *"
+    # due giri di giorno (11:43 e 17:43 italiane d inverno)
     - cron: "43 10,16 * * *"
-    # (91) chiusura della notte: alle 8:07 italiane (7:07 UTC in inverno) i dati ESPN della notte diventano quelli ufficiali dell app
-    - cron: "7 7 * * *"
-    # (92) lunedì: formazioni della settimana salvate nell app ogni 15 minuti fino alla prima partita (6-23 UTC = 7-24 italiane)
-    - cron: "*/15 6-23 * * 1"
+    # (92) lunedì: formazioni della settimana salvate nell app ogni 15 minuti dalle 07:00 italiane fino a sera
+    - cron: "*/15 5-23 * * 1"
   workflow_dispatch:
 permissions:
   contents: write
@@ -21,17 +20,30 @@ jobs:
   dati:
     runs-on: ubuntu-latest
     steps:
+      - name: Orario (07:30 italiane per i dati ufficiali, 07:00 per le formazioni del lunedì)
+        env:
+          SCHED: ${{ github.event.schedule }}
+        run: |
+          HM=$((10#$(TZ=Europe/Rome date +%H%M)))
+          if [ "$SCHED" = "0,30 5-9 * * *" ] && [ $HM -lt 730 ]; then echo "SKIP=1" >> "$GITHUB_ENV"; echo "Prima delle 07:30 italiane: niente da fare"; fi
+          if [ "$SCHED" = "*/15 5-23 * * 1" ] && [ $HM -lt 700 ]; then echo "SKIP=1" >> "$GITHUB_ENV"; echo "Prima delle 07:00 italiane: niente da fare"; fi
       - uses: actions/checkout@v4
+        if: env.SKIP != '1'
       - uses: actions/setup-node@v4
+        if: env.SKIP != '1'
         with:
           node-version: 20
       - name: Scarica i tabellini ESPN
+        if: env.SKIP != '1'
         run: node tools/espn.mjs
       - name: Lega ESPN (rose, formazioni del lunedì, punteggi, free agent, scambi)
+        if: env.SKIP != '1'
         run: node tools/lega.mjs || touch /tmp/lega_ko
       - name: Date di nascita (età)
+        if: env.SKIP != '1'
         run: node tools/eta.mjs || true
       - name: Salva se ci sono novità
+        if: env.SKIP != '1'
         run: |
           git config user.name "espn-bot"
           git config user.email "espn-bot@users.noreply.github.com"
@@ -41,5 +53,6 @@ jobs:
           for i in 1 2 3; do git pull --rebase -X theirs origin main && git push origin HEAD:main && exit 0; sleep 5; done
           exit 1
       - name: Avviso se la lega ESPN non è stata letta bene
+        if: env.SKIP != '1'
         run: |
           if [ -f /tmp/lega_ko ]; then echo "::error::tools/lega.mjs ha trovato un problema (vedi sopra), dati della lega non aggiornati"; exit 1; fi
