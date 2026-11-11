@@ -164,3 +164,4 @@
 (100) Cambio giorno/notte: i due fogli di stile si scaricano subito (preload) e prima di cambiare si aspetta che quello della modalità nuova sia pronto; prima, su iPhone, per un attimo la pagina appariva senza grafica.
 (101) Cambio giorno/notte: a cambio finito il correttore di contrasto del giorno (parquet.js) riparte da zero, così non restano scritte scure e spesse scritte mentre la pagina era a metà cambio.
 (102) Scambio Cancun–Quebec dell 11/11 (solo scelte): ai Mayans 1ª 2027 e 1ª 2029 dei Ducks; ai Ducks 1ª 2028 (loro), 1ª 2030 dei Mayans con lo swap «migliore tra Mayans, Bluesky e Aliens» (PKRULE QUE|2030|1|CAN), 1ª 2030 (loro), 1ª 2030 di Santa Rosa. Storico trade e banner 24 ore.
+(103) Regola: data e ora di uno scambio = quelle del messaggio in cui Francesco lo comunica (scambio Cancun–Quebec: 11/11 alle 11:01).
