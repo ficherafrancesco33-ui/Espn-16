@@ -612,6 +612,10 @@ html.notte .st-tm{background:#18102e;color:#fff;border-color:rgba(167,139,250,.2
 </style>
 <style>/* (94) fondo pagina: resoconto dei dati salvati da GitHub */.foot .ftrep{all:unset;cursor:pointer;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit}.foot .ftbox{margin:10px auto 0;max-width:520px;text-align:left;font:500 12.5px/1.45 system-ui,sans-serif;letter-spacing:0;text-transform:none;font-style:normal;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.25)}.foot .ftbox p{margin:3px 0}.foot .ftbox .ok{color:#4ade80}.foot .ftbox .ko{color:#fbbf24}.foot .ftbox .ftn{opacity:.75;font-size:11.5px;margin-top:6px}</style>
 <style>/* (99) Dynasty TV come Dreamers: pallino rosso lampeggiante (in campo adesso) nella colonna AVG, prima del numero */html body .tvbox .lvd{display:inline-block;width:6px;height:6px;border-radius:50%;background:#ff4d5e!important;margin-right:4px;vertical-align:middle;animation:lvp 1.4s infinite}</style>
+<style>/* (105) duello: striscia delle altre sfide scorrevole senza tagli a sinistra (prima justify-content:center la tagliava), caselle più larghe; caselle partita con punteggi a 3 cifre più piccoli */
+html body .dustrip:not(#a){justify-content:flex-start;padding-left:2px;padding-right:2px}html body .dustrip>.dumini:first-child{margin-left:auto}html body .dustrip>.dumini:last-child{margin-right:auto}
+html body .dumini:not(#a){flex:0 0 auto;min-width:96px}html body .dumini>span{white-space:nowrap}html body .dumini b{padding-left:4px}
+html body .duw b.d3:not(#a){font-size:9px;letter-spacing:-.06em;padding:0}</style>
 </head>
 <body>
 <div id="sbar" aria-hidden="true"></div>
@@ -970,7 +974,9 @@ render();
 <script src="nav.js"></script>
 <script src="live.js"></script><script src="formazioni-live.js"></script><!-- (92) formazioni del lunedì in diretta da ESPN -->
 <script src="parquet.js"></script>
-<script>try{e16Rec()}catch(err){console.error("e16Rec",err)}/* (104) classifica con la regola delle medie */render();
+<script>try{e16Rec()}catch(err){console.error("e16Rec",err)}/* (104) classifica con la regola delle medie */
+/* (105) duello: la striscia delle altre sfide si porta sulla sfida aperta */{const R0=render;render=function(){const x=R0.apply(this,arguments);try{const st=document.querySelector(".dustrip"),on=st&&st.querySelector(".dumini.on");if(on)st.scrollLeft+=on.getBoundingClientRect().left-st.getBoundingClientRect().left-(st.clientWidth-on.offsetWidth)/2}catch(_){}return x}}
+render();
 if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 <script>/* (54) ORDINA LE TABELLE: toccando l intestazione di una colonna (tabelle complete: Live stanotte del campo, Osservatorio, partite del profilo, tabella della formazione consigliata)

@@ -69,7 +69,7 @@ const Phi=z=>{const t=1/(1+.2316419*Math.abs(z)),d=.3989423*Math.exp(-z*z/2),p=d
 function duCard(t,x,zone){const g=x.g,rl=RLd(g[3]),fin=x.rem===0&&!x.G.some(y=>y.lv),pl=x.n>0;
  const cls=zone==="trib"?"trib":(!pl&&x.G.length?"wait":"full");
  const chip=y=>{const lab=WKD[new Date(y.d+"T12:00:00Z").getUTCDay()];
-  if(y.f!=null)return `<span class="duw dug ${xc(y.f)}" title="${y.opp}${y.lv?" · in corso":""}"><i>${lab}</i><b>${f1(y.f)}</b></span>`;
+  if(y.f!=null)return `<span class="duw dug ${xc(y.f)}" title="${y.opp}${y.lv?" · in corso":""}"><i>${lab}</i><b${Math.abs(y.f)>=99.95?' class="d3"':""}>${f1(y.f)}</b></span>`;
   if(y.ng)return `<span class="duw dun0" title="${y.opp} · non ha giocato"><i>${lab}</i><b>NG</b></span>`;
   return `<span class="duw duu"><i>${lab}</i><b>${y.opp}</b></span>`};
  const sc=pl?`<span style="color:#fff!important;-webkit-text-fill-color:#fff!important" class="pdkx ${xc(x.pg)} dubig"><b>${f1(x.tot)}</b>${zone==="trib"?"<i>tribuna</i>":""}</span>`
