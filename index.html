@@ -907,7 +907,7 @@ let HSL=null,HWK=null;/* casella della Home: pagina scelta e settimana */
 try{HSL=+localStorage.getItem("e16_hsl")||0}catch(e){}
 function vHome(){
  const N=nights(),d=night&&N.includes(night)?night:N[N.length-1];const i=N.indexOf(d);
- const rail=c=>`<div class="hmrail${c==="W"?" hmrailw":""}">${TEAMS.filter(t=>t.conf===c).map(t=>`<button class="hrl" data-team="${t.id}" style="--tc:${TCOL[t.id]}" title="${esc(t.nome)}"><span class="badge logo lg-${t.id}"></span></button>`).join("")}</div>`;
+ /* (109) loghi di East e West in ordine di classifica (standings: si spostano da soli durante l anno) */const rail=c=>`<div class="hmrail${c==="W"?" hmrailw":""}">${standings(c).map((t,i)=>`<button class="hrl" data-team="${t.id}" style="--tc:${TCOL[t.id]}" title="${i+1}ª ${c==="E"?"East":"West"} · ${esc(t.nome)} (${t.w}-${t.l})"><span class="badge logo lg-${t.id}"></span></button>`).join("")}</div>`;
  let rows=d?rowsOf(d):[];const q=hq.trim();rows.sort((a,b)=>b.f-a.f);
  /* (12) CERCA GIOCATORE come Dreamers: risultati in tutta la lega (rose e svincolati), tocca per aprire il profilo */
  let hres="";if(q.length>=2){const k=__ownKey(q),seen=new Set(),own=[],fa=[];
