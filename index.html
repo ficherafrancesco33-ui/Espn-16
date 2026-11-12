@@ -661,6 +661,19 @@ html:not(.notte) .drroom .dtleg,html:not(.notte) .drroom .dtres{color:#2b1608}ht
 .dsvial{display:grid;gap:6px;margin-bottom:6px}.dsviar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 10px;border-radius:10px;border:1px solid var(--dsl);font-size:13px}
 .dsviar i{font-style:normal;font-weight:900;color:var(--dsa);min-width:24px}.dsviar small{flex-basis:100%;opacity:.75;font-size:11px}
 @media (prefers-reduced-motion:reduce){.dsmsg,.dsslot.next{animation:none}}</style>
+<style>/* (108) Sala Draft: loghi sempre tondi e centrati, caselle allineate */
+html body .dsroom .dslg{aspect-ratio:1/1;flex-shrink:0;overflow:hidden;padding:0}
+html body .dsroom .dslg .badge{display:block;background-position:center!important;background-repeat:no-repeat!important;background-size:contain!important;margin:0}
+html body .dsroom .dslg.mini{width:20px!important;height:20px!important;flex:0 0 20px!important;border-width:1.5px;display:inline-grid;vertical-align:middle}
+html body .dsroom .dslg.mini .badge{width:14px!important;height:14px!important}
+html body .dsroom .dsslot{justify-content:flex-start;padding:10px 4px 9px;gap:4px}
+html body .dsroom .dsslot .dslg.big{margin:2px 0}
+html body .dsroom .dsslot small.dsvia{display:flex;flex-direction:column;align-items:center;gap:3px;-webkit-line-clamp:unset}
+html body .dsroom .dsord{min-height:52px}
+html body .dsroom .dsord .dsow{flex:1;display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-width:0}
+html body .dsroom .dsord .dsow b{flex:none;max-width:100%}
+html body .dsroom .dsviar .dslg.mini{margin:0 1px}
+html body .dsroom{padding-left:12px;padding-right:12px}html body .dsroom>.gback{margin-left:0}html body .dsroom .chips.dssort,html body .dsroom .dscon .chips{flex-wrap:wrap;overflow:visible;row-gap:8px}html body .dsroom .dstabs{margin-left:0;margin-right:0}</style>
 </head>
 <body>
 <div id="sbar" aria-hidden="true"></div>
