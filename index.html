@@ -652,6 +652,15 @@ html body .duw b.d3:not(#a){font-size:9px;letter-spacing:-.06em;padding:0}</styl
 html:not(.notte) .drroom .dtleg,html:not(.notte) .drroom .dtres{color:#2b1608}html:not(.notte) .drroom .dtres{color:#fff}
 .drcr[data-lgteam]{cursor:pointer}
 @media (max-width:370px){.dtc b{font-size:20px}.dthr{grid-template-columns:1fr 44px 56px 56px}}</style>
+<style>/* (107) Sala Draft: suspense (3ª → 2ª → 1ª) e scelte di altre squadre come in NBA */
+.dsmsg{text-align:center;margin:4px 0 10px;font-weight:800;font-size:15px;animation:dsmsg 1s ease-in-out infinite alternate}@keyframes dsmsg{from{opacity:.55}to{opacity:1}}
+.dsslot.next{border-color:var(--dsa);animation:dsnext .7s ease-in-out infinite alternate}@keyframes dsnext{from{box-shadow:0 0 0 0 transparent}to{box-shadow:0 0 18px 2px color-mix(in srgb,var(--dsa) 55%,transparent)}}
+.dsslot .dsvia,.dsord .dsvia{display:inline-flex;align-items:center;gap:4px;justify-content:center;flex-wrap:wrap}
+.dslg.mini{width:18px!important;height:18px!important;display:inline-block;vertical-align:middle}.dslg.mini .badge{width:18px!important;height:18px!important}
+.dsow{display:flex;flex-direction:column;min-width:0;line-height:1.15}.dsord.via .dsow small{display:block;font-size:10.5px;font-weight:700;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dsvial{display:grid;gap:6px;margin-bottom:6px}.dsviar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 10px;border-radius:10px;border:1px solid var(--dsl);font-size:13px}
+.dsviar i{font-style:normal;font-weight:900;color:var(--dsa);min-width:24px}.dsviar small{flex-basis:100%;opacity:.75;font-size:11px}
+@media (prefers-reduced-motion:reduce){.dsmsg,.dsslot.next{animation:none}}</style>
 </head>
 <body>
 <div id="sbar" aria-hidden="true"></div>

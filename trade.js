@@ -99,6 +99,12 @@ function pickInfo(p,holder,prot){/* p = [anno, giro, squadra d origine, nota]; h
  got.sort((x,y)=>x-y);const med=got.length?got[Math.floor(got.length/2)]:null,s=med||Math.round(L.reduce((q,S)=>q+S[rk][p[2]],0)/L.length),q=s<=4?"alta":s<=10?"media":"bassa";
  const prob=Math.round(n/L.length*100);const out={slot:s,q,v:Math.round(a/L.length*dec/5)*5,rule:ru?{txt:ru.t,prob}:null,prob};return PKMEMO[key]=out}
 window.e16Pick=pickInfo;
+/* (107) A CHI VA OGNI SCELTA dato un ordine del Draft vero (Sala Draft): S = {squadra: numero della sua scelta naturale}.
+   Per ogni squadra che detiene una scelta di quell anno/giro (CAP.pk) si applica la regola (swap/protezione, PKRULE) e si ottiene il numero che le arriva.
+   Ritorna {numero: {own: chi sceglie davvero, from: squadra della scelta naturale con quel numero, txt: regola}}. */
+window.e16PickOwners=(y,r,S)=>{const inv={};for(const t in S)inv[S[t]]=t;const out={};
+ try{for(const h in CAP)for(const p of CAP[h].pk||[]){if(p[0]!==y||p[1]!==r)continue;const ru=r===1?ruleOf(h,p):null;const n=ru?ru.f(S):S[p[2]];if(n==null||out[n])continue;out[n]={own:h,from:inv[n]||p[2],txt:ru?ru.t:(p[3]||"")}}}catch(e){}
+ for(const n in inv)if(!out[n])out[n]={own:inv[n],from:inv[n],txt:""};return out};
 function teamValue(id){const pl=(ROSE[id]||[]).reduce((a,g)=>a+val(g[0]),0),pk=((CAP[id]||{}).pk||[]).reduce((a,p)=>a+pickInfo(p).v,0);return{pl,pk,tot:pl+pk}}
 window.e16TeamValue=teamValue;window.e16Val=val;window.e16Str=()=>str();
 /* ---------- stato ---------- */

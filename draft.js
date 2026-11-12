@@ -17,6 +17,7 @@ const f1=v=>(Math.round(v*10)/10).toLocaleString("it-IT",{minimumFractionDigits:
 /* (78) età al draft in evidenza: pastiglia colorata (fino a 19,5 verde, fino a 21 oro, oltre arancio/rosso) */
 const ageB=a=>a?`<b class="dsage ${a<=19.5?"g":a<=21?"y":"o"}" title="Età al draft">${f1(a)} anni</b>`:"";
 const nick=id=>TM[id]?TM[id].nome.split(" ").slice(-1)[0]:id;
+const dei=id=>(/^[AEIOU]/i.test(nick(id))?"degli ":"dei ")+e(nick(id)),ai=id=>(/^[AEIOU]/i.test(nick(id))?"agli ":"ai ")+e(nick(id));/* (107) articoli: dei Ducks, degli Aliens */
 const LOTT_N=[161,161,161,143,120,103,85,66];
 const f2=v=>v.toLocaleString("it-IT",{minimumFractionDigits:2,maximumFractionDigits:2});
 const D={tab:"lot",cl:"",run:false,res:null,sort:"rk",dir:"d",q:"",pos:"",tm:null,pl:"",pa:"",pb:"",met:"f",per:"g"};
@@ -35,12 +36,21 @@ function draw(lot){const N=nums(lot),left=lot.slice(),w=N.slice(),win=[];for(let
 const lg=(id,c="")=>`<span class="dslg ${c}" style="--tc:${TCOL[id]||"#334"}"><span class="badge logo lg-${id}"></span></span>`;
 function vLot(){const{lot,pl}=order(),P=probs(lot),N=nums(lot);
  const drum=`<div class="dsdrum${D.run?" spin":""}" aria-hidden="true"><div class="dsglass"></div>${lot.map((t,i)=>`<span class="dsball" style="--i:${i};--tc:${TCOL[t.id]}"><span class="badge logo lg-${t.id}"></span></span>`).join("")}</div>`;
- const res=D.res;const slots=[1,2,3].map(k=>{const t=res&&res.shown>=k?res.win[k-1]:null;return `<div class="dsslot${t?" on":""}"><i>${k}ª</i>${t?`${lg(t.id,"big")}<b>${e(nick(t.id))}</b><small>${e(t.nome)}</small>`:`<b class="dsq">?</b>`}</div>`}).join("");
- const full=res&&res.shown>=3?[...res.win,...res.rest,...pl].map((t,i)=>`<div class="dsord${i<3?" top":""}"><i>${i+1}</i>${lg(t.id)}<b>${e(nick(t.id))}</b><small>${t.w}-${t.l}${i<3?" · lottery":i<8?" · fuori playoff":" · playoff"}</small></div>`).join(""):"";
+ const res=D.res;
+ /* (107) chi sceglie davvero (scelte scambiate, swap e protezioni come in NBA: «Mayans (dai Ducks)») */
+ let OW={};if(res&&res.shown>=1){try{const S={};[...res.win,...res.rest,...pl].forEach((t,i)=>S[t.id]=i+1);OW=window.e16PickOwners?e16PickOwners(2027,1,S):{}}catch(_){}}
+ const via=(n,t)=>{const o=OW[n];return o&&o.own!==t.id?o:null};
+ /* (107) suspense come in NBA: esce prima la 3ª, poi la 2ª, infine la 1ª */
+ const vis=k=>res&&res.shown>=4-k,nextK=res&&res.shown<3?3-res.shown:0;
+ const slots=[1,2,3].map(k=>{const t=vis(k)?res.win[k-1]:null,v=t?via(k,t):null;return `<div class="dsslot${t?" on":""}${D.run&&k===nextK?" next":""}${v?" via":""}"><i>${k}ª</i>${t?(v?`${lg(v.own,"big")}<b>${e(nick(v.own))}</b><small class="dsvia">scelta ${dei(t.id)} ${lg(t.id,"mini")}</small>`:`${lg(t.id,"big")}<b>${e(nick(t.id))}</b><small>${e(t.nome)}</small>`):`<b class="dsq">?</b>`}</div>`}).join("");
+ const msg=D.run&&nextK?`<p class="dsmsg">🥁 E la <b>${nextK}ª scelta</b> del Draft 2027 va a…</p>`:"";
+ const full=res&&res.shown>=3?[...res.win,...res.rest,...pl].map((t,i)=>{const v=via(i+1,t);return v?`<div class="dsord via${i<3?" top":""}" title="${e(v.txt||"")}"><i>${i+1}</i>${lg(v.own)}<span class="dsow"><b>${e(nick(v.own))}</b><small>${dei(t.id).replace(/^de/,"da")}</small></span></div>`:`<div class="dsord${i<3?" top":""}"><i>${i+1}</i>${lg(t.id)}<b>${e(nick(t.id))}</b><small>${t.w}-${t.l}${i<3?" · lottery":i<8?" · fuori playoff":" · playoff"}</small></div>`}).join(""):"";
+ const viaL=res&&res.shown>=3?[...res.win,...res.rest,...pl].map((t,i)=>({n:i+1,t,v:via(i+1,t)})).filter(x=>x.v):[];
  return `<div class="dsbox"><h4 class="dsh">Lottery 2027 <small>prime 3 scelte tra le 8 escluse dai playoff</small></h4>
- ${drum}<div class="dsslots">${slots}</div>
+ ${drum}${msg}<div class="dsslots">${slots}</div>
  <div class="dsbtns"><button class="dsgo" data-ds="gira" ${D.run?"disabled":""}>🎱 ${res?"Rigira":"Gira"}</button>${res?`<button class="dsre" data-ds="reset">Azzera</button>`:""}</div>
- ${full?`<h4 class="dsh">Ordine del 1° giro <small>con questa estrazione</small></h4><div class="dsordl">${full}</div>`:""}</div>
+ ${full?`<h4 class="dsh">Ordine del 1° giro <small>con questa estrazione</small></h4><div class="dsordl">${full}</div>`:""}
+ ${viaL.length?`<h4 class="dsh">Scelte che cambiano squadra <small>scambi, swap e protezioni</small></h4><div class="dsvial">${viaL.map(x=>`<div class="dsviar"><i>${x.n}ª</i>${lg(x.t.id,"mini")}<span>la scelta ${dei(x.t.id).replace(/ (.*)$/," <b>$1</b>")} va ${ai(x.v.own).split(" ")[0]}</span>${lg(x.v.own,"mini")}<b>${e(nick(x.v.own))}</b>${x.v.txt?`<small>${e(x.v.txt)}</small>`:""}</div>`).join("")}</div>`:""}</div>
  <div class="dsbox"><h4 class="dsh">Le 8 squadre in lottery <small>classifica di oggi</small></h4>
  <div class="tbl-wrap"><table class="dstab"><thead><tr><th>#</th><th>Squadra</th><th>Numeri</th><th>1ª</th><th>2ª</th><th>3ª</th><th>Top 3</th></tr></thead><tbody>
  ${lot.map((t,i)=>`<tr><td>${i+1}</td><td class="dstn">${lg(t.id)}<span><b>${e(nick(t.id))}</b><small>${t.w}-${t.l}</small></span></td><td><b>${N[i]}</b>${D.cl===t.id?' <em class="dscl">+10</em>':""}</td>${P[i].slice(0,3).map(v=>`<td>${f1(v)}%</td>`).join("")}<td><b>${f1(P[i][0]+P[i][1]+P[i][2])}%</b></td></tr>`).join("")}</tbody></table></div>
@@ -188,8 +198,8 @@ document.addEventListener("click",ev=>{if(!IN())return;const b=ev.target.closest
  if(d.dsrt){D.dir=D.sort===d.dsrt&&D.dir!=="a"?"a":"d";D.sort=d.dsrt;save();keep();return}
  if(d.drk){D.pl=d.drk;go("drpl");return}
  if(d.ds==="reset"){D.res=null;keep();return}
- if(d.ds==="gira"&&!D.run){const{lot}=order(),r=draw(lot);D.res={...r,shown:0};const step=reduced()?60:1700,first=reduced()?60:2600;D.run=true;keep();
-  setTimeout(function nx(){if(cur!=="draft"||!D.res)return(D.run=false);D.res.shown++;if(D.res.shown>=3)D.run=false;keep();if(D.res.shown<3)setTimeout(nx,step)},first)}});
+ if(d.ds==="gira"&&!D.run){const{lot}=order(),r=draw(lot);D.res={...r,shown:0};const W=reduced()?[60,60,60]:[2800,3000,4200];/* (107) 3ª, 2ª e poi la 1ª con più attesa */D.run=true;keep();
+  setTimeout(function nx(){if(cur!=="draft"||!D.res)return(D.run=false);D.res.shown++;if(D.res.shown>=3)D.run=false;keep();if(D.res.shown<3)setTimeout(nx,W[D.res.shown])},W[0])}});
 document.addEventListener("keydown",ev=>{if(!IN()||ev.key!=="Enter")return;const b=ev.target.closest&&ev.target.closest("[data-drk]");if(b){D.pl=b.dataset.drk;go("drpl")}});
 document.addEventListener("change",ev=>{if(cur!=="drcmp")return;const s=ev.target.closest("[data-dsel]");if(!s)return;D[s.dataset.dsel]=s.value;keep()});
 document.addEventListener("input",ev=>{if(cur!=="draft"||ev.target.id!=="dsq")return;D.q=ev.target.value;const pos=ev.target.selectionStart;render();const n=document.getElementById("dsq");if(n){n.focus();try{n.setSelectionRange(pos,pos)}catch(_){}}});
