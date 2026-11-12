@@ -30,6 +30,7 @@ const RL=r=>{const a=String(r||"").split(",");return a[0]==="C"?"Centro":/G/.tes
 let CT=null;function ct(){if(CT)return CT;CT={};if(typeof CAP==="undefined")return CT;
  for(const t in CAP)for(const p of CAP[t].pl||[]){const y=(p[1]||[]).filter(v=>v!=null);if(!y.length)continue;CT[nk(p[0])]={n:p[0],t,y,rk:!!p[2],tot:y.reduce((a,b)=>a+b,0)}}return CT}
 const contr=n=>ct()[nk(n)]||null;
+window.e16Contr=n=>{try{return contr(n)}catch(_){return null}};/* (112) contratto di un giocatore per la rosa della scheda squadra */
 /* (48) stipendio di mercato con la formula della lega (stipendi-data.js, aggiornato ogni domenica) */
 let SN=null;const stipOf=n=>{if(typeof STIP==='undefined')return null;if(!SN){SN={};for(const k in STIP.p)SN[nk(k)]=STIP.p[k]}return SN[nk(n)]||null};/* (51) durata dei contratti secondo lo stipendio (regola della lega): 4–9,9 cr = solo 1 anno; 10–14,9 = 1 o 2 anni; da 15 = da 1 a 3 anni */
 const durMax=v=>v>=15?3:v>=10?2:1;const durTxt=v=>{const m=durMax(v);return m===1?"contratto di 1 anno":`contratto da 1 a ${m} anni`};window.e16DurMax=durMax;
