@@ -5,6 +5,8 @@
    (ESPN non mostra in pubblico le scelte scambiate né chi è stato poi ceduto di nuovo); se c è una riga a mano per la stessa data e le stesse squadre vale quella.
    LEGA.mov = firme e tagli di free agent («Movimenti»). Banner in Home per 24 ore dopo ogni scambio, come Dreamers (tocca → Storico trade). */
 const TRADES=[
+ /* (113) scambio Quebec-Cleveland del 15/11/2026 */
+ {data:"15/11/2026",ora:"15:44",titolo:"Scambio",lati:[["QUE",["Brayden Burries","Morez Johnson Jr.","Hannes Steinbach","Scelta 1° giro 2031 (dei Cadavers)","Scelta 2° giro 2027 (dei Mayans)","Scelta 2° giro 2027 (dei Mavericks)"]],["CLE",["Brandon Miller","Christian Braun"]]]},
  /* (111) foto «ESPN Trade a 2 squadre» (12/11/2026): ai Ducks Ament, Philon Jr. e la 2ª 2028 dei Bluesky; ai Bluesky Sharpe e Aldama. In campo con la nuova squadra dal turno che parte lunedì */
  {data:"12/11/2026",ora:"19:14",titolo:"Scambio",lati:[["QUE",["Nate Ament","Labaron Philon Jr.","Scelta 2° giro 2028 (dei Bluesky)"]],["ALB",["Day'Ron Sharpe","Santi Aldama"]]]},
  /* (44) primo scambio da quando è entrato Francesco (foto «ESPN Trade», 09/11/2026; ora dalla lega ESPN) */
