@@ -833,6 +833,19 @@ const dIt=d=>{const[y,m,g]=d.split("-");return g+"/"+m};
 try{if(typeof LEGA!=="undefined"&&LEGA.rose)for(const t in LEGA.rose)if(ROSE[t]&&LEGA.rose[t].length)ROSE[t]=LEGA.rose[t]}catch(e){}
 const OWNH={};try{const nn=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[.'’]/g,"").replace(/\s+(jr|sr|ii|iii|iv)$/,"").trim();for(const t in ROSE)for(const g of ROSE[t])OWNH[nn(g[0])]=t;window.__ownKey=nn}catch(e){}
 const ownH=n=>OWNH[window.__ownKey?__ownKey(n):n]||"";
+/* (114) REGOLA SCAMBI ESPN 16: le SCELTE passano subito, i GIOCATORI (rosa e contratto) passano tutti insieme il LUNEDÌ, a fine partite della domenica.
+   Chiamata da storico.js appena c è TRADES: per ogni scambio della settimana in corso (lunedì dopo la data dello scambio non ancora arrivato, data di New York)
+   i giocatori restano nella vecchia squadra: si rimettono in ROSE (se ESPN li ha già spostati), OWNH e nei contratti CAP (occupato e libero ricalcolati). */
+window.E16PEND=[];
+window.e16Pending=function(T){try{const nn=window.__ownKey||(x=>String(x).toLowerCase()),today=new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York"}).format(new Date());
+ for(const x of T||[]){if(!/scambio/i.test(x.titolo||"")||!x.data||!x.lati||x.lati.length!==2)continue;const m=/^(\d{2})\/(\d{2})\/(\d{4})$/.exec(x.data);if(!m)continue;
+  const d=new Date(Date.UTC(+m[3],+m[2]-1,+m[1],12)),dow=d.getUTCDay(),add=dow===1?7:(8-dow)%7||7,eff=new Date(d.getTime()+add*864e5).toISOString().slice(0,10);if(today>=eff)continue;
+  const P=[];for(const[to,its]of x.lati){const fr=x.lati.find(l=>l[0]!==to)[0];for(const it of its||[]){if(/^scelta|crediti|\bcr\b/i.test(it))continue;P.push([it,to,fr])}}
+  for(const[n,to,fr]of P){const k=nn(n);
+   if(ROSE[to]){const i=ROSE[to].findIndex(g=>nn(g[0])===k);if(i>=0&&ROSE[fr]){ROSE[fr].push(ROSE[to].splice(i,1)[0])}}OWNH[k]=fr;
+   if(typeof CAP!=="undefined"&&CAP[to]&&CAP[fr]){const j=CAP[to].pl.findIndex(p=>nn(p[0])===k);if(j>=0){const c=CAP[to].pl.splice(j,1)[0];CAP[fr].pl.push(c);for(let y=0;y<5;y++){const v=(c[1]||[])[y]||0;CAP[to].occ[y]=Math.round((CAP[to].occ[y]-v)*10)/10;CAP[fr].occ[y]=Math.round((CAP[fr].occ[y]+v)*10)/10}
+     for(const t of [to,fr])CAP[t].libero=Math.round(((typeof CAP_TOT!=="undefined"?CAP_TOT:190)-CAP[t].occ[0]-(CAP[t].tagli||0))*10)/10}}}
+  E16PEND.push({x,eff,n:P.map(p=>p[0])})}}catch(e){console.error("e16Pending",e)}};
 const nbaLogo=a=>`loghi/nba/${String(a).toLowerCase()}.svg`;
 const pdkC=v=>v>=50?"v":v>=35?"g":v>=20?"y":"r";
 /* (7) SETTIMANE della lega (come ESPN Fantasy): la 1ª va da martedì 20/10 a domenica 25/10, poi da lunedì a domenica.
