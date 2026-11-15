@@ -12,7 +12,7 @@ const TRADES=[
  /* (44) primo scambio da quando è entrato Francesco (foto «ESPN Trade», 09/11/2026; ora dalla lega ESPN) */
  {data:"11/11/2026",ora:"11:01",titolo:"Scambio",lati:[["CAN",["Scelta 1° giro 2027 (dei Ducks)","Scelta 1° giro 2029 (dei Ducks)"]],["QUE",["Scelta 1° giro 2028 (dei Ducks)","Scelta 1° giro 2030 (dei Mayans, migliore tra Mayans, Bluesky e Aliens)","Scelta 1° giro 2030 (dei Ducks)","Scelta 1° giro 2030 (via Santa Rosa)"]]]},
  {data:"09/11/2026",ora:"21:15",titolo:"Scambio",lati:[["HON",["Rui Hachimura"]],["QUE",["Koa Peat","Scelta 2° giro 2027 (via Honolulu)","Scelta 3° giro 2028 (via Mavericks)"]]]}
-];/* (114) giocatori degli scambi della settimana: restano nella vecchia squadra fino a lunedì (le scelte passano subito) */
+];/* (115) giocatori degli scambi: subito nelle rose della nuova squadra; negli scontri diretti dal lunedì (formazione ESPN) */
 try{window.e16Pending&&e16Pending(TRADES)}catch(e){}
 
 (function(){
