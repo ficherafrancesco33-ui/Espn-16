@@ -841,7 +841,7 @@ const ownH=n=>OWNH[window.__ownKey?__ownKey(n):n]||"";
 window.E16PEND=[];
 window.e16Pending=function(T){try{const nn=window.__ownKey||(x=>String(x).toLowerCase()),today=new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York"}).format(new Date());
  for(const x of T||[]){if(!/scambio/i.test(x.titolo||"")||!x.data||!x.lati||x.lati.length!==2)continue;const m=/^(\d{2})\/(\d{2})\/(\d{4})$/.exec(x.data);if(!m)continue;
-  const d=new Date(Date.UTC(+m[3],+m[2]-1,+m[1],12)),dow=d.getUTCDay(),add=dow===1?7:(8-dow)%7||7,eff=new Date(d.getTime()+add*864e5).toISOString().slice(0,10),stop=new Date(d.getTime()+(add+14)*864e5).toISOString().slice(0,10);if(today>=stop)continue;/* (118) anche dopo il lunedì, finché ESPN non ha registrato lo scambio (il giocatore è ancora nella rosa ESPN della vecchia squadra) resta spostato nella nuova (al massimo 2 settimane); se ESPN l ha già registrato non c è niente da spostare */
+  const d=new Date(Date.UTC(+m[3],+m[2]-1,+m[1],12)),dow=d.getUTCDay(),add=dow===1?7:(8-dow)%7||7,eff=new Date(d.getTime()+add*864e5).toISOString().slice(0,10);if(today>=eff)continue;
   const P=[];for(const[to,its]of x.lati){const fr=x.lati.find(l=>l[0]!==to)[0];for(const it of its||[]){if(/^scelta|crediti|\bcr\b/i.test(it))continue;P.push([it,to,fr])}}
   for(const[n,to,fr]of P){const k=nn(n);if(ROSE[fr]&&ROSE[to]){const i=ROSE[fr].findIndex(g=>nn(g[0])===k);if(i>=0){const g=ROSE[fr].splice(i,1)[0];ROSE[to].push([g[0],g[1],"BE",g[3]])}}OWNH[k]=to}
   E16PEND.push({x,eff,n:P.map(p=>p[0])})}}catch(e){console.error("e16Pending",e)}};
