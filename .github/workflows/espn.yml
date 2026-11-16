@@ -1,13 +1,18 @@
 # ESPN 16: scarica i tabellini NBA da ESPN e aggiorna espn-data.js (tecnici e flagranti dalla cronaca).
-# (98) Gira da solo: niente di notte (vale il live sul telefono); i dati diventano ufficiali dalle 07:30 italiane, poi un giro ogni 30 minuti fino alle 11:30 e due volte di giorno.
+# (116, regola Francesco 16/11/2026) SOLO ESPN, SEMPRE: in ESPN 16 si gioca su ESPN, quindi nessuna riserva (niente Dunkest), mai.
+#   Niente di notte (vale il live sul telefono); prima delle 07:30 italiane niente (alle 07:00 a volte le partite non sono finite).
+#   Dalle 07:30 alle 10:30 italiane un tentativo ogni 15 minuti (07:32, 07:47, 08:02, ... minuti "storti" perché GitHub a volte salta le corse
+#   a :00 e :30), poi ogni 30 minuti fino a sera, all'infinito: espn.mjs riscarica da solo le notti non ancora chiuse, quindi se ESPN
+#   è in ritardo i dati arrivano alla prima corsa buona. Se ESPN non risponde: prima delle 10:30 si aspetta la corsa dopo senza errori,
+#   dalle 10:30 il job fallisce (mail di GitHub) ma i tentativi continuano lo stesso.
 # (91) Se una squadra non viene riconosciuta o manca una formazione, tools/lega.mjs si ferma con errore: GitHub manda la mail e i dati vecchi restano. Nessuno deve lanciare niente a mano.
 name: espn-dati
 on:
   schedule:
-    # (98) dati ufficiali SEMPRE dalle 07:30 italiane (con e senza ora legale): ogni 30 minuti dalle 05:00 alle 09:30 UTC, le corse prima delle 07:30 di Roma non fanno niente
-    - cron: "0,30 5-9 * * *"
-    # due giri di giorno (11:43 e 17:43 italiane d inverno)
-    - cron: "43 10,16 * * *"
+    # (116) dati ufficiali dalle 07:30 italiane (con e senza ora legale): ogni 15 minuti dalle 05 alle 09 UTC, le corse prima delle 07:30 di Roma non fanno niente
+    - cron: "2,17,32,47 5-9 * * *"
+    # (116) poi ogni 30 minuti fino a sera, sempre e solo ESPN
+    - cron: "2,32 10-22 * * *"
     # (92) lunedì: formazioni della settimana salvate nell app ogni 15 minuti dalle 07:00 italiane fino a sera
     - cron: "*/15 5-23 * * 1"
   workflow_dispatch:
@@ -25,8 +30,10 @@ jobs:
           SCHED: ${{ github.event.schedule }}
         run: |
           HM=$((10#$(TZ=Europe/Rome date +%H%M)))
-          if [ "$SCHED" = "0,30 5-9 * * *" ] && [ $HM -lt 730 ]; then echo "SKIP=1" >> "$GITHUB_ENV"; echo "Prima delle 07:30 italiane: niente da fare"; fi
+          if [ "$SCHED" = "2,17,32,47 5-9 * * *" ] && [ $HM -lt 730 ]; then echo "SKIP=1" >> "$GITHUB_ENV"; echo "Prima delle 07:30 italiane: niente da fare"; fi
           if [ "$SCHED" = "*/15 5-23 * * 1" ] && [ $HM -lt 700 ]; then echo "SKIP=1" >> "$GITHUB_ENV"; echo "Prima delle 07:00 italiane: niente da fare"; fi
+          # (116) prima delle 10:30 un ESPN che non risponde non è un errore (si riprova fra 15 minuti); dalle 10:30 sì (mail)
+          if [ $HM -lt 1030 ] && [ "${{ github.event_name }}" = "schedule" ]; then echo "PRESTO=1" >> "$GITHUB_ENV"; fi
       - uses: actions/checkout@v4
         if: env.SKIP != '1'
       - uses: actions/setup-node@v4
@@ -35,7 +42,12 @@ jobs:
           node-version: 20
       - name: Scarica i tabellini ESPN
         if: env.SKIP != '1'
-        run: node tools/espn.mjs
+        run: |
+          if node tools/espn.mjs; then exit 0; fi
+          git checkout -- espn-data.js 2>/dev/null || true
+          touch /tmp/espn_ko
+          if [ "$PRESTO" = "1" ]; then echo "::warning title=ESPN non risponde::riprovo alla prossima corsa (fra 15 minuti)"; exit 0; fi
+          echo "::error title=ESPN non risponde::dati della notte non aggiornati, riprovo da solo ogni 30 minuti fino a sera"; exit 1
       - name: Lega ESPN (rose, formazioni del lunedì, punteggi, free agent, scambi)
         if: env.SKIP != '1'
         run: node tools/lega.mjs || touch /tmp/lega_ko
