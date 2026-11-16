@@ -199,3 +199,5 @@
 - e16Pending (scambi dello storico che spostavano i giocatori prima di ESPN) è DISATTIVATO: le rose sono solo quelle di ESPN. I contratti (cap-data.js) si spostano comunque a mano quando si registra lo scambio.
 - Campo di una settimana: titolari = i 14 della formazione ESPN di quella settimana, anche se poi ceduti o tagliati (così si capisce chi ha fatto i punti di quella squadra); tribuna solo nella settimana in corso. Esempio: settimana 4 dei Ducks = Sharpe, Aldama, Oubre, Dort, Miller, Braun…
 - Eccezione del 16/11/2026 (`E16_TURNO_ECC`): i cambi erano già arrivati prima delle 10:30, quindi quel giorno il turno è finito subito (settimana 5 in attesa).
+
+(122) 16/11/2026 – REGOLA FRANCESCO: lo Storico trade / Trade Alert mostra SOLO gli scambi registrati a mano in storico.js (TRADES), che Francesco manda con le scelte. Gli scambi letti da ESPN (LEGA.trades) non si aggiungono più (ESPN non ha le scelte: erano scambi incompleti e doppi, es. Quebec-Cleveland e Quebec-Albuquerque comparivano due volte). Non registrare uno scambio finché Francesco non lo manda. Le rose invece seguono ESPN (nota 121).

@@ -29,8 +29,10 @@ const fromTs=ms=>{const f=new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Rome
 const tsOf=x=>{if(x.ts)return x.ts;if(!x.data||!x.ora)return 0;const[d,m,y]=x.data.split("/").map(Number),[hh,mm]=x.ora.split(":").map(Number);
  const guess=Date.UTC(y,m-1,d,hh,mm),off=(()=>{const f=fromTs(guess);const[d2,m2]=f.data.split("/").map(Number),[h2,mi2]=f.ora.split(":").map(Number);return Date.UTC(y,m2-1,d2,h2,mi2)-guess})();return guess-off};
 /* scambi: righe a mano + automatici da ESPN (stesso giorno e stesse squadre = vale la riga a mano) */
+/* (122) REGOLA FRANCESCO: nello storico SOLO gli scambi registrati a mano (TRADES), quando Francesco li manda con le scelte.
+   ESPN non ha le scelte, quindi i suoi scambi sono incompleti: non si aggiungono più in automatico (prima comparivano due volte). */
 function allTrades(){const L=TRADES.map(x=>({...x,ts:tsOf(x),auto:0}));
- try{/* (44) lo storico parte dal primo scambio di Francesco (09/11/2026): quelli prima non si mostrano */for(const T of (LEGA.trades||[]).filter(x=>x.d>=Date.parse("2026-11-09T00:00:00Z"))){const by={};for(const[t,p]of T.l)(by[t]=by[t]||[]).push(p);const f=fromTs(T.d),tms=Object.keys(by).sort().join();
+ if(false)try{/* (44) lo storico parte dal primo scambio di Francesco (09/11/2026): quelli prima non si mostrano */for(const T of (LEGA.trades||[]).filter(x=>x.d>=Date.parse("2026-11-09T00:00:00Z"))){const by={};for(const[t,p]of T.l)(by[t]=by[t]||[]).push(p);const f=fromTs(T.d),tms=Object.keys(by).sort().join();
   if(L.some(x=>x.data===f.data&&x.lati.map(l=>l[0]).sort().join().includes(tms)))continue;
   L.push({data:f.data,ora:f.ora,titolo:"Scambio",lati:Object.keys(by).map(t=>[t,by[t]]),ts:T.d,auto:1})}}catch(_){}
  return L.sort((a,b)=>b.ts-a.ts)}
