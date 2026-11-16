@@ -74,17 +74,21 @@ function lbm(id,w,wCur){const m=(MATCHUPS[w]||[]).find(x=>x.includes(id));if(!m)
  const has=k=>(MATCHUPS[k]||[]).some(x=>x.includes(id));
  return `<h2 class="lbmh">${window.E16KIT?(window.e16FxWrap?e16FxWrap(id,E16KIT.kitBtn(id)):E16KIT.kitBtn(id)):"<span></span>"}<span class="lbmw"><button class="lbma" type="button" data-cwk="${w-1}" aria-label="Settimana precedente" ${has(w-1)?"":"disabled"}>${svgL}</button><span class="lbm${live?" run":""} pqw" style="--sc:color-mix(in srgb,${TCOL[id]} 62%,#fff)" data-du="${m[0]},${m[1]}" data-duw="${w}" role="button" tabindex="0" aria-label="${e(TM[id].nome)} ${f1(sa)} contro ${e(TM[o].nome)} ${f1(sb)}"><span class="lbml"><span class="badge logo lg-${id}"></span></span><span class="lbmg" title="Sopra: partite giocate sul totale (migliori 14). Sotto: senza gli infortunati"><i>${a1}</i><b>${a2}</b></span><span class="lbmn${sa>=sb?"":" dim"}">${f1(sa)}</span><span class="lbmx"></span><span class="lbmn${sb>sa?"":" dim"}">${f1(sb)}</span><span class="lbmg"><i>${b1}</i><b>${b2}</b></span><span class="lbml"><span class="badge logo lg-${o}"></span></span></span><button class="lbma" type="button" data-cwk="${w+1}" aria-label="Settimana successiva" ${w<wCur&&has(w+1)?"":"disabled"}>${svgR}</button></span>${window.e16DrmBtn?e16DrmBtn(id):"<span></span>"}</h2>`}/* (67) a destra il tasto viola «D» della modalità Dream (dream-e16.js), specchio del tasto maglia */
 document.addEventListener("click",ev=>{const b=ev.target.closest("[data-cwk]");if(!b||b.disabled)return;ev.stopPropagation();CW=+b.dataset.cwk;render()},true);
-window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P=pstats();
+window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=(ROSE[id]||[]).slice(),P=pstats();
  /* punteggio della settimana in corso di ogni giocatore: (104) si mostra la media AVG delle sue partite (W[k].f = somma, W[k].n = partite) */
  const wCur=e16WeekNow(),wNow=CW&&CW<=wCur?CW:wCur,[wa,wb]=weekRange(wNow),W={};
  /* (118) righe della settimana dalla stessa funzione di Lega e duello (wkTeam): partite giocate, live, NG e da giocare */
  try{for(const x of wkTeam(id,wNow).L)W[x.g[0]]=x}catch(_){}
  /* (16) in campo i 5 titolari con l AVG medio più alto; posizioni: centri in alto, ali in mezzo, guardie in basso */
  /* (120) titolari = i 14 della formazione ESPN della settimana mostrata (LEGA.line, il lunedì letta in diretta da formazioni-live.js fino alla prima partita); senza formazione: slot della rosa ESPN */
- const LNs=(()=>{try{const L=LEGA.line[wNow][id];return L&&L.length?new Set(L.map(__ownKey)):null}catch(_){return null}})(),isTit=g=>LNs?LNs.has(__ownKey(g[0])):g[2]!=="BE"&&g[2]!=="IR";
+ const LNa=(()=>{try{const L=LEGA.line[wNow][id];return L&&L.length?L:null}catch(_){return null}})(),LNs=LNa?new Set(LNa.map(__ownKey)):null,isTit=g=>LNs?LNs.has(__ownKey(g[0])):g[2]!=="BE"&&g[2]!=="IR";
+ /* (121) i titolari della settimana ci sono tutti, anche se nel frattempo sono stati ceduti o tagliati (i punti di quella settimana li hanno fatti loro):
+    squadra NBA e ruolo presi dalla rosa in cui sono adesso o dai tabellini. La tribuna si vede solo nella settimana in corso (panchine passate non salvate). */
+ if(LNa){const have=new Set(R0.map(g=>__ownKey(g[0])));for(const n of LNa){if(have.has(__ownKey(n)))continue;let g0=null;for(const t2 in ROSE){g0=(ROSE[t2]||[]).find(x=>__ownKey(x[0])===__ownKey(n));if(g0)break}
+  const x=W[n];R0.push([n,(g0&&g0[1])||(x&&x.team)||"",(g0&&g0[2]==="IR")?"IR":"ESPN",(g0&&g0[3])||""])}}
  const avgOf=g=>{const p=P[g[0]];return p?p.ff/p.gp:-1},tit=R0.filter(isTit).sort((a,b)=>avgOf(b)-avgOf(a));
  const RK={C:0,F:1,G:2},POS=["C","SF","PF","PG","SG"];
- const five=tit.slice(0,5).sort((a,b)=>RK[RL(a[3])]-RK[RL(b[3])]).map((g,i)=>[g[0],g[1],POS[i],g[3]]),rest=tit.slice(5),trib=R0.filter(g=>!isTit(g));
+ const five=tit.slice(0,5).sort((a,b)=>RK[RL(a[3])]-RK[RL(b[3])]).map((g,i)=>[g[0],g[1],POS[i],g[3]]),rest=tit.slice(5),trib=wNow===wCur?R0.filter(g=>!isTit(g)):[];
  /* (104) punteggio della settimana = regola delle medie (somma delle medie dei 14 titolari ESPN), uguale a Lega e duello */
  let tot=0;try{tot=weekScores(wNow).S[id]||0}catch(_){}const r=REC[id];
  const name=t.nome.split(" ").slice(-1)[0];
@@ -99,7 +103,8 @@ window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P
  ${five.map(g=>{const[x,y]=SLOT5[g[2]];return `<button class="cpl dr" data-ist="${g[2]==="IR"?"out":"ok"}" data-pl="${e(g[0])}" style="left:${x}%;top:${y}%;--k:1">${card(t,g,P,W,wa)}</button>`}).join("")}</div>
  <h2><span class="t"><span>Titolari</span></span><em>altri ${rest.length} · 100% AVG</em></h2>
  <div class="bench dptrib e16tit">${rest.map(g=>{const p=P[g[0]],v=p?p.ff/p.gp:null,w=W[g[0]];return `<button class="bpl" data-pl="${e(g[0])}">${jersey(id,numOf(g[0]),name,g[0])}<span class="bnm"><i class="rtr ${RL(g[3])}"></i>${e(g[0])}<small>${({G:"Guardia",F:"Ala",C:"Centro"})[RL(g[3])]} · ${g[1]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${v!=null?` · stagione ${f1(v)}`:""}</small></span><span class="trlk"></span>${benchEv(w,wa)}</button>`}).join("")}</div>
- <h2><span class="t"><span>Tribuna</span></span><em>panchina e IR della formazione ESPN · non contano</em></h2>
+ ${wNow!==wCur?`<p class="note">Settimana ${wNow} chiusa: in campo e nei titolari i 14 della formazione ESPN di quella settimana, anche se poi ceduti o tagliati. La tribuna si vede solo nella settimana in corso.</p>`:""}
+ ${wNow===wCur?`<h2><span class="t"><span>Tribuna</span></span><em>panchina e IR della formazione ESPN · non contano</em></h2>`:""}
  <div class="bench dptrib">${trib.map(g=>{const p=P[g[0]],v=p?p.ff/p.gp:null,w=W[g[0]];return `<button class="bpl" data-pl="${e(g[0])}">${jersey(id,numOf(g[0]),name,g[0])}<span class="bnm"><i class="rtr ${RL(g[3])}"></i>${e(g[0])}<small>${g[2]==="IR"?"Infortunato · ":""}${g[1]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${g[2]==="IR"?"":u25(g[0])?" · under 25 ✓":etaOf(g[0])!=null?" · ⚠️ non under 25":""}</small></span><span class="trlk"></span>${benchEv(w,wa)}</button>`}).join("")}</div>
  ${window.e16FconsBtn?e16FconsBtn(id):""}
  ${liveBox(id)}

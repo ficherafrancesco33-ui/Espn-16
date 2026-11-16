@@ -838,12 +838,15 @@ const dIt=d=>{const[y,m,g]=d.split("-");return g+"/"+m};
 try{if(typeof LEGA!=="undefined"&&LEGA.rose)for(const t in LEGA.rose)if(ROSE[t]&&LEGA.rose[t].length)ROSE[t]=LEGA.rose[t]}catch(e){}
 const OWNH={};try{const nn=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[.'’]/g,"").replace(/\s+(jr|sr|ii|iii|iv)$/,"").trim();for(const t in ROSE)for(const g of ROSE[t])OWNH[nn(g[0])]=t;window.__ownKey=nn}catch(e){}
 const ownH=n=>OWNH[window.__ownKey?__ownKey(n):n]||"";
+/* (121) rose lette in diretta da ESPN dal telefono (formazioni-live.js): sostituisce le rose e ricostruisce chi possiede chi */
+window.e16SetRose=function(R){let ch=false;for(const t in R){if(!ROSE[t]||!R[t].length)continue;if(JSON.stringify(ROSE[t])!==JSON.stringify(R[t])){ROSE[t]=R[t];ch=true}try{LEGA.rose[t]=R[t]}catch(_){}}if(ch){for(const k in OWNH)delete OWNH[k];for(const t in ROSE)for(const g of ROSE[t])OWNH[__ownKey(g[0])]=t}return ch};
 /* (114)(115) REGOLA SCAMBI ESPN 16: le SCELTE e i GIOCATORI passano SUBITO nelle rose e nei contratti dell app (anche se ESPN non ha ancora registrato lo scambio);
    negli SCONTRI DIRETTI invece contano dal LUNEDÌ dopo (formazione ESPN del lunedì: chi era titolare per la vecchia squadra conta ancora per lei fino a fine settimana, wkTeam).
    Chiamata da storico.js appena c è TRADES: per gli scambi a 2 squadre della settimana (lunedì dopo non ancora arrivato, data New York) i giocatori ancora nella rosa ESPN
    della vecchia squadra vengono spostati in ROSE e OWNH nella nuova (i contratti in cap-data.js sono già quelli nuovi). E16PEND = scambi in attesa del lunedì. */
 window.E16PEND=[];
-window.e16Pending=function(T){try{const nn=window.__ownKey||(x=>String(x).toLowerCase()),today=new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York"}).format(new Date());
+/* (121) REGOLA: rose = copia di ESPN (dalle 10:30 del lunedì in tempo reale). Gli scambi dello storico non spostano più i giocatori nelle rose: si capisce da ESPN se uno scambio è stato fatto. */
+window.e16Pending=function(T){return;try{const nn=window.__ownKey||(x=>String(x).toLowerCase()),today=new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York"}).format(new Date());
  for(const x of T||[]){if(!/scambio/i.test(x.titolo||"")||!x.data||!x.lati||x.lati.length!==2)continue;const m=/^(\d{2})\/(\d{2})\/(\d{4})$/.exec(x.data);if(!m)continue;
   const d=new Date(Date.UTC(+m[3],+m[2]-1,+m[1],12)),dow=d.getUTCDay(),add=dow===1?7:(8-dow)%7||7,eff=new Date(d.getTime()+add*864e5).toISOString().slice(0,10);if(today>=eff)continue;
   const P=[];for(const[to,its]of x.lati){const fr=x.lati.find(l=>l[0]!==to)[0];for(const it of its||[]){if(/^scelta|crediti|\bcr\b/i.test(it))continue;P.push([it,to,fr])}}
@@ -858,7 +861,9 @@ const W1="2026-10-20",W2="2026-10-26";
    quella in corso solo dalle 10:30 di Roma, quando i dati ufficiali della notte di domenica sono arrivati (ESPN dalle 07:30 ogni 15 minuti).
    Prima delle 10:30 resta in corso la settimana appena finita (risultati e classifica si chiudono alle 10:30). Dalle 10:30 campo e sfide
    mostrano la settimana nuova: formazioni dei GM in diretta da ESPN e giocatori «In attesa» fino alla prima partita del lunedì. */
-function e16WeekNow(){const t=nyToday(),d=t<W1?W1:t;let w=weekOf(d);if(w>1&&weekRange(w)[0]===d){const p=new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Rome",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date()),g=k=>+((p.find(x=>x.type===k)||{}).value||0);if((g("hour")%24)*60+g("minute")<630)w--}return w}
+/* (121) eccezione del 16/11/2026: il turno è finito subito (i cambi giocatori erano già arrivati prima delle 10:30) */
+const E16_TURNO_ECC={"2026-11-16":0};window.E16_TURNO_ECC=E16_TURNO_ECC;
+function e16WeekNow(){const t=nyToday(),d=t<W1?W1:t;let w=weekOf(d);if(w>1&&weekRange(w)[0]===d&&!(d in E16_TURNO_ECC)){const p=new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Rome",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date()),g=k=>+((p.find(x=>x.type===k)||{}).value||0);if((g("hour")%24)*60+g("minute")<630)w--}return w}
 window.e16WeekNow=e16WeekNow;
 function weekOf(d){if(d<W2)return 1;return 2+Math.floor((Date.parse(d+"T12:00:00Z")-Date.parse(W2+"T12:00:00Z"))/(7*864e5))}
 function weekRange(w){if(w===1)return[W1,"2026-10-25"];const a=new Date(Date.parse(W2+"T12:00:00Z")+(w-2)*7*864e5),b=new Date(a.getTime()+6*864e5);return[a.toISOString().slice(0,10),b.toISOString().slice(0,10)]}
