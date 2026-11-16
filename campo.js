@@ -49,9 +49,17 @@ const RLi={G:"G",F:"A",C:"C"};
 const pcls=v=>v>=50?"v":v>=35?"g":v>=20?"y":"r";
 const gcol=v=>v>=50?"#7c3aed":v>=35?"#3ba764":v>=20?"#f5b400":"#dc2626";
 const last=n=>{const p=String(n).replace(/\s+(Jr\.?|Sr\.?|II|III|IV)$/i,"").split(" ");return p.slice(1).join(" ")||p[0]};
-function card(t,g,P,W){const p=P[g[0]],avg=p?p.ff/p.gp:null,w=W[g[0]];
+/* (118) CARTELLINO DEL TURNO come Dreamers: il riquadro grande = media AVG delle partite della settimana in corso ("In attesa" se non ha ancora giocato);
+   sotto, la barra delle notti: una casella per ogni partita della sua squadra NBA nella settimana: N1…N7 = da giocare (numero della notte del turno),
+   AVG della partita nel suo colore quando è giocata, che lampeggia se è in corso, NG se la squadra ha giocato senza di lui. W[nome] = riga di wkTeam. */
+const wkBig=x=>{if(x&&x.n)return{c:pcls(x.pg),t:f1(x.pg)};if(!x||!x.G.length)return{c:"na",t:"Nessuna partita"};if(x.rem||x.G.some(y=>y.lv))return{c:"na",t:"In attesa"};return{c:"na",t:"Non ha giocato"}};
+function wkBar(x,wa,cls){if(!x||!x.G.length)return"";const a=Date.parse(wa+"T12:00:00Z");
+ return `<span class="gd ${cls||""} gbar" aria-label="${x.n} partite giocate su ${x.G.length}">${x.G.map(y=>{const nt=Math.round((Date.parse(y.d+"T12:00:00Z")-a)/864e5)+1;
+  if(y.f!=null)return `<i class="${y.lv?"lv":"ok"}" style="--gc:${gcol(y.f)}">${f1(y.f)}</i>`;if(y.ng)return `<i class="ng">NG</i>`;return `<i>N${nt}</i>`}).join("")}</span>`}
+function card(t,g,P,W,wa){const x=W[g[0]],b=wkBig(x);
  return `<span class="pj">${jersey(t.id,numOf(g[0]),t.nome.split(" ").slice(-1)[0],g[0])}</span><span class="pnm ${RL(g[3])}"><i>${RLi[RL(g[3])]}</i><b class="pn">${e(last(g[0]))}</b></span>
- <span class="gw"><span class="pcs"><span class="pcd ${avg!=null?pcls(avg):""}"><b>${avg!=null?f1(avg):"–"}</b></span></span><span class="gd gbar">${w?`<i class="ok" style="--gc:${gcol(w.f/w.n)}">${f1(w.f/w.n)}</i><i>${w.n}P</i>`:`<i>SETT. 0</i>`}</span></span>`}
+ <span class="gw"><span class="pcs"><span class="pcd ${b.c}"><b>${b.t}</b></span></span>${wkBar(x,wa)||`<span class="gd gbar"><i>0 partite</i></span>`}</span>`}
+const benchEv=(x,wa)=>{const b=wkBig(x);return `<span class="bev"><span class="cev ${b.c==="na"?"wait":b.c}">${b.c==="na"?(b.t==="Nessuna partita"?"–":b.t==="Non ha giocato"?"NG":"Attesa"):b.t}</span>${wkBar(x,wa,"trgd")}</span>`};
 window.e16Jersey=(t,n,nk,pl)=>jersey(t,n,nk,pl);window.e16Num=n=>numOf(n);
 let NUMS=null;function numOf(n){if(!NUMS){NUMS={};/* numero di maglia NBA: dalle rose ESPN non lo abbiamo; si usa un numero stabile dal nome */}
  if(NUMS[n]!=null)return NUMS[n];let h=0;for(const ch of n)h=(h*31+ch.charCodeAt(0))%97;return NUMS[n]=h%55}
@@ -69,7 +77,8 @@ document.addEventListener("click",ev=>{const b=ev.target.closest("[data-cwk]");i
 window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P=pstats();
  /* punteggio della settimana in corso di ogni giocatore: (104) si mostra la media AVG delle sue partite (W[k].f = somma, W[k].n = partite) */
  const wCur=weekOf(nyToday()<W1?W1:nyToday()),wNow=CW&&CW<=wCur?CW:wCur,[wa,wb]=weekRange(wNow),W={};
- for(const d of Object.keys(ESPN.days)){if(d<wa||d>wb)continue;for(const x of rowsOf(d)){const k=x.r[0];(W[k]=W[k]||{f:0,n:0}).f+=x.f;W[k].n++}}
+ /* (118) righe della settimana dalla stessa funzione di Lega e duello (wkTeam): partite giocate, live, NG e da giocare */
+ try{for(const x of wkTeam(id,wNow).L)W[x.g[0]]=x}catch(_){}
  /* (16) in campo i 5 titolari con l AVG medio più alto; posizioni: centri in alto, ali in mezzo, guardie in basso */
  const avgOf=g=>{const p=P[g[0]];return p?p.ff/p.gp:-1},tit=R0.filter(g=>g[2]!=="BE"&&g[2]!=="IR").sort((a,b)=>avgOf(b)-avgOf(a));
  const RK={C:0,F:1,G:2},POS=["C","SF","PF","PG","SG"];
@@ -85,14 +94,14 @@ window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P
   <div class="cgo">Contratti e scelte ›</div></div>`})()}
   ${lbm(id,wNow,wCur)}
   <div class="court" style="--tc:${TCOL[id]};border-left:0;border-right:0;border-top:4px solid ${id==="QUE"?(E16N?"#5b21b6":"#ffffff"):(COL[id]||COL.FAL).fr}!important;margin-top:10px">${court(t)}
- ${five.map(g=>{const[x,y]=SLOT5[g[2]];return `<button class="cpl dr" data-ist="${g[2]==="IR"?"out":"ok"}" data-pl="${e(g[0])}" style="left:${x}%;top:${y}%;--k:1">${card(t,g,P,W)}</button>`}).join("")}</div>
+ ${five.map(g=>{const[x,y]=SLOT5[g[2]];return `<button class="cpl dr" data-ist="${g[2]==="IR"?"out":"ok"}" data-pl="${e(g[0])}" style="left:${x}%;top:${y}%;--k:1">${card(t,g,P,W,wa)}</button>`}).join("")}</div>
  <h2><span class="t"><span>Titolari</span></span><em>altri ${rest.length} · 100% AVG</em></h2>
- <div class="bench dptrib e16tit">${rest.map(g=>{const p=P[g[0]],v=p?p.ff/p.gp:null,w=W[g[0]];return `<button class="bpl" data-pl="${e(g[0])}">${jersey(id,numOf(g[0]),name,g[0])}<span class="bnm"><i class="rtr ${RL(g[3])}"></i>${e(g[0])}<small>${({G:"Guardia",F:"Ala",C:"Centro"})[RL(g[3])]} · ${g[1]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${w?` · sett. ${f1(w.f/w.n)} (${w.n}P)`:""}</small></span><span class="trlk"></span><span class="bev"><span class="cev ${v!=null?pcls(v):"wait"}">${v!=null?f1(v):"–"}</span></span></button>`}).join("")}</div>
+ <div class="bench dptrib e16tit">${rest.map(g=>{const p=P[g[0]],v=p?p.ff/p.gp:null,w=W[g[0]];return `<button class="bpl" data-pl="${e(g[0])}">${jersey(id,numOf(g[0]),name,g[0])}<span class="bnm"><i class="rtr ${RL(g[3])}"></i>${e(g[0])}<small>${({G:"Guardia",F:"Ala",C:"Centro"})[RL(g[3])]} · ${g[1]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${v!=null?` · stagione ${f1(v)}`:""}</small></span><span class="trlk"></span>${benchEv(w,wa)}</button>`}).join("")}</div>
  <h2><span class="t"><span>Tribuna</span></span><em>panchina e IR della formazione ESPN · non contano</em></h2>
- <div class="bench dptrib">${trib.map(g=>{const p=P[g[0]],v=p?p.ff/p.gp:null;return `<button class="bpl" data-pl="${e(g[0])}">${jersey(id,numOf(g[0]),name,g[0])}<span class="bnm"><i class="rtr ${RL(g[3])}"></i>${e(g[0])}<small>${g[2]==="IR"?"Infortunato · ":""}${g[1]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${g[2]==="IR"?"":u25(g[0])?" · under 25 ✓":etaOf(g[0])!=null?" · ⚠️ non under 25":""}</small></span><span class="trlk"></span><span class="bev"><span class="cev ${v!=null?pcls(v):"wait"}">${v!=null?f1(v):"–"}</span></span></button>`}).join("")}</div>
+ <div class="bench dptrib">${trib.map(g=>{const p=P[g[0]],v=p?p.ff/p.gp:null,w=W[g[0]];return `<button class="bpl" data-pl="${e(g[0])}">${jersey(id,numOf(g[0]),name,g[0])}<span class="bnm"><i class="rtr ${RL(g[3])}"></i>${e(g[0])}<small>${g[2]==="IR"?"Infortunato · ":""}${g[1]}${etaOf(g[0])!=null?" · "+etaTxt(g[0]):""}${g[2]==="IR"?"":u25(g[0])?" · under 25 ✓":etaOf(g[0])!=null?" · ⚠️ non under 25":""}</small></span><span class="trlk"></span>${benchEv(w,wa)}</button>`}).join("")}</div>
  ${window.e16FconsBtn?e16FconsBtn(id):""}
  ${liveBox(id)}
- <p class="note">Sotto ogni maglia: AVG medio della stagione; barra = AVG fatti questa settimana e partite giocate. I numeri di maglia sono indicativi.</p></div>`};
+ <p class="note">Sotto ogni maglia: media AVG della settimana (In attesa finché non gioca); barra = una casella per ogni partita della sua squadra nella settimana: N1…N7 da giocare (notte del turno), AVG della partita nel suo colore (lampeggia se in corso), NG se non ha giocato. Nelle liste a destra la stessa cosa; la media della stagione è nella riga. I numeri di maglia sono indicativi.</p></div>`};
 /* (46) «LIVE STANOTTE» sotto la tribuna, come Dreamers: tabellino di tutti i giocatori della squadra.
    Notte = la notte scelta (giorni della settimana in corso, data USA), con stato della partita.
    Turno = la SETTIMANA intera: per ogni giocatore la somma di tutte le sue partite (AVG e statistiche cumulative), con ‹ › per le altre settimane.
