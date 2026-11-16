@@ -43,7 +43,7 @@ function campoNotteMap(t,dd){const d=dd||notte(),o={};if(!d)return o;const mine=
 /* sfida della settimana ESPN 16 al posto del turno Dreamers (maxischermo, spogliatoio ospiti, canale TV) */
 let SC={};const sco=k=>{const n=Date.now();if(SC[k]&&n-SC[k].t<20000)return SC[k].S;let S={};try{S=(typeof sfidaScores==="function"?sfidaScores(k):weekScores(k)).S||{}}catch(e){}SC[k]={t:n,S};return S};
 const drStand=()=>TEAMS.map(t=>({t:t.id,...(REC[t.id]||{w:0,l:0,pf:0,pa:0})})).sort((a,b)=>(b.w-a.w)||(b.pf-a.pf));
-const drPO=x=>x,drCurWeek=()=>{const d=nyToday();return weekOf(d<W1?W1:d)},drWeek=k=>({k,closed:SCORES[k]!=null}),drPairs=k=>MATCHUPS[k]||[],drTeam=(k,t)=>({score:sco(k)[t]??null});
+const drPO=x=>x,drCurWeek=()=>e16WeekNow(),drWeek=k=>({k,closed:SCORES[k]!=null}),drPairs=k=>MATCHUPS[k]||[],drTeam=(k,t)=>({score:sco(k)[t]??null});
 /* maglie: jersey() di kit.js con il nome della squadra sul petto; KITO 2 (Alternativa) per i Ducks = la loro prima maglia in più */
 function jersey(t,num,nk){const K=window.KITO;let kf;if(K!=null){kf=K;try{if(t==="QUE"&&K===2)kf=E16KIT.kitLista(t)[2]}catch(e){}}
   return window.E16KIT?E16KIT.jersey(t,num,nk||nick(t),undefined,kf):(window.e16Jersey?e16Jersey(t,num,nk||nick(t)):"")}

@@ -610,6 +610,7 @@ html.notte .st-tm{background:#18102e;color:#fff;border-color:rgba(167,139,250,.2
 .st-tab .p1{background:rgba(233,185,73,.16)}
 @media (max-width:370px){.st-champ{grid-template-columns:84px minmax(0,1fr);gap:9px}.st-ctro svg{width:84px}.st-yr{font-size:32px}.st-cy{grid-template-columns:66px minmax(0,1fr)}.st-cyh b{font-size:18px}.st-tab li{grid-template-columns:26px 28px minmax(0,1fr) auto 34px;gap:6px}.st-hero{grid-template-columns:74px minmax(0,1fr)}.st-htro svg{width:74px}.st-ht b{font-size:30px}.st-cw{grid-template-columns:40px 20px 28px minmax(0,1fr);gap:5px}}
 </style>
+<style>/* (120) report delle notti */.foot .ftruns{margin-bottom:10px;display:grid;gap:6px}.foot .fth{font-weight:800;opacity:.85}.foot .ftrun{border:1px solid rgba(127,127,127,.35);border-radius:10px;padding:6px 10px;text-align:left}.foot .ftrun summary{cursor:pointer;font-weight:800}.foot .ftrun p{margin:4px 0 0}.foot .ftan{color:#dc2626}</style>
 <style>/* (94) fondo pagina: resoconto dei dati salvati da GitHub */.foot .ftrep{all:unset;cursor:pointer;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit}.foot .ftbox{margin:10px auto 0;max-width:520px;text-align:left;font:500 12.5px/1.45 system-ui,sans-serif;letter-spacing:0;text-transform:none;font-style:normal;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.25)}.foot .ftbox p{margin:3px 0}.foot .ftbox .ok{color:#4ade80}.foot .ftbox .ko{color:#fbbf24}.foot .ftbox .ftn{opacity:.75;font-size:11.5px;margin-top:6px}</style>
 <style>/* (99) Dynasty TV come Dreamers: pallino rosso lampeggiante (in campo adesso) nella colonna AVG, prima del numero */html body .tvbox .lvd{display:inline-block;width:6px;height:6px;border-radius:50%;background:#ff4d5e!important;margin-right:4px;vertical-align:middle;animation:lvp 1.4s infinite}</style>
 <style>/* (118) campo: barra delle notti anche nelle liste Titolari e Tribuna (come la tribuna Dreamers) */.bev .gd.trgd{margin:4px 0 0 auto!important;justify-content:flex-end}.bev .gd.trgd.gbar{width:84px;margin:3px 0 0 auto!important;padding:1.5px 2px!important;border-radius:6px;z-index:0}.bev{display:flex;flex-direction:column;align-items:flex-end}.gd.gbar i.lv{background:var(--gc,#ef4444)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;animation:gbLv 1s ease-in-out infinite}</style>
@@ -681,15 +682,18 @@ html body .dsroom{padding-left:12px;padding-right:12px}html body .dsroom>.gback{
 <div id="sbar" aria-hidden="true"></div>
 <script>/* (6) tema come Dreamers: giorno = html.dlt-parquet, notte = html.notte + body.notte; variabili colore sull html come in Dreamers */
 /* (94) resoconto dei dati salvati nell app da GitHub (come il report del fondo pagina di Dreamers) */
-function ftReport(){const r=[],ok=t=>`<b class="ok">✓</b> ${t}`,ko=t=>`<b class="ko">⚠</b> ${t}`;try{
+function ftReport(){const r=[],ok=t=>`<b class="ok">✓</b> ${t}`,ko=t=>`<b class="ko">⚠</b> ${t}`;let rp="";try{
+ /* (120) report delle notti ufficiali (ESPN.rep, scritto da tools/espn.mjs): la più recente aperta, le altre richiudibili */
+ const RP=ESPN.rep||[],card=(x,i)=>`<details class="ftrun"${i?"":" open"}><summary>${x.esito==="ok"?"✓":"⚠"} ${x.quando} · notte ${x.notti.map(d=>d.slice(8)+"/"+d.slice(5,7)).join(", ")} · ESPN${x.gh?" (GitHub)":""}</summary>${x.info.map(t=>`<p>${t}</p>`).join("")}${(x.anomalie||[]).map(t=>`<p class="ftan">⚠ ${t}</p>`).join("")}</details>`;
+ rp=RP.length?`<div class="ftruns"><p class="fth">Arrivo dei dati ufficiali (ESPN dalle 07:30, ogni 15 minuti)</p>${RP.slice(0,10).map(card).join("")}</div>`:"";
  const nB=Object.keys(ESPN.box||{}).length,nG=Object.keys(ESPN.games||{}).length;r.push(ok(`Tabellini NBA: ${nB} partite salvate su ${nG} in calendario · ${ESPN.upd}`));
  if(typeof LEGA!=="undefined"){const nT=Object.keys(LEGA.rose||{}).length;r.push((nT===TEAMS.length?ok:ko)(`Lega ESPN: rose di ${nT} squadre su ${TEAMS.length} · ${LEGA.upd}`));
-  const wN=weekOf(nyToday()<W1?W1:nyToday()),L=LEGA.line&&LEGA.line[wN];const nL=L?Object.keys(L).length:0;r.push((nL===TEAMS.length?ok:ko)(`Formazioni del lunedì, settimana ${wN}: ${nL} su ${TEAMS.length}`));
+  const wN=e16WeekNow(),L=LEGA.line&&LEGA.line[wN];const nL=L?Object.keys(L).length:0;r.push((nL===TEAMS.length?ok:ko)(`Formazioni del lunedì, settimana ${wN}: ${nL} su ${TEAMS.length}`));
   const lv=LEGA.live&&LEGA.live[wN];r.push(lv?ok(`Punteggi ESPN della settimana ${wN} salvati alle ${new Date(LEGA.liveTs).toLocaleTimeString("it-IT",{timeZone:"Europe/Rome",hour:"2-digit",minute:"2-digit"})}`):ko(`Punteggi ESPN della settimana ${wN} non ancora salvati`));
   const ch=Object.keys(LEGA.score||{}).length;r.push(ok(`Settimane chiuse con risultato ufficiale ESPN: ${ch}`))}
  if(typeof INFLIVE!=="undefined")r.push(ok(`Infortuni: ${INFLIVE.l.length} giocatori · salvati nell app il ${INFLIVE.upd} (GitHub ogni 5 minuti; con l app aperta il telefono li rilegge da ESPN ogni 30 secondi)`));else r.push(ko("Infortuni: file dell app non trovato"));
  }catch(_){r.push(ko("Resoconto non disponibile"))}
- return`<div class="ftbox">${r.map(x=>`<p>${x}</p>`).join("")}<p class="ftn">Questi dati sono salvati nell app da GitHub (non sul telefono): tutti vedono gli stessi. Durante le partite il telefono aggiunge il live.</p></div>`}
+ return`<div class="ftbox">${rp}${r.map(x=>`<p>${x}</p>`).join("")}<p class="ftn">Questi dati sono salvati nell app da GitHub (non sul telefono): tutti vedono gli stessi. Durante le partite il telefono aggiunge il live.</p></div>`}
 document.addEventListener("click",e=>{if(e.target.closest("[data-ftrep]")){window.__ftOpen=!window.__ftOpen;const y=scrollY;render();scrollTo(0,y)}});
 function e16Tema(nt){const H=document.documentElement,B=document.body;
  const C="--duchrl:#7c3aed;--sepw:1px;--sepc:#0b0b12;--bxc:#e8631a;--bxbc:#e8631a;--bxg:#22a34a;--bxr:#e02424;--bxn:#ffffff;--sj:1;--sn:1;--st:1;--sp:1;--sov:-10;--hh:112px;";
@@ -797,7 +801,7 @@ function render(){
  document.body.dataset.v=curTeam?"squadra":({stat:"efficienza",sgioc:"fa",gioc:"grafico",comp:"compar",ssq:"effsquadra",lega:"dreamers",inf:"infortuni",reg:"regolamento"})[cur]||cur;
  e16Tema(E16N);
  /* (94) in fondo: quando GitHub ha salvato nell app i dati ufficiali ESPN; toccando si apre il resoconto (tabellini, lega, punteggi, infortuni) */
- {const f=document.getElementById("foot");if(f){f.innerHTML=typeof ESPN!=="undefined"?`<button type="button" class="ftrep" data-ftrep="1">Dati ufficiali ESPN · salvati da GitHub il ${ESPN.upd} ›</button>${window.__ftOpen?ftReport():""}`:""}}
+ {const f=document.getElementById("foot");if(f){const R0=(ESPN.rep||[])[0],dI=d=>d.slice(8)+"/"+d.slice(5,7);/* (120) come Dreamers: sotto l orario la notte ufficiale arrivata e quando; tocco = report */f.innerHTML=typeof ESPN!=="undefined"?`<button type="button" class="ftrep" data-ftrep="1">${R0?`Dati ufficiali ESPN · notte ${R0.notti.map(dI).join(", ")} · arrivati il ${R0.quando.replace(" · "," alle ")}${R0.esito!=="ok"?" ⚠":""}`:`Dati ufficiali ESPN · salvati da GitHub il ${ESPN.upd}`} ›</button>${window.__ftOpen?ftReport():""}`:""}}
  const m=document.getElementById("main");
  /* (6) le pagine proprie di ESPN 16 (squadra, lega, cap) stanno dentro .e16: le loro regole non toccano le classi Dreamers */
  m.innerHTML='<div class="view">'+(curTeam?'<div class="e16">'+vTeam(curTeam)+'</div>':window.STATV&&STATV[cur]?STATV[cur]():cur==="campo"&&window.vCampo?`<div class="chips">${TEAMS.map(x=>`<button class="chip" data-team="${x.id}" aria-pressed="${x.id===e16RT()}"><span class="badge logo lg-${x.id}"></span>${esc(x.nome.split(" ").slice(-1)[0])}</button>`).join("")}</div>`+vCampo(e16RT()):window.GESTV&&GESTV[cur]?GESTV[cur]():window.SCAMBIV&&SCAMBIV[cur]?SCAMBIV[cur]():window.TRADEV&&TRADEV[cur]?TRADEV[cur]():cur==="tv"?vTv():cur==="cap"?'<div class="e16">'+vCapAll()+'</div>':vHome())+'</div>';
@@ -850,6 +854,12 @@ const pdkC=v=>v>=50?"v":v>=35?"g":v>=20?"y":"r";
 /* (7) SETTIMANE della lega (come ESPN Fantasy): la 1ª va da martedì 20/10 a domenica 25/10, poi da lunedì a domenica.
    Punteggio di una squadra in una settimana = somma degli AVG dei 14 titolari della formazione ESPN del lunedì (44) in tutte le loro partite della settimana: punteggio pieno, nessun ruolo, nessun cap. */
 const W1="2026-10-20",W2="2026-10-26";
+/* (120) CAMBIO TURNO ALLE 10:30 ITALIANE DEL LUNEDÌ (come Dreamers): la settimana nuova inizia il lunedì (data USA), ma nell app diventa
+   quella in corso solo dalle 10:30 di Roma, quando i dati ufficiali della notte di domenica sono arrivati (ESPN dalle 07:30 ogni 15 minuti).
+   Prima delle 10:30 resta in corso la settimana appena finita (risultati e classifica si chiudono alle 10:30). Dalle 10:30 campo e sfide
+   mostrano la settimana nuova: formazioni dei GM in diretta da ESPN e giocatori «In attesa» fino alla prima partita del lunedì. */
+function e16WeekNow(){const t=nyToday(),d=t<W1?W1:t;let w=weekOf(d);if(w>1&&weekRange(w)[0]===d){const p=new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Rome",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date()),g=k=>+((p.find(x=>x.type===k)||{}).value||0);if((g("hour")%24)*60+g("minute")<630)w--}return w}
+window.e16WeekNow=e16WeekNow;
 function weekOf(d){if(d<W2)return 1;return 2+Math.floor((Date.parse(d+"T12:00:00Z")-Date.parse(W2+"T12:00:00Z"))/(7*864e5))}
 function weekRange(w){if(w===1)return[W1,"2026-10-25"];const a=new Date(Date.parse(W2+"T12:00:00Z")+(w-2)*7*864e5),b=new Date(a.getTime()+6*864e5);return[a.toISOString().slice(0,10),b.toISOString().slice(0,10)]}
 const nyToday=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"America/New_York"}).format(new Date());
@@ -908,7 +918,7 @@ let WK=null;function weekScores(w,mode){if(mode!=="sum"){const S={},G={};TEAMS.f
 const is89=w=>+w===8||+w===9;const wkLab=w=>is89(w)?"8–9":String(w);const sfFin=(w,wNow)=>(+w===8?9:+w)<wNow;
 function sfidaScores(w,mode){const WS=weekScores(w,mode);if(+w!==9)return WS;const W8=weekScores(8,mode),S={},Gm={};TEAMS.forEach(t=>{S[t.id]=(W8.S[t.id]||0)+(WS.S[t.id]||0);Gm[t.id]=(W8.G[t.id]||0)+(WS.G[t.id]||0)});return{S,G:Gm,off:WS.off&&W8.off,s8:W8.S,s9:WS.S}}
 /* (104) settimana finita = giorni passati (New York) e tutte le partite della settimana chiuse */
-function wkDone(w){const[a,b]=weekRange(w);if(b>=nyToday())return false;for(const d of Object.keys(ESPN.days))if(d>=a&&d<=b)for(const id of ESPN.days[d]){const g=ESPN.games[id];if(g&&g[4]!=="F")return false}return true}
+function wkDone(w){const[a,b]=weekRange(w);if(b>=nyToday()||w>=e16WeekNow())return false;/* (120) la settimana si chiude alle 10:30 del lunedì dopo */for(const d of Object.keys(ESPN.days))if(d>=a&&d<=b)for(const id of ESPN.days[d]){const g=ESPN.games[id];if(g&&g[4]!=="F")return false}return true}
 /* (104) record V-P(-pareggi), punti fatti e subiti con la regola delle medie, per le sfide finite (8 e 9 = una sola sfida: media sett. 8 + media sett. 9).
    Vince chi ha di più considerando tutte le cifre decimali; pareggio solo se identici. */
 function e16Rec(){for(const id in REC){REC[id].w=0;REC[id].l=0;REC[id].t=0;REC[id].pf=0;REC[id].pa=0}
@@ -939,7 +949,7 @@ function vHome(){
  const live=rows.some(x=>x.g[4]==="L");
  const list=rows.slice(0,50).map(x=>{const o=ownH(x.r[0]);return `<div class="hmp lvx" data-pl="${esc(x.r[0])}"><div class="lvh"><i class="hmo">${o?`<span class="badge logo lg-${o}"></span>`:`<img src="${nbaLogo(x.r[1])}" alt="" style="width:100%;height:100%;object-fit:contain">`}</i><span class="plk">${esc(x.r[0])}</span><span style="color:#fff!important;-webkit-text-fill-color:#fff!important" class="pdkx ${pdkC(x.f)}">${f1(x.f)}</span></div><small class="lvs">vs ${x.opp} · ${x.g[4]==="L"?`<span class="hmlv">LIVE</span> ${esc(x.g[6]||"")}`:"Finale"} · ${mn(x.r[3])}</small>${box(x)}</div>`}).join("")||`<div class="hmp"><small class="lvs">Nessuna partita</small></div>`;
  /* settimana: quella in corso (o la scelta con le frecce) */
- const wNow=weekOf(nyToday()<W1?W1:nyToday()),w=HWK&&HWK<=wNow?HWK:wNow,WS=weekScores(w),[wa,wb]=weekRange(w);
+ const wNow=e16WeekNow(),w=HWK&&HWK<=wNow?HWK:wNow,WS=weekScores(w),[wa,wb]=weekRange(w);
  const cls=c=>{const L=standings(c);return `<div class="hmslot"><div class="hmh"><span>${c==="E"?"EAST":"WEST"} · CLASSIFICA</span><span>V · P · SETT.</span></div><div class="hmscroll">${L.map((t,k)=>`<div class="hmp hmcl${k<4?"":" hmcl2"}" data-team="${t.id}"><span class="hmps">${k+1}</span><i class="hmrl"><span class="badge logo lg-${t.id}"></span></i><span class="hmn">${esc(t.nome.split(" ").slice(-1)[0])}<small>${esc(t.gm)}</small></span><span class="hmwl"><b>${t.w}</b><b class="l">${t.l}</b><b class="a">${f1(WS.S[t.id])}</b></span></div>`).join("")}</div><div class="hmgrip"><i></i></div></div>`};
  const M=MATCHUPS[w]||[];
  const wkHead=`<div class="hmh hmnv"><button type="button" class="hmar" ${w>1?`data-hwk="${w-1}"`:"disabled"}>‹</button><span class="hmnt"><b>SETTIMANA ${w}</b><small>${dIt(wa)} → ${dIt(wb)}${w===wNow&&live?" · LIVE":""}${is89(w)?" · "+sf89Note(w):""}</small></span><button type="button" class="hmar" ${w<wNow?`data-hwk="${w+1}"`:"disabled"}>›</button></div>`;

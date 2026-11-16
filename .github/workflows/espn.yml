@@ -34,6 +34,8 @@ jobs:
           if [ "$SCHED" = "*/15 5-23 * * 1" ] && [ $HM -lt 700 ]; then echo "SKIP=1" >> "$GITHUB_ENV"; echo "Prima delle 07:00 italiane: niente da fare"; fi
           # (116) prima delle 10:30 un ESPN che non risponde non è un errore (si riprova fra 15 minuti); dalle 10:30 sì (mail)
           if [ $HM -lt 1030 ] && [ "${{ github.event_name }}" = "schedule" ]; then echo "PRESTO=1" >> "$GITHUB_ENV"; fi
+          # (120) il lunedì dalle 07:00 si salvano già le formazioni, ma i tabellini (dati ufficiali) solo dalle 07:30, come gli altri giorni
+          if [ $HM -lt 730 ] && [ "${{ github.event_name }}" = "schedule" ]; then echo "NOTAB=1" >> "$GITHUB_ENV"; fi
       - uses: actions/checkout@v4
         if: env.SKIP != '1'
       - uses: actions/setup-node@v4
@@ -43,6 +45,7 @@ jobs:
       - name: Scarica i tabellini ESPN
         if: env.SKIP != '1'
         run: |
+          if [ "$NOTAB" = "1" ]; then echo "Prima delle 07:30 italiane: tabellini non ancora (solo formazioni)"; exit 0; fi
           if node tools/espn.mjs; then exit 0; fi
           git checkout -- espn-data.js 2>/dev/null || true
           touch /tmp/espn_ko

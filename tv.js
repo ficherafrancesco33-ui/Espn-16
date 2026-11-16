@@ -22,7 +22,7 @@ function defDay(){const D=Object.keys(ESPN.days).sort(),t=nyDay();if(D.includes(
 /* (38) SCONTRI DIRETTI della lega sotto le partite NBA, come «Dreamers» nella Dynasty TV di Dreamers: le sfide della settimana del giorno scelto,
    (44) punteggio = ufficiale ESPN (settimane finite) o somma dei 14 titolari della formazione ESPN del lunedì, quanti dei 14 hanno già giocato, giorni giocati della settimana e i migliori di ogni squadra.
    Tocca una sfida → (74) box score della sfida in stile Dynasty TV di Dreamers (vDr); da lì «Apri la sfida» porta al duello della Lega. */
-function e16Sfide(d){try{const w=weekOf(d<W1?W1:d),M=MATCHUPS[w]||[];if(!M.length)return"";const[a,b]=weekRange(w),WS=sfidaScores(w),wNow=weekOf(nyToday()<W1?W1:nyToday());
+function e16Sfide(d){try{const w=weekOf(d<W1?W1:d),M=MATCHUPS[w]||[];if(!M.length)return"";const[a,b]=weekRange(w),WS=sfidaScores(w),wNow=e16WeekNow();
  const days=Object.keys(ESPN.days).filter(k=>k>=a&&k<=b&&(ESPN.days[k]||[]).length).sort(),done=days.filter(k=>(ESPN.days[k]||[]).every(id=>ESPN.games[id]&&ESPN.games[id][4]==="F")).length;
  const fin=w===8?false:w<wNow||(days.length&&done===days.length),st=fin?"Finale":w===8&&w<wNow?"Continua nella 9":w>wNow?"Da giocare":"In corso";
  const card=([A,B])=>{const TA=wkTeam(A,w),TB=wkTeam(B,w),sa=WS.S[A],sb=WS.S[B];
@@ -63,7 +63,7 @@ function vGame(){const id=TVS.g,g=ESPN.games[id];if(!g){TVS.g=null;return vList(
    tabella con Titolari (formazione ESPN del lunedì), In attesa (titolari che non hanno ancora giocato) e Tribuna; AVG = punti della settimana,
    statistiche = somma delle partite della settimana dai tabellini ESPN (si scorre a destra come nel box NBA). */
 function vDr(){try{const[A,B,ws,cup]=TVS.dr.split(","),w=+ws,MD=cup==="c"?"sum":undefined/* (104) dalla McGee Cup: regola a somma */,WS=sfidaScores(w,MD),TA=wkTeam(A,w,MD),TB=wkTeam(B,w,MD),sa=WS.S[A],sb=WS.S[B];
- const[a0,b0]=weekRange(w),wNow=weekOf(nyToday()<W1?W1:nyToday()),days=Object.keys(ESPN.days).filter(k=>k>=a0&&k<=b0&&(ESPN.days[k]||[]).length).sort(),done=days.filter(k=>(ESPN.days[k]||[]).every(id=>ESPN.games[id]&&ESPN.games[id][4]==="F")).length;
+ const[a0,b0]=weekRange(w),wNow=e16WeekNow(),days=Object.keys(ESPN.days).filter(k=>k>=a0&&k<=b0&&(ESPN.days[k]||[]).length).sort(),done=days.filter(k=>(ESPN.days[k]||[]).every(id=>ESPN.games[id]&&ESPN.games[id][4]==="F")).length;
  const fin=w===8?false:w<wNow||(days.length&&done===days.length),live=[TA,TB].some(T=>T.L.some(x=>x.G.some(g=>g.lv)));
  const side=TVS.drs==="b"?"b":"a",id=side==="a"?A:B,T=side==="a"?TA:TB;
  const nick=t=>e(TM[t].nome.split(" ").slice(-1)[0]),lg=t=>`<span class="drsbl"><span class="badge logo lg-${t}" role="img" aria-label="${e(TM[t].nome)}"></span></span>`;

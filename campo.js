@@ -76,13 +76,15 @@ function lbm(id,w,wCur){const m=(MATCHUPS[w]||[]).find(x=>x.includes(id));if(!m)
 document.addEventListener("click",ev=>{const b=ev.target.closest("[data-cwk]");if(!b||b.disabled)return;ev.stopPropagation();CW=+b.dataset.cwk;render()},true);
 window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P=pstats();
  /* punteggio della settimana in corso di ogni giocatore: (104) si mostra la media AVG delle sue partite (W[k].f = somma, W[k].n = partite) */
- const wCur=weekOf(nyToday()<W1?W1:nyToday()),wNow=CW&&CW<=wCur?CW:wCur,[wa,wb]=weekRange(wNow),W={};
+ const wCur=e16WeekNow(),wNow=CW&&CW<=wCur?CW:wCur,[wa,wb]=weekRange(wNow),W={};
  /* (118) righe della settimana dalla stessa funzione di Lega e duello (wkTeam): partite giocate, live, NG e da giocare */
  try{for(const x of wkTeam(id,wNow).L)W[x.g[0]]=x}catch(_){}
  /* (16) in campo i 5 titolari con l AVG medio più alto; posizioni: centri in alto, ali in mezzo, guardie in basso */
- const avgOf=g=>{const p=P[g[0]];return p?p.ff/p.gp:-1},tit=R0.filter(g=>g[2]!=="BE"&&g[2]!=="IR").sort((a,b)=>avgOf(b)-avgOf(a));
+ /* (120) titolari = i 14 della formazione ESPN della settimana mostrata (LEGA.line, il lunedì letta in diretta da formazioni-live.js fino alla prima partita); senza formazione: slot della rosa ESPN */
+ const LNs=(()=>{try{const L=LEGA.line[wNow][id];return L&&L.length?new Set(L.map(__ownKey)):null}catch(_){return null}})(),isTit=g=>LNs?LNs.has(__ownKey(g[0])):g[2]!=="BE"&&g[2]!=="IR";
+ const avgOf=g=>{const p=P[g[0]];return p?p.ff/p.gp:-1},tit=R0.filter(isTit).sort((a,b)=>avgOf(b)-avgOf(a));
  const RK={C:0,F:1,G:2},POS=["C","SF","PF","PG","SG"];
- const five=tit.slice(0,5).sort((a,b)=>RK[RL(a[3])]-RK[RL(b[3])]).map((g,i)=>[g[0],g[1],POS[i],g[3]]),rest=tit.slice(5),trib=R0.filter(g=>g[2]==="BE"||g[2]==="IR");
+ const five=tit.slice(0,5).sort((a,b)=>RK[RL(a[3])]-RK[RL(b[3])]).map((g,i)=>[g[0],g[1],POS[i],g[3]]),rest=tit.slice(5),trib=R0.filter(g=>!isTit(g));
  /* (104) punteggio della settimana = regola delle medie (somma delle medie dei 14 titolari ESPN), uguale a Lega e duello */
  let tot=0;try{tot=weekScores(wNow).S[id]||0}catch(_){}const r=REC[id];
  const name=t.nome.split(" ").slice(-1)[0];
@@ -108,7 +110,7 @@ window.vCampo=function(id){const t=TM[id];if(!t)return"";const R0=ROSE[id]||[],P
    Titolari della formazione ESPN segnati con il pallino; tocca una riga per il profilo. */
 const CL={m:"notte",d:null,w:null};
 const snm=n=>{const p=String(n).split(" ");return p.length>1?p[0][0]+". "+last(n):n};
-function liveBox(id){const own=new Set((ROSE[id]||[]).map(g=>__ownKey(g[0]))),wCur=weekOf(nyToday()<W1?W1:nyToday());
+function liveBox(id){const own=new Set((ROSE[id]||[]).map(g=>__ownKey(g[0]))),wCur=e16WeekNow();
  const days=k=>{const[a,b]=weekRange(k);return Object.keys(ESPN.days).filter(d=>d>=a&&d<=b&&(ESPN.days[d]||[]).length).sort()};
  const rowsDay=d=>{const out=[];for(const gid of ESPN.days[d]||[]){const g=ESPN.games[gid],B=ESPN.box[gid];if(!g||!B)continue;for(const r of B)if(own.has(__ownKey(r[0])))out.push({r,g,gid})}return out};
  const st=(g)=>g[4]==="F"?"Finale":g[4]==="L"?`<span class="hmlv">LIVE</span> ${e(g[6]||"")}`:"";

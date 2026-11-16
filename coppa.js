@@ -31,7 +31,7 @@ function fill(){for(let i=1;i<COPPA.length;i++){const r=COPPA[i],p=COPPA[i-1];if
  for(let k=0;k+1<A.length;k+=2)r.m.push([A[k],A[k+1]]);r.draw=1}}
 const nick=t=>TM[t]?TM[t].nome.split(" ").slice(-1)[0]:t;
 const lg=t=>`<span class="cplg" style="--tc:${TCOL[t]||"#333"}"><span class="badge logo lg-${t}" role="img" aria-label="${e(TM[t]?TM[t].nome:t)}"></span></span>`;
-const wNow=()=>{try{return weekOf(nyToday()<W1?W1:nyToday())}catch(_){return 1}};
+const wNow=()=>{try{return e16WeekNow()}catch(_){return 1}};
 /* punteggi di una sfida: ufficiali se scritti, altrimenti quelli della settimana */
 function score(r,m){if(m[2]!=null)return{a:m[2],b:m[3],off:1};try{const S=sfidaScores(r.w,"sum").S;return{a:S[m[0]],b:S[m[1]],off:0}}catch(_){return{a:null,b:null,off:0}}}
 function stato(r){const n=wNow();return r.w<n?"fin":r.w===n?"live":"next"}

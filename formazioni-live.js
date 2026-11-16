@@ -13,7 +13,8 @@ const itNow=()=>{const p=new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Rome"
 function finestra(){try{const t=nyToday(),w=weekOf(t<W1?W1:t),a=weekRange(w)[0];if(t!==a)return null;
  const it=itNow();if(it.d===a&&it.h<7)return null;
  const ids=(ESPN.days&&ESPN.days[a])||[];let first=Infinity,started=false;for(const id of ids){const g=ESPN.games[id];if(!g)continue;if(g[4]!=="S")started=true;const t0=new Date(g[5]).getTime();if(t0<first)first=t0}
- if(started||Date.now()>=first)return null;return{w,a}}catch(_){return null}}
+ /* (120) fino all ultimo istante: si legge fino a 10 minuti dopo la prima palla a due (la formazione è ormai bloccata: così si salva quella definitiva) */
+ if(Date.now()>=first+10*60000)return null;return{w,a,first}}catch(_){return null}}
 let busy=false,timer=null;window.E16FORM={ts:0,w:null};
 async function giro(){const f=finestra();if(!f||busy||document.hidden)return;busy=true;
  try{const c=new AbortController(),to=setTimeout(()=>c.abort(),12000);const r=await fetch(`${B}?view=mRoster&scoringPeriodId=${spOf(f.a)}&t=${Date.now()}`,{signal:c.signal,cache:"no-store"});clearTimeout(to);if(!r.ok)return;const J=await r.json();
@@ -22,7 +23,8 @@ async function giro(){const f=finestra();if(!f||busy||document.hidden)return;bus
   LEGA.line=LEGA.line||{};const prima=JSON.stringify(LEGA.line[f.w]||{});LEGA.line[f.w]=L;window.E16FORM={ts:Date.now(),w:f.w};
   if(JSON.stringify(L)!==prima){const y=scrollY;try{render()}catch(_){}scrollTo(0,y)}
  }catch(_){}finally{busy=false}}
-function avvia(){if(timer)return;giro();timer=setInterval(()=>{if(!finestra()){return}giro()},60000)}
+/* (120) ogni 60 secondi; negli ultimi 15 minuti prima della prima partita (e nei 10 dopo) ogni 15 secondi, per prendere anche gli ultimi spostamenti */
+let last=0;function avvia(){if(timer)return;giro();timer=setInterval(()=>{const f=finestra();if(!f)return;const vic=Math.abs(Date.now()-f.first)<15*60000;if(vic||Date.now()-last>=60000){last=Date.now();giro()}},15000)}
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)giro()});
 setTimeout(avvia,2500);
 })();

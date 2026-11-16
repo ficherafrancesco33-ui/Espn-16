@@ -14,7 +14,7 @@ try{Object.assign(G,JSON.parse(localStorage.getItem("e16_gest")||"{}"))}catch(_)
 const save=()=>{try{localStorage.setItem("e16_gest",JSON.stringify({tab:G.tab,rt:G.rt}))}catch(_){}};
 /* ---------- LEGA ---------- */
 function vLega(){
- const wNow=weekOf(nyToday()<W1?W1:nyToday()),w=G.wk&&G.wk<=wNow+20?G.wk:wNow,[wa,wb]=weekRange(w);
+ const wNow=e16WeekNow(),w=G.wk&&G.wk<=wNow+20?G.wk:wNow,[wa,wb]=weekRange(w);
  const tabs=`<div class="drtabs">${[["turno","Settimana"],["cal","Calendario"],["cla","Classifica"],["po","Playoff"]].map(([k,l])=>`<button data-lg2="${k}" aria-pressed="${G.tab===k}">${l}</button>`).join("")}</div>`;
  const head=`<div class="drroom" data-th="3"><button class="drexit" data-go="home">‹ Torna all'app</button><div class="drhd"><span class="drlogo">ESPN 16</span><small>FantaBasket USA · AVG · stagione 26/27</small></div>${tabs}`;
  let body="";
@@ -286,7 +286,7 @@ document.addEventListener("click",ev=>{const c=ev.target.closest("[data-lgteam],
  if(G.tm&&(d.lg2||d.lgw||d.du))G.tm=null;
  /* (26) sfida toccata da qualunque pagina (Lega, Home, banner, tabellone del campo) → duello stile Sleeper */
  if(d.du){ev.stopPropagation();if(d.du==="close")G.du=null;else{G.du=d.du.split(",");G.tab="turno";if(d.duw)G.wk=+d.duw;cur="lega";curTeam=null}render();scrollTo(0,0);setTimeout(()=>{const o=document.querySelector(".dumini.on"),st=o&&o.parentElement;if(st)st.scrollLeft=o.offsetLeft-(st.clientWidth-o.offsetWidth)/2},30);return}
- if(d.duk){const wNow=weekOf(nyToday()<W1?W1:nyToday()),w=(G.wk||wNow)+ +d.duk,m=(MATCHUPS[w]||[]).find(x=>x.includes(G.du[0]));if(!m)return;G.wk=w;G.du=m[0]===G.du[0]?m:[m[1],m[0]];render();return}
+ if(d.duk){const wNow=e16WeekNow(),w=(G.wk||wNow)+ +d.duk,m=(MATCHUPS[w]||[]).find(x=>x.includes(G.du[0]));if(!m)return;G.wk=w;G.du=m[0]===G.du[0]?m:[m[1],m[0]];render();return}
  if(d.lgw){G.wk=+d.lgw;G.du=null;if(d.lg2)G.tab=d.lg2;save();render();return}
  if(d.lg2){G.tab=d.lg2;G.du=null;save();render();return}
  if(d.rt){G.rt=d.rt;save();render();return}

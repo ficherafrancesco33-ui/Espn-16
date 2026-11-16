@@ -93,6 +93,31 @@ if (OLD.inj && OLD.inj.length && !(oraIt >= 7 && oraIt < 9) && !process.env.INFO
 try { const J = await get("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries"); ESPN.inj = [];
   for (const tm of J.injuries || []) for (const x of tm.injuries || []) { const a = x.athlete || {}; ESPN.inj.push([a.displayName || "", (a.team && a.team.abbreviation) || "", x.status || "", x.shortComment || x.longComment || "", (x.details && x.details.type) || "", (x.details && x.details.returnDate) || "", (x.details && x.details.side) || "", (x.details && x.details.detail) || "", x.date || ""]) }
 } catch (e) { if (OLD.inj) ESPN.inj = OLD.inj }
+/* (120) REPORT NASCOSTO (come REPORT_INFO di Dreamers): ogni volta che una notte diventa ufficiale (tutte le partite finite e con tabellino)
+   si scrive in ESPN.rep l ora di arrivo, le notti, partite e giocatori, e i controlli (somma dei punti dei giocatori = punteggio della partita).
+   L app lo mostra sotto l orario in fondo alla pagina (tocco sulla riga). Si tengono le ultime 30 corse. */
+{
+  const isClosed = (D, G, X, d) => (D[d] || []).length && D[d].every(id => G[id] && G[id][4] === "F" && X[id]);
+  const nuove = days.filter(d => d <= nyToday && isClosed(ESPN.days, ESPN.games, ESPN.box, d) && !isClosed(OLD.days, OLD.games, OLD.box, d));
+  ESPN.rep = (OLD.rep || []).slice(0, 30);
+  if (nuove.length) {
+    const an = [], info = [];
+    for (const d of nuove) {
+      let gioc = 0;
+      for (const id of ESPN.days[d]) {
+        const g = ESPN.games[id], B = ESPN.box[id] || [];
+        gioc += B.length;
+        for (const [k, sq] of [[2, g[0]], [3, g[1]]]) { const pt = B.filter(r => r[1] === sq).reduce((s, r) => s + r[4], 0); if (pt !== g[k]) an.push(`${d.slice(8)}/${d.slice(5, 7)} ${g[0]}-${g[1]}: punti dei giocatori ${sq} ${pt} ≠ punteggio ${g[k]}`) }
+        if (!B.length) an.push(`${g[0]}-${g[1]}: tabellino vuoto`);
+      }
+      info.push(`Notte ${d.slice(8)}/${d.slice(5, 7)} · partite ${ESPN.days[d].length} · giocatori ${gioc}`);
+    }
+    info.push(an.length ? "Controlli: ci sono anomalie (sotto)" : "Controlli superati: tutte le partite finite e con tabellino, somma dei punti dei giocatori = punteggio di ogni partita");
+    const quando = new Intl.DateTimeFormat("it-IT", { timeZone: "Europe/Rome", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(new Date()).replace(", ", " · ");
+    ESPN.rep.unshift({ quando, gh: process.env.GITHUB_ACTIONS ? 1 : 0, notti: nuove, esito: an.length ? "avvisi" : "ok", anomalie: an, info });
+    console.log("REPORT", JSON.stringify(ESPN.rep[0]));
+  }
+}
 ESPN.upd = new Intl.DateTimeFormat("it-IT", { timeZone: "Europe/Rome", dateStyle: "short", timeStyle: "short" }).format(new Date());
 writeFileSync(OUT, "/* ESPN 16 – generato da tools/espn.mjs (GitHub), non modificare a mano */\nconst ESPN=" + JSON.stringify(ESPN) + ";\n");
 console.log("notti", days.length, "partite", Object.keys(ESPN.games).length, "tabellini", Object.keys(ESPN.box).length);

@@ -67,7 +67,7 @@ function optimize(P){const n=P.length,k=Math.max(0,n-14);let best=null,relaxed=f
    if(!best||tot>best.tot+1e-9)best={tot,st,ex,sl}}};
  run(true);if(!best){relaxed=true;run(false)}if(best)best.relaxed=relaxed;return best}
 /* ---------- pagina ---------- */
-function vFcons(){const t=FC.t&&TM[FC.t]?FC.t:"QUE",T=TM[t],wNow=weekOf(nyToday()<W1?W1:nyToday()),maxW=Math.max(...Object.keys(MATCHUPS).map(Number));
+function vFcons(){const t=FC.t&&TM[FC.t]?FC.t:"QUE",T=TM[t],wNow=e16WeekNow(),maxW=Math.max(...Object.keys(MATCHUPS).map(Number));
  const w=FC.w&&FC.w>=wNow&&FC.w<=maxW?FC.w:Math.min(maxW,wNow+1);FC.w=w;fetchMissing(w);
  const[wa,wb]=weekRange(w),R0=ROSE[t]||[],P=R0.map(g=>player(g,w)),best=optimize(P);
  const nick=T.nome.split(" ").slice(-1)[0],jer=n=>window.e16Jersey?e16Jersey(t,window.e16Num?e16Num(n):"",nick,n):"";/* (57) col giocatore per le maglie NBA */
@@ -108,7 +108,7 @@ function vFcons(){const t=FC.t&&TM[FC.t]?FC.t:"QUE",T=TM[t],wNow=weekOf(nyToday(
  <p class="note">Come si calcola: previsione a partita = 60% media AVG della stagione + 40% media delle ultime 5 partite (con meno di 5 partite la media della stagione), per il fattore avversario (AVG concessi a partita da quella squadra NBA rispetto alla media, tra −12% e +12%). Previsione della settimana = MEDIA delle partite che dovrebbe giocare (regola delle medie: conta la media, non il numero di partite; 0 se non ne gioca nessuna): calendario NBA meno quelle saltate per infortunio (Centro Medico ESPN: Out fino alla data di rientro; senza data fuori tutta la settimana; in dubbio = prima partita al 75%). Si schierano i 14 con la previsione più alta che entrano negli slot ESPN; in tribuna solo under 25, tranne gli infortunati.</p></div>`}
 window.SCAMBIV=window.SCAMBIV||{};SCAMBIV.fcons=vFcons;
 /* tasto nel campo, tra la tribuna e «Live stanotte» */
-window.e16FconsBtn=id=>{const wNow=weekOf(nyToday()<W1?W1:nyToday());return `<button class="fcbtn" data-fcopen="${id}"><span class="fci">🧠</span><span><b>Formazione consigliata</b><small>per lunedì · settimana ${wNow+1} · partite, infortuni e previsioni</small></span><i>›</i></button>`};
+window.e16FconsBtn=id=>{const wNow=e16WeekNow();return `<button class="fcbtn" data-fcopen="${id}"><span class="fci">🧠</span><span><b>Formazione consigliata</b><small>per lunedì · settimana ${wNow+1} · partite, infortuni e previsioni</small></span><i>›</i></button>`};
 document.addEventListener("click",ev=>{const b=ev.target.closest("[data-fcopen],[data-fcw],[data-fct]");if(!b||b.disabled)return;const d=b.dataset;
  if(d.fcopen){ev.preventDefault();FC.t=d.fcopen;FC.w=null;cur="fcons";curTeam=null;render();scrollTo(0,0);return}
  if(cur!=="fcons")return;if(d.fcw){FC.w=+d.fcw;render();return}if(d.fct){FC.t=d.fct;render();return}},true);
