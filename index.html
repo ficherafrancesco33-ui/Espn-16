@@ -695,19 +695,38 @@ function ftReport(){const r=[],ok=t=>`<b class="ok">✓</b> ${t}`,ko=t=>`<b clas
  }catch(_){r.push(ko("Resoconto non disponibile"))}
  return`<div class="ftbox">${rp}${r.map(x=>`<p>${x}</p>`).join("")}<p class="ftn">Questi dati sono salvati nell app da GitHub (non sul telefono): tutti vedono gli stessi. Durante le partite il telefono aggiunge il live.</p></div>`}
 document.addEventListener("click",e=>{if(e.target.closest("[data-ftrep]")){window.__ftOpen=!window.__ftOpen;const y=scrollY;render();scrollTo(0,y)}});
+/* (130) PERSONALIZZAZIONE dello stile, come in Dreamers: Parquet (ufficiale), Carbone e oro, Cyber. Con Carbone e oro e Cyber di giorno
+   si usa la grafica scura della notte con i viola ricolorati nella tavolozza dello stile; di notte resta la notte normale. Vale su questo telefono (localStorage e16_stile). */
+const E16_ST={oro:{n:"Carbone e oro",v:"--fg:#f3efe2;--bg:#070707;--panel:#141414;--panel2:#1e1e1e;--line:#3a3320;--muted:#a8a08a;--glow:#2a2208;--hd1:#1c1c1c;--hd2:#0b0b0b;--red:#c9a227;--red2:#f2cf5b;--gold:#f5d76e;--onred:#14100a;--pn1:#1d1d1d;--pn2:#101010;",deep:[8,8,8],pan:[26,26,26],pan2:[60,52,30],acc:[201,162,39],lt:[242,207,91],tc:"#0b0b0b"},
+ cyber:{n:"Cyber",v:"--fg:#e6f7ff;--bg:#04070d;--panel:#0a1220;--panel2:#101c33;--line:#1c3a63;--muted:#8fb0d0;--glow:#0b3a5a;--hd1:#0a1a33;--hd2:#040a14;--red:#00c8e0;--red2:#7df3ff;--gold:#ff2bd6;--onred:#001018;--pn1:#0d1830;--pn2:#070e1c;",deep:[4,7,13],pan:[10,18,32],pan2:[18,44,78],acc:[0,200,224],lt:[125,243,255],tc:"#04070d"}};
+function e16Stile(){try{const k=localStorage.getItem("e16_stile");return E16_ST[k]?k:"parquet"}catch(e){return"parquet"}}
+function e16Recolor(css,T){const cache={};return css.replace(/#([0-9a-f]{6})\b|rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+)\s*)?\)/gi,(m,hx,R,G,Bv,A)=>{if(cache[m]!==undefined)return cache[m];let r,g,b,a=1;
+  if(hx){const n=parseInt(hx,16);r=n>>16;g=n>>8&255;b=n&255}else{r=+R;g=+G;b=+Bv;if(A!=null)a=+A}
+  if(hx&&hx.toLowerCase()==="8b5cf6")return cache[m]=m;/* viola dei PDK alti: resta */
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn,L=(mx+mn)/510;let out=m;
+  if(d>0){const S=d/(255-Math.abs(mx+mn-255));let h;if(mx===r)h=((g-b)/d+6)%6;else if(mx===g)h=(b-r)/d+2;else h=(r-g)/d+4;h*=60;
+   if(h>=225&&h<=300&&S>.25){const q=L>=.78?T.lt:L>=.55?T.acc:L>=.3?T.pan2:L>=.08?T.pan:T.deep;out=a<1||!hx?`rgba(${q[0]},${q[1]},${q[2]},${a})`:"#"+q.map(x=>x.toString(16).padStart(2,"0")).join("")}}
+  return cache[m]=out})}
+function e16StileCss(k){let el=document.getElementById("e16st");if(!E16_ST[k]){if(el)el.textContent="";return}
+ if(el&&el.dataset.k===k)return;const T=E16_ST[k];let txt="";
+ const grab=sh=>{try{for(const r of sh.cssRules)txt+=r.cssText+"\n"}catch(e){}};
+ const n=document.getElementById("skn");if(n&&n.sheet)grab(n.sheet);
+ document.querySelectorAll("style:not(#e16st)").forEach(st=>{if(/notte|#[0-9a-f]{6}|rgb/i.test(st.textContent))grab(st.sheet)});
+ if(!el){el=document.createElement("style");el.id="e16st"}document.head.appendChild(el);el.textContent=e16Recolor(txt,T);el.dataset.k=k}
 function e16Tema(nt){const H=document.documentElement,B=document.body;
  const C="--duchrl:#7c3aed;--sepw:1px;--sepc:#0b0b12;--bxc:#e8631a;--bxbc:#e8631a;--bxg:#22a34a;--bxr:#e02424;--bxn:#ffffff;--sj:1;--sn:1;--st:1;--sp:1;--sov:-10;--hh:112px;";
  const D="--fg:#2b1608;--bg:#c88a4c;--panel:#fff6e4;--panel2:#f6e2bd;--line:#d9b27a;--muted:#7a5632;--glow:#e9b878;--hd1:#e85a0c;--hd2:#c2410c;--red:#e85a0c;--red2:#c2410c;--gold:#b45309;--onred:#ffffff;--pn1:#fff6e4;--pn2:#f6e2bd;";
- H.className=nt?"notte lvoff texn":"dlt-parquet lvoff texn";B.classList.toggle("notte",nt);H.setAttribute("style",nt?C:C+D);
+ const SK=e16Stile(),TX=!nt&&SK!=="parquet";/* (130) stile scuro di giorno: grafica della notte ricolorata */const ntv=nt||TX;
+ H.className=ntv?"notte lvoff texn"+(TX?" e16x e16-"+SK:""):"dlt-parquet lvoff texn";B.classList.toggle("notte",ntv);H.setAttribute("style",nt?C:TX?C+E16_ST[SK].v:C+D);
  /* (28) cambio giorno/notte fluido come Dreamers: i due fogli restano sempre scaricati e letti; si cambia solo media (con disabled Safari li ricaricava: lampo bianco e pagina senza stile) */
- const g=document.getElementById("skg"),n=document.getElementById("skn");if(g){g.disabled=false;g.media=nt?"not all":"all"}if(n){n.disabled=false;n.media=nt?"all":"not all"}
+ const g=document.getElementById("skg"),n=document.getElementById("skn");if(g){g.disabled=false;g.media=ntv?"not all":"all"}if(n){n.disabled=false;n.media=ntv?"all":"not all"}const doSt=()=>e16StileCss(TX?SK:"");try{doSt()}catch(e){}if(TX&&!(n&&n.sheet&&n.sheet.cssRules.length))setTimeout(()=>{try{const el=document.getElementById("e16st");if(el)el.dataset.k="";doSt()}catch(e){}},400);
  const sw=document.getElementById("sw");if(sw){sw.classList.toggle("on",nt);sw.setAttribute("aria-checked",nt?"true":"false")}
- const tc=document.querySelector('meta[name="theme-color"]');if(tc)tc.content=nt?"#3e2577":"#e7590c"}
+ const tc=document.querySelector('meta[name="theme-color"]');if(tc)tc.content=nt?"#3e2577":TX?E16_ST[SK].tc:"#e7590c"}
 /* (59) l app parte SEMPRE in modalità notte; il giorno si accende con l interruttore e vale finché l app resta aperta (sessionStorage e16_tema) */let E16N=true;try{E16N=sessionStorage.getItem("e16_tema")!=="g"}catch(e){}
 e16Tema(E16N);</script>
 <header>
   <div class="wrap">
-    <div class="top"><div class="brandwrap"><img class="lglogo" id="lgreload" src="logo-app.png" alt="ESPN 16" title="Aggiorna"><div class="brand" style="cursor:pointer">ESPN 16</div></div><div class="topbtns"><button class="hnt hnthd" id="sw" type="button" role="switch" aria-checked="false" aria-label="Modalità notte"><span class="hntk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" fill="currentColor"></path></svg></span></button><!-- (77) tasto impostazioni tolto: per ora non serve --></div></div>
+    <div class="top"><div class="brandwrap"><img class="lglogo" id="lgreload" src="logo-app.png" alt="ESPN 16" title="Aggiorna"><div class="brand" style="cursor:pointer">ESPN 16</div></div><div class="topbtns"><button class="hnt hnthd" id="sw" type="button" role="switch" aria-checked="false" aria-label="Modalità notte"><span class="hntk"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" fill="currentColor"></path></svg></span></button><button class="hnt e16setb" id="e16set" type="button" aria-label="Personalizza lo stile"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4L10.6 6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.3 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg></button><!-- (130) personalizzazione dello stile --></div></div>
     <nav role="tablist" id="nav"></nav>
     <div class="subnav" id="subnav" role="menu" hidden></div>
   </div>
@@ -1075,5 +1094,12 @@ if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(
   R.sort((a,b)=>{const x=v(a),y=v(b);if(typeof x==="string"||typeof y==="string"){if(typeof x!==typeof y)return typeof x==="string"?1:-1;return dir==="d"?y.localeCompare(x):x.localeCompare(y)}return dir==="d"?y-x:x-y});
   R.forEach(r=>tb.tBodies[0].appendChild(r))},true);
  const st=document.createElement("style");st.textContent=SEL.split(",").map(s=>s+" th").join(",")+"{cursor:pointer;-webkit-user-select:none;user-select:none}";document.head.appendChild(st)})();</script>
+<style>/* (130) personalizzazione dello stile */.e16setb{display:grid;place-items:center;width:44px;height:44px;margin-left:8px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;cursor:pointer}.e16setb svg{width:22px;height:22px}
+.e16sh{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}.e16bx{width:100%;max-width:520px;background:#141414;color:#fff;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));font-family:Barlow,Arial,sans-serif}
+.e16bx h3{margin:0 0 4px;font:800 italic 24px "Barlow Condensed",Arial;text-transform:uppercase;letter-spacing:.04em}.e16bx p{margin:0 0 14px;font-size:13px;opacity:.75}.e16ch{display:grid;gap:10px}.e16ch button{display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;border:2px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#fff;font:800 italic 20px "Barlow Condensed",Arial;text-transform:uppercase;cursor:pointer;text-align:left}.e16ch button[aria-pressed="true"]{border-color:#facc15;background:rgba(250,204,21,.12)}.e16ch i{display:flex;gap:3px}.e16ch i b{width:16px;height:28px;border-radius:5px}.e16ch small{display:block;font:600 12px Barlow,Arial;text-transform:none;opacity:.7}.e16x0{margin-top:14px;width:100%;padding:12px;border-radius:12px;border:0;background:rgba(255,255,255,.12);color:#fff;font:800 16px Barlow,Arial;cursor:pointer}</style>
+<script>/* (130) foglio di scelta dello stile */document.addEventListener("click",e=>{if(e.target.closest("#e16set")){const k=e16Stile(),it=[["parquet","Parquet · ufficiale","Legno e arancio",["#e85a0c","#c88a4c","#fdf3e1"]],["oro","Carbone e oro","Nero e oro",["#1c1c1c","#c9a227","#f5d76e"]],["cyber","Cyber","Nero e azzurro neon",["#0a1a33","#00c8e0","#ff2bd6"]]];
+  const sh=document.createElement("div");sh.className="e16sh";sh.innerHTML=`<div class="e16bx"><h3>Stile dell'app</h3><p>Vale di giorno; di notte l'app resta viola.</p><div class="e16ch">${it.map(([v,n,d,c])=>`<button data-e16st="${v}" aria-pressed="${k===v}"><i>${c.map(x=>`<b style="background:${x}"></b>`).join("")}</i><span>${n}<small>${d}</small></span></button>`).join("")}</div><button class="e16x0">Chiudi</button></div>`;document.body.appendChild(sh);return}
+ const b=e.target.closest("[data-e16st]");if(b){try{localStorage.setItem("e16_stile",b.dataset.e16st)}catch(_){}const sh=document.querySelector(".e16sh");if(sh)sh.remove();const y=scrollY;e16Tema(E16N);try{render()}catch(_){}scrollTo(0,y);return}
+ if(e.target.closest(".e16x0")||e.target.classList.contains("e16sh")){const sh=document.querySelector(".e16sh");if(sh)sh.remove()}});</script>
 </body>
 </html>

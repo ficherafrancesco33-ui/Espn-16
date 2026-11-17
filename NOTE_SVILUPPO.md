@@ -201,3 +201,5 @@
 - Eccezione del 16/11/2026 (`E16_TURNO_ECC`): i cambi erano già arrivati prima delle 10:30, quindi quel giorno il turno è finito subito (settimana 5 in attesa).
 
 (122) 16/11/2026 – REGOLA FRANCESCO: lo Storico trade / Trade Alert mostra SOLO gli scambi registrati a mano in storico.js (TRADES), che Francesco manda con le scelte. Gli scambi letti da ESPN (LEGA.trades) non si aggiungono più (ESPN non ha le scelte: erano scambi incompleti e doppi, es. Quebec-Cleveland e Quebec-Albuquerque comparivano due volte). Non registrare uno scambio finché Francesco non lo manda. Le rose invece seguono ESPN (nota 121).
+
+- (130) v122: personalizzazione dello stile come Dreamers. Tasto ingranaggio in testata (#e16set) apre «Stile dell app»: Parquet (ufficiale), Carbone e oro, Cyber (localStorage e16_stile). Con Carbone e oro e Cyber di giorno: classi notte + e16x e16-<stile>, variabili E16_ST, e un foglio #e16st generato da e16Recolor (skin-notte + stili interni con i viola ricolorati nella tavolozza dello stile, come shThemeCtx di Dreamers). Di notte resta la notte normale.
