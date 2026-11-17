@@ -16,6 +16,7 @@
 <link rel="preload" href="skin-giorno.css" as="style"><link rel="preload" href="skin-notte.css" as="style">
 <link rel="stylesheet" href="skin-giorno.css" id="skg" media="not all">
 <link rel="stylesheet" href="skin-notte.css" id="skn">
+<link rel="stylesheet" href="skin-scuro.css" id="sks" media="not all"><!-- (131) stile scuro di Dreamers per Carbone e oro / Cyber -->
 <style>/* ===== ESPN 16 – app del Fantabasket Dynasty a 16 squadre (base grafica: app Dreamers) =====
    Colori in variabili: tema arancio come la Home Dreamers. */:root{--c2:#fdf3e1;--c3:#fff7ed;--cb:#f3c48d;--c4:#fbe9cc;--hd1:#f97316;--hd2:#ea580c;--hd3:#c2410c;--bg1:#b8763f;--bg2:#a8652f;--card:var(--c2);--card2:var(--c4);--line:#eed2a6;--ink:#3b1d0a;--mut:#9a5a2b;--acc:#ea580c;--ffp:#7c3aed;--win:#16a34a;--loss:#dc2626;--east:#2563eb;--west:#dc2626}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -717,9 +718,9 @@ function e16Tema(nt){const H=document.documentElement,B=document.body;
  const C="--duchrl:#7c3aed;--sepw:1px;--sepc:#0b0b12;--bxc:#e8631a;--bxbc:#e8631a;--bxg:#22a34a;--bxr:#e02424;--bxn:#ffffff;--sj:1;--sn:1;--st:1;--sp:1;--sov:-10;--hh:112px;";
  const D="--fg:#2b1608;--bg:#c88a4c;--panel:#fff6e4;--panel2:#f6e2bd;--line:#d9b27a;--muted:#7a5632;--glow:#e9b878;--hd1:#e85a0c;--hd2:#c2410c;--red:#e85a0c;--red2:#c2410c;--gold:#b45309;--onred:#ffffff;--pn1:#fff6e4;--pn2:#f6e2bd;";
  const SK=e16Stile(),TX=!nt&&SK!=="parquet";/* (130) stile scuro di giorno: grafica della notte ricolorata */const ntv=nt||TX;
- H.className=ntv?"notte lvoff texn"+(TX?" e16x e16-"+SK:""):"dlt-parquet lvoff texn";B.classList.toggle("notte",ntv);H.setAttribute("style",nt?C:TX?C+E16_ST[SK].v:C+D);
+ H.className=ntv?"notte lvoff texn"+(TX?" e16x tho e16-"+SK:""):"dlt-parquet lvoff texn";if(TX)H.dataset.thx=SK;else delete H.dataset.thx;B.classList.toggle("notte",ntv);H.setAttribute("style",nt?C:TX?C+E16_ST[SK].v:C+D);
  /* (28) cambio giorno/notte fluido come Dreamers: i due fogli restano sempre scaricati e letti; si cambia solo media (con disabled Safari li ricaricava: lampo bianco e pagina senza stile) */
- const g=document.getElementById("skg"),n=document.getElementById("skn");if(g){g.disabled=false;g.media=ntv?"not all":"all"}if(n){n.disabled=false;n.media=ntv?"all":"not all"}const doSt=()=>e16StileCss(TX?SK:"");try{doSt()}catch(e){}if(TX&&!(n&&n.sheet&&n.sheet.cssRules.length))setTimeout(()=>{try{const el=document.getElementById("e16st");if(el)el.dataset.k="";doSt()}catch(e){}},400);
+ const g=document.getElementById("skg"),n=document.getElementById("skn");if(g){g.disabled=false;g.media=ntv?"not all":"all"}if(n){n.disabled=false;n.media=ntv?"all":"not all"}{const x=document.getElementById("sks");if(x){x.disabled=false;x.media=TX?"all":"not all"}}const doSt=()=>e16StileCss(TX?SK:"");try{doSt()}catch(e){}if(TX&&!(n&&n.sheet&&n.sheet.cssRules.length))setTimeout(()=>{try{const el=document.getElementById("e16st");if(el)el.dataset.k="";doSt()}catch(e){}},400);
  const sw=document.getElementById("sw");if(sw){sw.classList.toggle("on",nt);sw.setAttribute("aria-checked",nt?"true":"false")}
  const tc=document.querySelector('meta[name="theme-color"]');if(tc)tc.content=nt?"#3e2577":TX?E16_ST[SK].tc:"#e7590c"}
 /* (59) l app parte SEMPRE in modalità notte; il giorno si accende con l interruttore e vale finché l app resta aperta (sessionStorage e16_tema) */let E16N=true;try{E16N=sessionStorage.getItem("e16_tema")!=="g"}catch(e){}
