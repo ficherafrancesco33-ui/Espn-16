@@ -211,3 +211,4 @@
 - (136) v128: canestro animato tutto nel bordo campo (campo-fx.js: il ferro non scende oltre la linea di fondo M3 6H97, centro a 1,05 raggi sopra la linea), come in Dreamers. Tutte le squadre e gli stili.
 - (137) v129: canestro come Dreamers (modo «logo»): il logo del bordo campo sparisce e al suo posto ci sono tabellone (bianco; rosso per i Ducks negli stili scuri), staffa e ferro, al centro del bordo campo (y = 62% del riquadro del logo).
 - (138) v130: salary cap dei Ducks negli stili scuri senza linee bianche interne (separatore verticale e linea sopra «Contratti e scelte»); resta il bordo esterno.
+- (139) v131: toccando il salary cap nella pagina campo si apre la squadra direttamente nella scheda Scelte (data-tab="pick").
