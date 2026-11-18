@@ -29,7 +29,7 @@ const RL=r=>{const a=String(r||"").split(",");return a[0]==="C"?"Centro":/G/.tes
 /* contratti per nome normalizzato */
 let CT=null;function ct(){if(CT)return CT;CT={};if(typeof CAP==="undefined")return CT;
  for(const t in CAP)for(const p of CAP[t].pl||[]){const y=(p[1]||[]).filter(v=>v!=null);if(!y.length)continue;CT[nk(p[0])]={n:p[0],t,y,rk:!!p[2],tot:y.reduce((a,b)=>a+b,0)}}return CT}
-const contr=n=>ct()[nk(n)]||null;
+const contr=n=>ct()[nk(n)]||null;window.e16CtReset=()=>{CT=null;QQ=null};/* (141) dopo i movimenti dedotti da ESPN */
 window.e16Contr=n=>{try{return contr(n)}catch(_){return null}};/* (112) contratto di un giocatore per la rosa della scheda squadra */
 /* (48) stipendio di mercato con la formula della lega (stipendi-data.js, aggiornato ogni domenica) */
 let SN=null;const stipOf=n=>{if(typeof STIP==='undefined')return null;if(!SN){SN={};for(const k in STIP.p)SN[nk(k)]=STIP.p[k]}return SN[nk(n)]||null};/* (51) durata dei contratti secondo lo stipendio (regola della lega): 4–9,9 cr = solo 1 anno; 10–14,9 = 1 o 2 anni; da 15 = da 1 a 3 anni */
@@ -64,6 +64,10 @@ window.e16ContrBox=function(n){const c0=contr(n),c=c0&&own(n)?c0:null;/* (45) co
   <p class="ctrs">${ok?`Entra nel cap dei Ducks: libero ${f1(lib)} → resterebbero <b>${f1(lib-pr)} cr</b>.`:`Non entra nel cap dei Ducks: libero ${f1(lib)} cr, servono ${f1(pr-lib)} cr in più.`} ${SX?`Firma possibile: <b>${isRk(n)?rkTxt(pr):durTxt(pr)}</b>. `:""}${SX?"Stipendio di mercato calcolato con la formula della lega (AVG e partite delle ultime 4 stagioni, età, stella, crescita), aggiornato ogni domenica.":"Prezzo di listino (manca lo stipendio calcolato)."}</p></div>`}
  return ""};
 
+/* (141) riquadro dei movimenti dedotti da ESPN (firme provvisorie da confermare, tagli, scambi da registrare) */
+const movBox=id=>{const M=(window.E16MOV||[]).filter(m=>!id||m.t===id||m.to===id);if(!M.length)return"";const lab={firma:"Firma",taglio:"Taglio",scambio:"Scambio"};
+ return `<div class="card ccmov"><div class="ttl">🔎 MOVIMENTI DEDOTTI DA ESPN</div>${M.map(m=>`<div class="ccmv ${m.ty}"><span class="ccmt">${lab[m.ty]}</span>${id?"":`<img src="${TM[m.t]?TM[m.t].logo:""}" alt="">`}<b data-pl="${e(m.n)}">${e(m.n)}</b><small>${m.ty==="firma"?`${f1(m.v)} cr · 1 anno · <i>prezzo da confermare</i>`:m.ty==="taglio"?`restavano ${f1(m.tot)} cr · costo taglio <b>${f1(m.cost)} cr</b>`:`contratto ${e(nick(m.t))} · in rosa ${e(nick(m.to))} · <i>da registrare</i>`}</small></div>`).join("")}<div class="note">Dedotti confrontando le rose ESPN (in vigore dal lunedì alle 10:30) con i contratti. Firma: stipendio di mercato provvisorio finché non arriva il prezzo vero. Taglio: 10% di quello che restava, minimo 1.</div></div>`};
+window.e16MovBox=movBox;
 /* ---------- PAGINA SALARY CAP DELLA SQUADRA ---------- */
 const SIM={id:null,cut:{},open:null};
 function capPage(id){const C=CAP[id];if(!C)return`<div class="note">Contratti non disponibili.</div>`;
@@ -96,7 +100,7 @@ function capPage(id){const C=CAP[id];if(!C)return`<div class="note">Contratti no
  /* (44) regola della lega: almeno 3 under 25 per squadra (età di oggi) */
  const nU=(ROSE[id]||[]).filter(g=>{const a=typeof etaOf==="function"?etaOf(g[0]):null;return a!=null&&a<25}).length;
  const u25b=`<div class="e16u25 ${nU<3?"ko":"ok"}">Under 25: <b>${nU}</b> · minimo 3${nU<3?" · sotto il minimo!":""}</div>`;
- return gauge+u25b+seas+
+ return gauge+movBox(id)+u25b+seas+
  `<div class="ccsec">Contratti <small>${L.length} · dal più pagato</small></div><div class="cclist">${L.map(card).join("")}</div>
  <div class="ccsec">Chi posso permettermi <small>svincolati con prezzo ≤ ${f1(lib)} cr</small></div>
  ${fa.length?`<div class="ccfa">${fa.slice(0,15).map(x=>{const v=verd(x.n,x.pr);return`<div class="ccfr" data-pl="${e(x.n)}"><div><b>${e(x.n)}</b><small>${e(x.t)} · ${x.s.gp} part.${(()=>{/* (44) età e under 25 */const a=typeof etaOf==="function"?etaOf(x.n):null;return a!=null?` · ${a} anni${a<25?` <i class="fau25">U25</i>`:""}`:""})()}</small></div><span class="ccfv"><b>${f1(x.s.avg)}</b><small>AVG</small></span><span class="ccfv"><b>${f1(x.pr)}</b><small>cr</small></span>${v?`<span class="ctrv ${v.k} sm">${f2(v.r)}</span>`:""}</div>`}).join("")}</div>`:`<p class="note">Nessuno svincolato con prezzo di listino entro ${f1(lib)} cr.</p>`}
@@ -118,7 +122,7 @@ window.e16CapLeague=function(){if(typeof CAP==="undefined")return"";
  const all=[];for(const k in ct()){const c=ct()[k];const v=verd(c.n,c.y[0]);if(v&&v.s.gp>=3)all.push({c,v})}
  const gold=all.slice().sort((a,b)=>b.v.r-a.v.r).slice(0,10),Q=quart(),heavy=all.filter(x=>x.c.y[0]>=10&&x.v.r<=Q.lo).sort((a,b)=>b.c.y[0]-a.c.y[0]).slice(0,10);
  const li=x=>`<div class="ccfr" data-pl="${e(x.c.n)}"><img src="${TM[x.c.t]?TM[x.c.t].logo:""}" alt=""><div><b>${e(x.c.n)}</b><small>${e(nick(x.c.t))} · ${x.c.y.length} ${x.c.y.length===1?"anno":"anni"}${x.c.rk?" · R":""}</small></div><span class="ccfv"><b>${f1(x.v.s.avg)}</b><small>AVG</small></span><span class="ccfv"><b>${f1(x.c.y[0])}</b><small>cr</small></span><span class="ctrv ${x.v.k} sm">${f2(x.v.r)}</span></div>`;
- return rank("a","SPAZIO NEL CAP · 26/27")+rank("b","SPAZIO NEL CAP · 27/28 (contratti già firmati)")+
+ return movBox(null)+rank("a","SPAZIO NEL CAP · 26/27")+rank("b","SPAZIO NEL CAP · 27/28 (contratti già firmati)")+
   `<div class="card ccl"><div class="ttl">🏅 CONTRATTI D'ORO</div><div class="ccfa">${gold.map(li).join("")}</div><div class="note">Il miglior AVG per credito di stipendio (almeno 3 partite).</div></div>
   <div class="card ccl"><div class="ttl">🏋️ CONTRATTI PESANTI</div><div class="ccfa">${heavy.map(li).join("")||`<p class="note">Nessuno.</p>`}</div><div class="note">Stipendi da 10 cr in su con AVG per credito tra il 25% peggiore della lega.</div></div>`};
 })();
