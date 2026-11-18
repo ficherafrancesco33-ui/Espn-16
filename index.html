@@ -715,7 +715,7 @@ function e16StileCss(k){let el=document.getElementById("e16st");if(!E16_ST[k]){i
  document.querySelectorAll("style:not(#e16st)").forEach(st=>{if(/notte|#[0-9a-f]{6}|rgb/i.test(st.textContent))grab(st.sheet)});
  if(!el){el=document.createElement("style");el.id="e16st"}document.head.appendChild(el);el.textContent=e16Recolor(txt,T);el.dataset.k=k}
 function e16Tema(nt){const H=document.documentElement,B=document.body;
- const C="--duchrl:#7c3aed;--sepw:1px;--sepc:#0b0b12;--bxc:#e8631a;--bxbc:#e8631a;--bxg:#22a34a;--bxr:#e02424;--bxn:#ffffff;--sj:1;--sn:1;--st:1;--sp:1;--sov:-10;--hh:112px;";
+ const C="--duchrl:#7c3aed;--sepw:1px;--sepc:#0b0b12;--bxc:#e8631a;--bxbc:#e8631a;--bxg:#22a34a;--bxr:#e02424;--bxn:#ffffff;--sj:1.1;--sn:1.1;--st:1.1;--sp:1.1;/* (135) maglie, nomi e PDK +10% */--sov:-10;--hh:112px;";
  const D="--fg:#2b1608;--bg:#c88a4c;--panel:#fff6e4;--panel2:#f6e2bd;--line:#d9b27a;--muted:#7a5632;--glow:#e9b878;--hd1:#e85a0c;--hd2:#c2410c;--red:#e85a0c;--red2:#c2410c;--gold:#b45309;--onred:#ffffff;--pn1:#fff6e4;--pn2:#f6e2bd;";
  const SK=e16Stile(),TX=!nt&&SK!=="parquet";/* (130) stile scuro di giorno: grafica della notte ricolorata */const ntv=nt||TX;
  H.className=ntv?"notte lvoff texn"+(TX?" e16x tho e16-"+SK:""):"dlt-parquet lvoff texn";if(TX)H.dataset.thx=SK;else delete H.dataset.thx;B.classList.toggle("notte",ntv);H.setAttribute("style",nt?C:TX?C+E16_ST[SK].v:C+D);
