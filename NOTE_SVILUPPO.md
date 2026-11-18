@@ -208,3 +208,4 @@
 - (133) v125: Ducks (QUE) con Carbone e oro e Cyber di giorno: campo «Griglia neon» come Dreamers ma rosso (#ef4444) al posto del lime (courtQueNeon in campo.js: fondo viola scuro, griglia e velo rossi, stelle, linee bianche con bagliore rosso, cornice viola), striscia sopra il campo viola, scritta QUEBEC DUCKS rossa, salary cap viola con dettagli rossi. Parquet e notte invariati.
 - (134) v126: Ducks negli stili scuri di giorno: salary cap come il campo neon (viola scuro, griglia rossa, bordo bianco con bagliore rosso) e tutte le scritte del banner squadra rosse.
 - (135) v127: maglie, capsule nome e PDK nel campo +10% (--sj/--sn/--st/--sp da 1 a 1.1 in e16Tema), tutte le squadre e tutti gli stili.
+- (136) v128: canestro animato tutto nel bordo campo (campo-fx.js: il ferro non scende oltre la linea di fondo M3 6H97, centro a 1,05 raggi sopra la linea), come in Dreamers. Tutte le squadre e gli stili.

@@ -78,7 +78,7 @@ function players(E){const L=[];E.court.querySelectorAll(".cpl .pj").forEach(p=>L
  return L.map(o=>{const r=o.el.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height*.52,w:r.width,court:o.court}}).filter(p=>p.w>0)}
 /* (73) il canestro: il logo resta nell SVG (fa da tabellone, sempre fermo) e il ferro sta nella sua parte bassa */
 function hoop(E){const im=[...E.court.querySelectorAll(".cbg image")].find(e=>+(e.getAttribute("y")||99)<20);
- if(im){const r=im.getBoundingClientRect();if(r.width>0){const pj=E.court.querySelector(".cpl .pj"),rr=(pj?pj.getBoundingClientRect().width:64)*.22;/* il ferro appeso sotto il logo: copre solo il bordo basso, le scritte del logo restano leggibili */return{x:r.left+r.width/2,y:r.bottom+rr*.45,L:r}}}
+ if(im){const r=im.getBoundingClientRect();if(r.width>0){const pj=E.court.querySelector(".cpl .pj"),rr=(pj?pj.getBoundingClientRect().width:64)*.22;/* il ferro appeso sotto il logo: copre solo il bordo basso, le scritte del logo restano leggibili */{/* (136) il ferro sta tutto nel bordo campo, sopra la linea di fondo, come in Dreamers */const fl=[...E.court.querySelectorAll(".cln path")].find(e=>/^M3 6H97/.test(e.getAttribute("d")||"")),ly=fl?fl.getBoundingClientRect().top:r.bottom+rr*2;return{x:r.left+r.width/2,y:Math.min(r.bottom+rr*.45,ly-rr*1.05),L:r}}}}
  const pa=[...E.court.querySelectorAll(".cln path")].find(e=>/^M46 12\.5A4/.test(e.getAttribute("d")||""));const cr=E.court.getBoundingClientRect();if(!pa)return{x:cr.left+cr.width/2,y:cr.top+cr.height*.18};const r=pa.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+2}}
 const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
 const rnd=s=>()=>(s=(s*16807)%2147483647)/2147483647;
