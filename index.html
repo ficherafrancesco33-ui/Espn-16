@@ -1140,6 +1140,17 @@ html.e16x body:not(#h1):not(#h2){background-image:none!important}
 }
 @media (min-width:1300px){main .drms,main .drcals{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style>
+<style>/* (143) Dynasty TV: sul telefono in verticale una squadra alla volta (schede); su computer, tablet e telefono in orizzontale le due squadre affiancate come Dreamers */
+main .tvdual{display:none}
+@media (min-width:1000px),(min-width:700px) and (orientation:landscape){
+ main .view:has(.tvdual) .tvtabs,main .tvsingle{display:none!important}
+ main .tvdual{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+ main .tvdual .tvdcol{min-width:0}
+ main .tvdual .tvdh{display:flex;align-items:center;gap:8px;padding:8px 10px;margin:0 0 6px;border-radius:10px;font:800 16px var(--display,Arial);font-style:italic;text-transform:uppercase;background:rgba(255,255,255,.07)}
+ main .tvdual .tvdh :is(img,.badge,.drsbl){width:26px!important;height:26px!important;flex:none}
+ main .tvdual .tbl-wrap{margin:0!important;overflow-x:auto}
+ main .tvdual table{width:100%!important;min-width:0!important}
+}</style>
 <style>/* (130) personalizzazione dello stile */.e16setb{display:grid;place-items:center;width:44px;height:44px;margin-left:8px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;cursor:pointer}.e16setb svg{width:22px;height:22px}
 .e16sh{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}.e16bx{width:100%;max-width:520px;background:#141414;color:#fff;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));font-family:Barlow,Arial,sans-serif}
 .e16bx h3{margin:0 0 4px;font:800 italic 24px "Barlow Condensed",Arial;text-transform:uppercase;letter-spacing:.04em}.e16bx p{margin:0 0 14px;font-size:13px;opacity:.75}.e16ch{display:grid;gap:10px}.e16ch button{display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;border:2px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#fff;font:800 italic 20px "Barlow Condensed",Arial;text-transform:uppercase;cursor:pointer;text-align:left}.e16ch button[aria-pressed="true"]{border-color:#facc15;background:rgba(250,204,21,.12)}.e16ch i{display:flex;gap:3px}.e16ch i b{width:16px;height:28px;border-radius:5px}.e16ch small{display:block;font:600 12px Barlow,Arial;text-transform:none;opacity:.7}.e16x0{margin-top:14px;width:100%;padding:12px;border-radius:12px;border:0;background:rgba(255,255,255,.12);color:#fff;font:800 16px Barlow,Arial;cursor:pointer}</style>
