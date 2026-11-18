@@ -209,3 +209,4 @@
 - (134) v126: Ducks negli stili scuri di giorno: salary cap come il campo neon (viola scuro, griglia rossa, bordo bianco con bagliore rosso) e tutte le scritte del banner squadra rosse.
 - (135) v127: maglie, capsule nome e PDK nel campo +10% (--sj/--sn/--st/--sp da 1 a 1.1 in e16Tema), tutte le squadre e tutti gli stili.
 - (136) v128: canestro animato tutto nel bordo campo (campo-fx.js: il ferro non scende oltre la linea di fondo M3 6H97, centro a 1,05 raggi sopra la linea), come in Dreamers. Tutte le squadre e gli stili.
+- (137) v129: canestro come Dreamers (modo «logo»): il logo del bordo campo sparisce e al suo posto ci sono tabellone (bianco; rosso per i Ducks negli stili scuri), staffa e ferro, al centro del bordo campo (y = 62% del riquadro del logo).

@@ -77,8 +77,8 @@ function unmountBall(){LASTC=null;GC=null;DB=null;TR=[];PLAN=null;document.query
 function players(E){const L=[];E.court.querySelectorAll(".cpl .pj").forEach(p=>L.push({el:p,court:1}));benchEls(E).forEach(p=>L.push({el:p,court:0}));
  return L.map(o=>{const r=o.el.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height*.52,w:r.width,court:o.court}}).filter(p=>p.w>0)}
 /* (73) il canestro: il logo resta nell SVG (fa da tabellone, sempre fermo) e il ferro sta nella sua parte bassa */
-function hoop(E){const im=[...E.court.querySelectorAll(".cbg image")].find(e=>+(e.getAttribute("y")||99)<20);
- if(im){const r=im.getBoundingClientRect();if(r.width>0){const pj=E.court.querySelector(".cpl .pj"),rr=(pj?pj.getBoundingClientRect().width:64)*.22;/* il ferro appeso sotto il logo: copre solo il bordo basso, le scritte del logo restano leggibili */{/* (136) il ferro sta tutto nel bordo campo, sopra la linea di fondo, come in Dreamers */const fl=[...E.court.querySelectorAll(".cln path")].find(e=>/^M3 6H97/.test(e.getAttribute("d")||"")),ly=fl?fl.getBoundingClientRect().top:r.bottom+rr*2;return{x:r.left+r.width/2,y:Math.min(r.bottom+rr*.45,ly-rr*1.05),L:r}}}}
+function hoop(E){/* (137) come Dreamers: il logo sparisce e al suo posto c'è il canestro con tabellone, al centro del bordo campo */const im=[...E.court.querySelectorAll(".cbg image")].find(e=>+(e.getAttribute("y")||99)<20);
+ if(im){const r=im.getBoundingClientRect();if(r.width>0){im.style.opacity="0";return{x:r.left+r.width/2,y:r.top+r.height*.62,M:"logo",L:r}}}
  const pa=[...E.court.querySelectorAll(".cln path")].find(e=>/^M46 12\.5A4/.test(e.getAttribute("d")||""));const cr=E.court.getBoundingClientRect();if(!pa)return{x:cr.left+cr.width/2,y:cr.top+cr.height*.18};const r=pa.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+2}}
 const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
 const rnd=s=>()=>(s=(s*16807)%2147483647)/2147483647;
@@ -96,7 +96,7 @@ function ball(c,x,y,r){c.save();c.translate(x,y);c.beginPath();c.arc(0,0,r,0,7);
 /* ferro e retina (modalità «logo» di Dreamers); il tabellone è il logo vero, quindi qui solo la staffa nel colore della squadra */
 function drawHoop(c,H,w,front,sw){const rr=w*.22;c.save();
  if(!front){c.fillStyle="rgba(0,0,0,.16)";c.beginPath();c.ellipse(H.x,H.y+rr*.3,rr*1.2,rr*.9,0,0,7);c.fill();c.restore();return}
- c.fillStyle=HC;c.strokeStyle="rgba(255,255,255,.85)";c.lineWidth=.8;c.beginPath();c.rect(H.x-2.2,H.y-rr*1.7,4.4,rr*.75);c.fill();c.stroke();
+ if(H.M==="logo"){/* (137) tabellone come Dreamers (rosso per i Ducks negli stili scuri) */c.fillStyle=(team()==="QUE"&&document.documentElement.classList.contains("e16x"))?"#ef4444":"#fff";c.strokeStyle=HC;c.lineWidth=1.8;c.beginPath();c.rect(H.x-w*.46,H.y-rr*2.1,w*.92,rr*.55);c.fill();c.stroke();c.fillStyle=HC;c.fillRect(H.x-1.3,H.y-rr*1.55,2.6,rr*.6)}else{c.fillStyle=HC;c.strokeStyle="rgba(255,255,255,.85)";c.lineWidth=.8;c.beginPath();c.rect(H.x-2.2,H.y-rr*1.7,4.4,rr*.75);c.fill();c.stroke();}
  const k=sw!=null&&sw<.5?1+.25*Math.sin(sw*Math.PI*6):1;c.strokeStyle="rgba(255,255,255,.95)";c.lineWidth=1;for(let i=0;i<12;i++){const an=i/12*Math.PI*2;c.beginPath();c.moveTo(H.x+Math.cos(an)*rr,H.y+Math.sin(an)*rr);c.lineTo(H.x+Math.cos(an+.5)*rr*.45*k,H.y+Math.sin(an+.5)*rr*.45*k+rr*.25);c.stroke()}
  c.beginPath();c.arc(H.x,H.y+rr*.25,rr*.45*k,0,7);c.stroke();c.beginPath();c.arc(H.x,H.y+rr*.12,rr*.72,0,7);c.stroke();c.strokeStyle="#f97316";c.lineWidth=2.6;c.beginPath();c.arc(H.x,H.y,rr,0,7);c.stroke();
  if(sw!=null&&sw<.85){c.globalAlpha=1-sw/.85;c.fillStyle=TC;c.strokeStyle="#111";c.lineWidth=2.4;c.font=`900 italic ${Math.round(w*.32)}px system-ui,sans-serif`;c.textAlign="center";c.strokeText("+3",H.x+w*.66,H.y-rr*.8-sw*14);c.fillText("+3",H.x+w*.66,H.y-rr*.8-sw*14);c.strokeStyle=TC;c.lineWidth=2;c.beginPath();c.arc(H.x,H.y,rr*(1.3+sw*2.2),0,7);c.stroke()}c.restore()}
