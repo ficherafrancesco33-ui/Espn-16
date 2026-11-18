@@ -212,3 +212,4 @@
 - (137) v129: canestro come Dreamers (modo «logo»): il logo del bordo campo sparisce e al suo posto ci sono tabellone (bianco; rosso per i Ducks negli stili scuri), staffa e ferro, al centro del bordo campo (y = 62% del riquadro del logo).
 - (138) v130: salary cap dei Ducks negli stili scuri senza linee bianche interne (separatore verticale e linea sopra «Contratti e scelte»); resta il bordo esterno.
 - (139) v131: toccando il salary cap nella pagina campo si apre la squadra direttamente nella scheda Scelte (data-tab="pick").
+- (140) v132: anche la tabella del salary cap (index) e le classifiche dei contratti aprono la squadra nella scheda Scelte. Resta su Salary cap solo il tasto «Salary cap» esplicito (gest.js).
