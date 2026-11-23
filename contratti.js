@@ -8,7 +8,7 @@
    - Pagina Salary cap della squadra (e16CapPage): indicatore del cap, stagioni 26/27→30/31, card dei contratti, simulatore tagli,
      «Chi posso permettermi» (svincolati del listino che entrano nel cap libero) e scadenze.
    - Pagina Cap & scelte della lega (e16CapLeague): spazio nel cap quest anno e il prossimo, contratti d oro e contratti pesanti.
-   Regola dei tagli (foglio «Tagli» del file della lega): costo = 10% del totale del contratto che resta, arrotondato a 0,1, senza minimo ((147) 23/11/2026);
+   Regola dei tagli (foglio «Tagli» del file della lega): costo = 10% del totale del contratto che resta, minimo 1, arrotondato a 0,1;
    se il costo viene spalmato sugli anni del contratto si aggiunge 1. La simulazione non si salva da nessuna parte. */
 /* (43) nomi scritti diversamente nel file della lega rispetto alle rose dell app: si correggono qui, all avvio, così contratti, cap
    e calcolatore trovano il giocatore. Solo grafia: le differenze vere di rosa (giocatori in squadre diverse) restano come nel file. */
@@ -49,7 +49,7 @@ function verd(n,sal){const s=st(n);if(!s||!sal)return null;const r=s.avg/sal,Q=q
 const VL={affare:"Affare",giusto:"Giusto",caro:"Caro",nd:"Poche partite"};
 const pill=v=>v?`<span class="ctrv ${v.k}">${VL[v.k]} · ${f2(v.r)} AVG/cr</span>`:"";
 /* costo del taglio (regola del foglio «Tagli») */
-const cutCost=c=>{const tot=c.y.reduce((a,b)=>a+b,0);return r1(tot*.1)};
+const cutCost=c=>{const tot=c.y.reduce((a,b)=>a+b,0);return Math.max(1,r1(tot*.1))};
 const capLib=id=>{const C=CAP[id];if(!C)return 0;return C.libero!=null?C.libero:CAP_TOT-(C.occ[0]||0)-(C.tagli||0)};
 const own=n=>{try{return OWNH[nk(n)]||null}catch(_){return null}};
 
@@ -66,7 +66,7 @@ window.e16ContrBox=function(n){const c0=contr(n),c=c0&&own(n)?c0:null;/* (45) co
 
 /* (141) riquadro dei movimenti dedotti da ESPN (firme provvisorie da confermare, tagli, scambi da registrare) */
 const movBox=id=>{const M=(window.E16MOV||[]).filter(m=>!id||m.t===id||m.to===id);if(!M.length)return"";const lab={firma:"Firma",taglio:"Taglio",scambio:"Scambio"};
- return `<div class="card ccmov"><div class="ttl">🔎 MOVIMENTI DEDOTTI DA ESPN</div>${M.map(m=>`<div class="ccmv ${m.ty}"><span class="ccmt">${lab[m.ty]}</span>${id?"":`<img src="${TM[m.t]?TM[m.t].logo:""}" alt="">`}<b data-pl="${e(m.n)}">${e(m.n)}</b><small>${m.ty==="firma"?`${f1(m.v)} cr · 1 anno · <i>prezzo da confermare</i>`:m.ty==="taglio"?`restavano ${f1(m.tot)} cr · costo taglio <b>${f1(m.cost)} cr</b>`:`dai ${e(nick(m.t))} ai ${e(nick(m.to))} · contratto spostato (${f1(m.v)} cr${m.anni>1?`, ${m.anni} anni`:""}) · <i>scelte e dettagli da confermare</i>`}</small></div>`).join("")}<div class="note">Dedotti confrontando le rose ESPN (in vigore dal lunedì alle 10:30) con i contratti. Firma: stipendio di mercato provvisorio finché non arriva il prezzo vero. Taglio: 10% di quello che restava. Scambio: il contratto passa da solo alla squadra della rosa ESPN; scelte e crediti si aggiungono quando arrivano i dettagli.</div></div>`};
+ return `<div class="card ccmov"><div class="ttl">🔎 MOVIMENTI DEDOTTI DA ESPN</div>${M.map(m=>`<div class="ccmv ${m.ty}"><span class="ccmt">${lab[m.ty]}</span>${id?"":`<img src="${TM[m.t]?TM[m.t].logo:""}" alt="">`}<b data-pl="${e(m.n)}">${e(m.n)}</b><small>${m.ty==="firma"?`${f1(m.v)} cr · 1 anno · <i>prezzo da confermare</i>`:m.ty==="taglio"?`restavano ${f1(m.tot)} cr · costo taglio <b>${f1(m.cost)} cr</b>`:`dai ${e(nick(m.t))} ai ${e(nick(m.to))} · contratto spostato (${f1(m.v)} cr${m.anni>1?`, ${m.anni} anni`:""}) · <i>scelte e dettagli da confermare</i>`}</small></div>`).join("")}<div class="note">Dedotti confrontando le rose ESPN (in vigore dal lunedì alle 10:30) con i contratti. Firma: stipendio di mercato provvisorio finché non arriva il prezzo vero. Taglio: 10% di quello che restava, minimo 1. Scambio: il contratto passa da solo alla squadra della rosa ESPN; scelte e crediti si aggiungono quando arrivano i dettagli.</div></div>`};
 window.e16MovBox=movBox;
 /* ---------- PAGINA SALARY CAP DELLA SQUADRA ---------- */
 const SIM={id:null,cut:{},open:null};
@@ -89,7 +89,7 @@ function capPage(id){const C=CAP[id];if(!C)return`<div class="note">Contratti no
    <div class="ccb">${c.rk?`<span class="ctrrk">R</span>`:""}${c.y.length===1?`<span class="ccx">Scade quest'anno</span>`:""}${pill(v)}</div></div>
   <div class="ctry sm">${YL.map((y,i)=>`<div class="cy${c.y[i]!=null?" on":""}${i===0?" now":""}"><small>${y}</small><b>${c.y[i]!=null?f1(c.y[i]):"–"}</b></div>`).join("")}</div>
   <div class="cccut"><button data-ccut="${e(c.n)}" aria-expanded="${op}">${cut?"✂ Tagliato in simulazione":"✂ Taglia"}</button></div>
-  ${op?`<div class="ccpan"><p>Costo del taglio: 10% di ${f1(c.tot)} cr che restano = <b>${f1(cost)} cr</b>${false?"":""}.</p>
+  ${op?`<div class="ccpan"><p>Costo del taglio: 10% di ${f1(c.tot)} cr che restano = <b>${f1(cost)} cr</b>${cost===1&&c.tot*.1<1?" (minimo 1)":""}.</p>
    <div class="ccopt"><button data-csim="s" data-cn="${e(c.n)}" aria-pressed="${cut==="s"}"><b>Subito</b><small>${f1(cost)} cr nel 26/27 · libero ${f1(lib+(cut?0:c.y[0]-cost))}</small></button>
    ${N>1?`<button data-csim="p" data-cn="${e(c.n)}" aria-pressed="${cut==="p"}"><b>Spalmato</b><small>${f1(cost+1)} cr in ${N} anni (${f1((cost+1)/N)}/anno) · libero ${f1(lib+(cut?0:c.y[0]-(cost+1)/N))}</small></button>`:""}</div>
    ${cut?`<button class="ccund" data-csim="x" data-cn="${e(c.n)}">Togli dalla simulazione</button>`:""}</div>`:""}</div>`};

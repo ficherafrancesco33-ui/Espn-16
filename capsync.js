@@ -4,7 +4,7 @@
    - giocatore in una rosa ESPN senza contratto in nessuna squadra  → FIRMA da svincolato: contratto provvisorio di 1 anno allo stipendio di
      mercato (formula della lega, STIP), segnato «da confermare» finché Francesco non comunica il prezzo vero (poi va scritto in cap-data.js);
    - giocatore con contratto che non è più in nessuna rosa ESPN → TAGLIO: contratto tolto, costo del taglio = 10% di quello che restava,
-     arrotondato a 0,1, senza minimo ((147) 23/11/2026, Francesco: «i tagli costano il 10%»), aggiunto ai tagli di quest anno;
+     minimo 1, arrotondato a 0,1 (regola del foglio «Tagli»), aggiunto ai tagli di quest anno;
    - giocatore con contratto in una squadra ma nella rosa ESPN di un altra → SCAMBIO: (144, 23/11/2026) il contratto SI SPOSTA da solo nella
      squadra della rosa ESPN (stesso stipendio e stessi anni; occupato e libero ricalcolati per tutte e due), segnato «da confermare» finché
      Francesco non manda i dettagli (scelte, crediti, eventuali modifiche al contratto): poi lo scambio si scrive in cap-data.js e non viene più dedotto.
@@ -21,7 +21,7 @@ function sync(){const sig=JSON.stringify(Object.keys(ROSE).map(t=>[t,(ROSE[t]||[
  const M=[],MV=[];
  for(const t in CAP0){const C=JSON.parse(JSON.stringify(CAP0[t])),keep=[];
   for(const p of C.pl||[]){const e=espn[nk(p[0])],y=(p[1]||[]).filter(v=>v!=null);
-   if(!e){const tot=y.reduce((a,b)=>a+b,0),cost=r1(tot*.1);y.forEach((v,i)=>{C.occ[i]=r1((C.occ[i]||0)-v)});C.tagli=r1((C.tagli||0)+cost);C.libero=r1((C.libero!=null?C.libero:CAP_TOT-(CAP0[t].occ[0]||0)-(CAP0[t].tagli||0))+y[0]-cost);
+   if(!e){const tot=y.reduce((a,b)=>a+b,0),cost=Math.max(1,r1(tot*.1));y.forEach((v,i)=>{C.occ[i]=r1((C.occ[i]||0)-v)});C.tagli=r1((C.tagli||0)+cost);C.libero=r1((C.libero!=null?C.libero:CAP_TOT-(CAP0[t].occ[0]||0)-(CAP0[t].tagli||0))+y[0]-cost);
     M.push({ty:"taglio",t,n:p[0],tot:r1(tot),cost});continue}
    if(e.t!==t){/* scambio: il contratto esce da qui e va nella squadra della rosa ESPN (dopo il giro) */y.forEach((v,i)=>{C.occ[i]=r1((C.occ[i]||0)-v)});C.libero=r1((C.libero!=null?C.libero:CAP_TOT-(CAP0[t].occ[0]||0)-(CAP0[t].tagli||0))+(y[0]||0));
     MV.push({p,to:e.t});M.push({ty:"scambio",t,to:e.t,n:p[0],v:y[0]||0,anni:y.length});continue}
