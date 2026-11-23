@@ -26,11 +26,11 @@ async function giro(){const f=finestra();if(!f||busy||document.hidden)return;bus
 /* (120) ogni 60 secondi; negli ultimi 15 minuti prima della prima partita (e nei 10 dopo) ogni 15 secondi, per prendere anche gli ultimi spostamenti */
 let last=0;function avvia(){if(timer)return;giro();timer=setInterval(()=>{const f=finestra();if(!f)return;const vic=Math.abs(Date.now()-f.first)<15*60000;if(vic||Date.now()-last>=60000){last=Date.now();giro()}},15000)}
 /* (121) ROSE IN TEMPO REALE: con l app aperta il telefono rilegge le rose da ESPN ogni 2 minuti (firme, tagli, scambi, slot), sempre tranne
-   il lunedì prima delle 10:30 (lì restano le rose della settimana finita). Stesso formato di tools/lega.mjs: [nome, squadra NBA, slot, ruoli]. */
+   il lunedì prima delle 9:00 (lì restano le rose della settimana finita; (145) prima era alle 10:30). Stesso formato di tools/lega.mjs: [nome, squadra NBA, slot, ruoli]. */
 const PRO={1:"ATL",2:"BOS",3:"NO",4:"CHI",5:"CLE",6:"DAL",7:"DEN",8:"DET",9:"GS",10:"HOU",11:"IND",12:"LAC",13:"LAL",14:"MIA",15:"MIL",16:"MIN",17:"BKN",18:"NY",19:"ORL",20:"PHI",21:"PHX",22:"POR",23:"SAC",24:"SA",25:"OKC",26:"UTAH",27:"WSH",28:"TOR",29:"MEM",30:"CHA",0:"FA"};
 const SLOT={0:"PG",1:"SG",2:"SF",3:"PF",4:"C",5:"G",6:"F",7:"SG/SF",8:"G/F",9:"PF/C",10:"F/C",11:"UTIL",12:"BE",13:"IR"},POS={1:"PG",2:"SG",3:"SF",4:"PF",5:"C"};
 const pos=p=>{const d=POS[p.defaultPositionId];const L=[0,1,2,3,4].filter(s=>(p.eligibleSlots||[]).includes(s)).map(s=>SLOT[s]);return[d,...L.filter(x=>x!==d)].filter(Boolean).join(",")};
-function roseAperte(){try{const t=nyToday(),w=weekOf(t<W1?W1:t);if(w>1&&weekRange(w)[0]===t&&itNow().hm<630&&!(window.E16_TURNO_ECC&&t in E16_TURNO_ECC))return false;return true}catch(_){return false}}
+function roseAperte(){try{const t=nyToday(),w=weekOf(t<W1?W1:t);if(w>1&&weekRange(w)[0]===t&&itNow().hm<540&&!(window.E16_TURNO_ECC&&t in E16_TURNO_ECC))return false;return true}catch(_){return false}}
 let rbusy=false;async function giroRose(){if(rbusy||document.hidden||!roseAperte()||!window.e16SetRose)return;rbusy=true;
  try{const c=new AbortController(),to=setTimeout(()=>c.abort(),12000);const r=await fetch(`${B}?view=mRoster&t=${Date.now()}`,{signal:c.signal,cache:"no-store"});clearTimeout(to);if(!r.ok)return;const J=await r.json();
   const R={};for(const t of J.teams||[]){const id=LEGA.map[t.id];if(!id)continue;R[id]=(t.roster&&t.roster.entries||[]).map(e=>{const p=e.playerPoolEntry.player;return[p.fullName,PRO[p.proTeamId]||"FA",SLOT[e.lineupSlotId]||"BE",pos(p)]})}

@@ -68,12 +68,12 @@ const trades = Object.keys(tr).sort((a, b) => b - a).map(k => ({ d: +k * 6e4, l:
 mov.sort((a, b) => b.d - a.d);
 /* (91) controllo prima di salvare: formazione del lunedì di tutte e 16 le squadre per ogni settimana iniziata */
 for (const w of curW) { const n = Object.keys(line[w] || {}).length; if (n !== TEAMS.length) throw new Error(`Settimana ${w}: formazioni ESPN di ${n} squadre su ${TEAMS.length}`) }
-/* (121) REGOLA FRANCESCO: i cambi di rosa (firme, tagli, scambi) arrivano nell app solo quando il turno è finito, cioè dalle 10:30 italiane
+/* (121) REGOLA FRANCESCO: i cambi di rosa (firme, tagli, scambi) arrivano nell app dalle 9:00 italiane del lunedì ((145) 23/11/2026: prima 10:30)
    del lunedì. Il lunedì (data USA) prima delle 10:30 si tengono rose, movimenti e scambi del file di prima (quelli della settimana appena finita);
    formazioni, punteggi e free agent invece si aggiornano. Dalle 10:30 la rosa è la copia di ESPN. */
 { const p = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Rome", hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(new Date()), g = k => +((p.find(x => x.type === k) || {}).value || 0);
   const lun = curW.some(w => w > 1 && weekStart(w) === today), hm = (g("hour") % 24) * 60 + g("minute");
-  if (lun && hm < 630 && OLD.rose && !process.env.LEGA_LIBERA) { for (const k in rose) delete rose[k]; Object.assign(rose, OLD.rose); mov.length = 0; mov.push(...(OLD.mov || [])); trades.length = 0; trades.push(...(OLD.trades || [])); console.log("Lunedì prima delle 10:30: rose, movimenti e scambi restano quelli della settimana finita") } }
+  if (lun && hm < 540 && OLD.rose && !process.env.LEGA_LIBERA) { for (const k in rose) delete rose[k]; Object.assign(rose, OLD.rose); mov.length = 0; mov.push(...(OLD.mov || [])); trades.length = 0; trades.push(...(OLD.trades || [])); console.log("Lunedì prima delle 10:30: rose, movimenti e scambi restano quelli della settimana finita") } }
 const LEGA = { liveTs: Date.now(), live, upd: new Intl.DateTimeFormat("it-IT", { timeZone: "Europe/Rome", dateStyle: "short", timeStyle: "short" }).format(new Date()), map: MAP, rose, match, score, line, fa, mov: mov.slice(0, 300), trades };
 writeFileSync(OUT, "/* ESPN 16 – generato da tools/lega.mjs dalla lega ESPN (pubblica), non modificare a mano */\nconst LEGA=" + JSON.stringify(LEGA) + ";\n");
 console.log("lega:", Object.keys(rose).length, "squadre,", Object.keys(line).length, "settimane di formazioni,", fa.length, "free agent,", mov.length, "movimenti,", trades.length, "scambi");
